@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw, Router } from 'vue-router'
 import MainLayout from '../layouts/MainLayout.vue'
 import Home from "../pages/Home.vue";
+import About from "../pages/About.vue";
+import Dashboard from "../pages/Dashboard.vue";
+import Profile from "../pages/Profile.vue";
 
 // Define custom meta interface for TypeScript
 declare module 'vue-router' {
@@ -24,24 +27,44 @@ const routes: RouteRecordRaw[] = [
         children: [
             {
                 path: '',
-                name: 'Dashboard',
+                name: 'Home',
                 component: Home,
                 meta: {
-                    title: 'Dashboard',
+                    title: 'Home',
                     icon: 'home',
                     breadcrumb: ['Home']
                 }
             },
-            // {
-            //     path: 'about',
-            //     name: 'About',
-            //     component: About,
-            //     meta: {
-            //         title: 'About',
-            //         icon: 'info-circle',
-            //         breadcrumb: ['Home', 'About']
-            //     }
-            // },
+            {
+                path: 'dashboard',
+                name: 'Dashboard',
+                component: Dashboard,
+                meta: {
+                    title: 'Dashboard',
+                    icon: 'dashboard',
+                    breadcrumb: ['Dashboard']
+                }
+            },
+            {
+                path: 'profile',
+                name: 'Profile',
+                component: Profile,
+                meta: {
+                    title: 'Profile',
+                    icon: 'profile',
+                    breadcrumb: ['Profile']
+                }
+            },
+            {
+                path: 'about',
+                name: 'About',
+                component: About,
+                meta: {
+                    title: 'About',
+                    icon: 'info-circle',
+                    breadcrumb: ['Home', 'About']
+                }
+            },
             // {
             //     path: 'dashboard',
             //     name: 'Dashboard',

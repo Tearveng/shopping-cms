@@ -83,6 +83,13 @@
             Dashboard
           </a-menu-item>
 
+          <a-menu-item key="profile" @click="$router.push('/profile')">
+            <template #icon>
+              <UserOutlined/>
+            </template>
+            Profile
+          </a-menu-item>
+
           <a-sub-menu key="users">
             <template #icon>
               <TeamOutlined/>
@@ -108,6 +115,13 @@
               Categories
             </a-menu-item>
           </a-sub-menu>
+
+          <a-menu-item key="about" @click="$router.push('/about')">
+            <template #icon>
+              <AliwangwangOutlined/>
+            </template>
+            About
+          </a-menu-item>
 
           <a-menu-item key="reports" @click="$router.push('/reports')">
             <template #icon>
@@ -135,8 +149,10 @@
             </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
-        <a-layout-content :style="contentStyle">Content</a-layout-content>
-        <a-layout-footer :style="footerStyle">Footer</a-layout-footer>
+        <a-layout-content>
+          <router-view/>
+        </a-layout-content>
+        <!--        <a-layout-footer :style="footerStyle">Footer</a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-flex>
@@ -241,14 +257,16 @@
 </template>
 
 <script setup lang="ts">
-import {computed, CSSProperties, ref} from 'vue'
+import {computed, type CSSProperties, ref} from 'vue'
 import {useRoute} from 'vue-router'
 import {
+  AliwangwangOutlined,
   BarChartOutlined,
   DashboardOutlined,
   SettingOutlined,
   ShoppingOutlined,
   TeamOutlined,
+  UserOutlined
 } from '@ant-design/icons-vue'
 
 const route = useRoute()
@@ -258,9 +276,9 @@ const openKeys = ref(['users', 'products'])
 // Active menu based on current route
 const activeMenu = computed(() => {
   const path = route.path
-  if (path === '/') return 'dashboard'
+  if (path === '/dashboard') return 'dashboard'
+  if (path === '/profile') return 'profile'
   if (path === '/about') return 'about'
-  // if (path === '/dashboard') return 'dashboard'
   if (path === '/users') return 'user-list'
   if (path === '/users/roles') return 'user-roles'
   if (path === '/products') return 'product-list'
@@ -273,10 +291,14 @@ const activeMenu = computed(() => {
 // Breadcrumbs based on current route
 const breadcrumbs = computed(() => {
   const path = route.path
-  const crumbs = [{name: 'Dashboard', path: '/'}]
+  const crumbs: { name: string, path?: string }[] = [{name: 'Home', path: '/'}]
 
   if (path === '/about') {
-    crumbs.push({name: 'About', path: 'about'})
+    crumbs.push({name: 'About'})
+  } else if (path === '/dashboard') {
+    crumbs.push({name: 'Dashboard'})
+  }else if (path === '/profile') {
+    crumbs.push({name: 'Profile'})
   }
 
   // else if (path === '/dashboard') {
@@ -311,13 +333,13 @@ const headerStyle: CSSProperties = {
   backgroundColor: '#fff',
 };
 
-const contentStyle: CSSProperties = {
-  textAlign: 'center',
-  minHeight: 120,
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#108ee9',
-};
+// const contentStyle: CSSProperties = {
+//   textAlign: 'center',
+//   minHeight: 120,
+//   lineHeight: '120px',
+//   color: '#fff',
+//   backgroundColor: '#108ee9',
+// };
 
 const siderStyle: CSSProperties = {
   textAlign: 'center',
