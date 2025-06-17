@@ -1,190 +1,250 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw, Router } from 'vue-router'
-import MainLayout from '../layouts/MainLayout.vue'
-import Home from "../pages/Home.vue";
+import type { RouteRecordRaw, Router } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+import MainLayout from "../layouts/MainLayout.vue";
 import About from "../pages/About.vue";
+import Login from "../pages/auth/Login.vue";
+import Contact from "../pages/Contact.vue";
 import Dashboard from "../pages/Dashboard.vue";
+import Home from "../pages/Home.vue";
 import Profile from "../pages/Profile.vue";
+import Setting from "../pages/Setting.vue";
+import Work from "../pages/Work.vue";
+import { useAuthStore } from "../stores/auth";
 
 // Define custom meta interface for TypeScript
-declare module 'vue-router' {
-    interface RouteMeta {
-        title?: string
-        requiresAuth?: boolean
-        roles?: string[]
-        icon?: string
-        breadcrumb?: string[]
-    }
+declare module "vue-router" {
+  interface RouteMeta {
+    title?: string;
+    requiresAuth?: boolean;
+    roles?: string[];
+    icon?: string;
+    breadcrumb?: string[];
+  }
 }
-
-// Lazy load components for better performance (Vue 3 style)
 
 // Vue 3 Router Configuration
 const routes: RouteRecordRaw[] = [
-    {
-        path: '/',
-        component: MainLayout,
-        children: [
-            {
-                path: '',
-                name: 'Home',
-                component: Home,
-                meta: {
-                    title: 'Home',
-                    icon: 'home',
-                    breadcrumb: ['Home']
-                }
-            },
-            {
-                path: 'dashboard',
-                name: 'Dashboard',
-                component: Dashboard,
-                meta: {
-                    title: 'Dashboard',
-                    icon: 'dashboard',
-                    breadcrumb: ['Dashboard']
-                }
-            },
-            {
-                path: 'profile',
-                name: 'Profile',
-                component: Profile,
-                meta: {
-                    title: 'Profile',
-                    icon: 'profile',
-                    breadcrumb: ['Profile']
-                }
-            },
-            {
-                path: 'about',
-                name: 'About',
-                component: About,
-                meta: {
-                    title: 'About',
-                    icon: 'info-circle',
-                    breadcrumb: ['Home', 'About']
-                }
-            },
-            // {
-            //     path: 'dashboard',
-            //     name: 'Dashboard',
-            //     component: Dashboard,
-            //     meta: {
-            //         title: 'Dashboard',
-            //         requiresAuth: true,
-            //         icon: 'dashboard',
-            //         breadcrumb: ['Home', 'Dashboard']
-            //     }
-            // },
-            // {
-            //     path: 'users',
-            //     name: 'Users',
-            //     component: Users,
-            //     meta: {
-            //         title: 'Users',
-            //         requiresAuth: true,
-            //         roles: ['admin', 'moderator'],
-            //         icon: 'team',
-            //         breadcrumb: ['Home', 'Users']
-            //     }
-            // },
-            // {
-            //     path: 'users/roles',
-            //     name: 'UserRoles',
-            //     component: UserRoles,
-            //     meta: {
-            //         title: 'User Roles',
-            //         requiresAuth: true,
-            //         roles: ['admin'],
-            //         icon: 'user',
-            //         breadcrumb: ['Home', 'Users', 'Roles']
-            //     }
-            // },
-            // {
-            //     path: 'products',
-            //     name: 'Products',
-            //     component: Products,
-            //     meta: {
-            //         title: 'Products',
-            //         requiresAuth: true,
-            //         icon: 'shopping',
-            //         breadcrumb: ['Home', 'Products']
-            //     }
-            // },
-            // {
-            //     path: 'products/categories',
-            //     name: 'ProductCategories',
-            //     component: ProductCategories,
-            //     meta: {
-            //         title: 'Product Categories',
-            //         requiresAuth: true,
-            //         roles: ['admin', 'moderator'],
-            //         icon: 'tags',
-            //         breadcrumb: ['Home', 'Products', 'Categories']
-            //     }
-            // },
-            // {
-            //     path: 'reports',
-            //     name: 'Reports',
-            //     component: Reports,
-            //     meta: {
-            //         title: 'Reports',
-            //         requiresAuth: true,
-            //         roles: ['admin'],
-            //         icon: 'bar-chart',
-            //         breadcrumb: ['Home', 'Reports']
-            //     }
-            // },
-            // {
-            //     path: 'settings',
-            //     name: 'Settings',
-            //     component: Settings,
-            //     meta: {
-            //         title: 'Settings',
-            //         requiresAuth: true,
-            //         icon: 'setting',
-            //         breadcrumb: ['Home', 'Settings']
-            //     }
-            // }
-        ]
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      title: "Login",
+      icon: "login",
+      breadcrumb: ["Login"],
     },
-    // 404 Not Found Route
-    // {
-    //     path: '/:pathMatch(.*)*',
-    //     name: 'NotFound',
-    //     component: NotFound,
-    //     meta: {
-    //         title: 'Page Not Found',
-    //         breadcrumb: ['Home', '404']
-    //     }
-    // }
-]
+  },
+  {
+    path: "/",
+    component: MainLayout,
+    children: [
+      {
+        path: "",
+        name: "Home",
+        component: Home,
+        meta: {
+          title: "Home",
+          icon: "home",
+          breadcrumb: ["Home"],
+        },
+      },
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: Dashboard,
+        meta: {
+          title: "Dashboard",
+          icon: "dashboard",
+          breadcrumb: ["Dashboard"],
+        },
+      },
+      {
+        path: "profile",
+        name: "Profile",
+        component: Profile,
+        meta: {
+          title: "Profile",
+          icon: "profile",
+          breadcrumb: ["Profile"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "work",
+        name: "Work",
+        component: Work,
+        meta: {
+          title: "Work",
+          icon: "work",
+          breadcrumb: ["Work"],
+        },
+      },
+      {
+        path: "about",
+        name: "About",
+        component: About,
+        meta: {
+          title: "About",
+          icon: "About",
+          breadcrumb: ["About"],
+        },
+      },
+      {
+        path: "contact",
+        name: "Contact",
+        component: Contact,
+        meta: {
+          title: "Contact",
+          icon: "About",
+          breadcrumb: ["Contact"],
+        },
+      },
+      {
+        path: "settings",
+        name: "Setting",
+        component: Setting,
+        meta: {
+          title: "Setting",
+          icon: "Setting",
+          breadcrumb: ["Setting"],
+        },
+      },
+      // {
+      //     path: 'dashboard',
+      //     name: 'Dashboard',
+      //     component: Dashboard,
+      //     meta: {
+      //         title: 'Dashboard',
+      //         requiresAuth: true,
+      //         icon: 'dashboard',
+      //         breadcrumb: ['Home', 'Dashboard']
+      //     }
+      // },
+      // {
+      //     path: 'users',
+      //     name: 'Users',
+      //     component: Users,
+      //     meta: {
+      //         title: 'Users',
+      //         requiresAuth: true,
+      //         roles: ['admin', 'moderator'],
+      //         icon: 'team',
+      //         breadcrumb: ['Home', 'Users']
+      //     }
+      // },
+      // {
+      //     path: 'users/roles',
+      //     name: 'UserRoles',
+      //     component: UserRoles,
+      //     meta: {
+      //         title: 'User Roles',
+      //         requiresAuth: true,
+      //         roles: ['admin'],
+      //         icon: 'user',
+      //         breadcrumb: ['Home', 'Users', 'Roles']
+      //     }
+      // },
+      // {
+      //     path: 'products',
+      //     name: 'Products',
+      //     component: Products,
+      //     meta: {
+      //         title: 'Products',
+      //         requiresAuth: true,
+      //         icon: 'shopping',
+      //         breadcrumb: ['Home', 'Products']
+      //     }
+      // },
+      // {
+      //     path: 'products/categories',
+      //     name: 'ProductCategories',
+      //     component: ProductCategories,
+      //     meta: {
+      //         title: 'Product Categories',
+      //         requiresAuth: true,
+      //         roles: ['admin', 'moderator'],
+      //         icon: 'tags',
+      //         breadcrumb: ['Home', 'Products', 'Categories']
+      //     }
+      // },
+      // {
+      //     path: 'reports',
+      //     name: 'Reports',
+      //     component: Reports,
+      //     meta: {
+      //         title: 'Reports',
+      //         requiresAuth: true,
+      //         roles: ['admin'],
+      //         icon: 'bar-chart',
+      //         breadcrumb: ['Home', 'Reports']
+      //     }
+      // },
+      // {
+      //     path: 'settings',
+      //     name: 'Settings',
+      //     component: Settings,
+      //     meta: {
+      //         title: 'Settings',
+      //         requiresAuth: true,
+      //         icon: 'setting',
+      //         breadcrumb: ['Home', 'Settings']
+      //     }
+      // }
+    ],
+  },
+  // 404 Not Found Route
+  // {
+  //     path: '/:pathMatch(.*)*',
+  //     name: 'NotFound',
+  //     component: NotFound,
+  //     meta: {
+  //         title: 'Page Not Found',
+  //         breadcrumb: ['Home', '404']
+  //     }
+  // }
+];
 
 // Create Router Instance (Vue 3 way)
 const router: Router = createRouter({
-    // Use HTML5 History API (Vue 3 syntax)
-    // history: createWebHistory(import.meta.env.BASE_URL),
-    history: createWebHistory(),
-    routes,
-    // Scroll behavior (Vue 3 enhanced)
-    scrollBehavior(to, _, savedPosition) {
-        // If user pressed back/forward buttons
-        if (savedPosition) {
-            return savedPosition
-        }
-
-        // If route has hash, scroll to anchor
-        if (to.hash) {
-            return {
-                el: to.hash,
-                behavior: 'smooth'
-            }
-        }
-
-        // Default: scroll to top
-        return { top: 0, behavior: 'smooth' }
+  // Use HTML5 History API (Vue 3 syntax)
+  // history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
+  routes,
+  // Scroll behavior (Vue 3 enhanced)
+  scrollBehavior(to, _, savedPosition) {
+    // If user pressed back/forward buttons
+    if (savedPosition) {
+      return savedPosition;
     }
-})
+
+    // If route has hash, scroll to anchor
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: "smooth",
+      };
+    }
+
+    // Default: scroll to top
+    return { top: 0, behavior: "smooth" };
+  },
+});
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+
+  if (authStore.loading) {
+    await authStore.fetchUser();
+  }
+
+  if (to.meta.requiresAuth && !authStore.user) {
+    next("/login");
+  } else if (to.path === '/login' && authStore.user) {
+    return next('/dashboard') // already logged in, skip login
+  }
+
+  next();
+});
 
 // Authentication helper (implement based on your auth system)
 // const isAuthenticated = (): boolean => {
@@ -263,8 +323,9 @@ const router: Router = createRouter({
 //     // You might want to show a toast notification or redirect to error page
 // })
 
-export default router
+export default router;
 
 // Export additional utilities
-export { routes }
-export type { RouteRecordRaw }
+export { routes };
+export type { RouteRecordRaw };
+

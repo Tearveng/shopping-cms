@@ -1,96 +1,47 @@
 <template>
-  <!--  <a-layout style="min-height: 100vh; align-items: center; max-width: 100vw;">-->
-  <!-- Header -->
-  <!--    <a-layout-header class="header">-->
-  <!--      <div class="logo">-->
-  <!--        <h2 style="color: white; margin: 0;">My App</h2>-->
-  <!--      </div>-->
-  <!--      <a-menu-->
-  <!--          theme="dark"-->
-  <!--          mode="horizontal"-->
-  <!--          :selectedKeys="[activeMenu]"-->
-  <!--          class="header-menu"-->
-  <!--      >-->
-  <!--        <a-menu-item key="home" @click="$router.push('/')">-->
-  <!--          <template #icon>-->
-  <!--            <HomeOutlined/>-->
-  <!--          </template>-->
-  <!--          Home-->
-  <!--        </a-menu-item>-->
-  <!--        <a-menu-item key="about" @click="$router.push('/about')">-->
-  <!--          <template #icon>-->
-  <!--            <InfoCircleOutlined/>-->
-  <!--          </template>-->
-  <!--          About-->
-  <!--        </a-menu-item>-->
-  <!--        <a-menu-item key="products" @click="$router.push('/products')">-->
-  <!--          <template #icon>-->
-  <!--            <ShoppingOutlined/>-->
-  <!--          </template>-->
-  <!--          Products-->
-  <!--        </a-menu-item>-->
-  <!--      </a-menu>-->
-
-  <!--      &lt;!&ndash; User menu &ndash;&gt;-->
-  <!--      <div class="header-right">-->
-  <!--        <a-dropdown>-->
-  <!--          <a-button type="text" style="color: white;">-->
-  <!--            <UserOutlined/>-->
-  <!--            User-->
-  <!--            <DownOutlined/>-->
-  <!--          </a-button>-->
-  <!--          <template #overlay>-->
-  <!--            <a-menu>-->
-  <!--              <a-menu-item key="profile">-->
-  <!--                <UserOutlined/>-->
-  <!--                Profile-->
-  <!--              </a-menu-item>-->
-  <!--              <a-menu-item key="settings">-->
-  <!--                <SettingOutlined/>-->
-  <!--                Settings-->
-  <!--              </a-menu-item>-->
-  <!--              <a-menu-divider/>-->
-  <!--              <a-menu-item key="logout">-->
-  <!--                <LogoutOutlined/>-->
-  <!--                Logout-->
-  <!--              </a-menu-item>-->
-  <!--            </a-menu>-->
-  <!--          </template>-->
-  <!--        </a-dropdown>-->
-  <!--      </div>-->
-  <!--    </a-layout-header>-->
-
   <a-flex style="justify-content: center">
     <a-layout style="width: 100%; max-width: 1024px">
       <a-layout-sider
-          v-model:collapsed="collapsed"
-          collapsible
-          theme="light"
-          width="250"
+        v-model:collapsed="collapsed"
+        collapsible
+        theme="light"
+        width="250"
       >
         <a-menu
-            mode="inline"
-            :selectedKeys="[activeMenu]"
-            :openKeys="openKeys"
-            @openChange="onOpenChange"
-            style="height: 100%; border-right: 0; text-align: start"
+          mode="inline"
+          :selectedKeys="[activeMenu]"
+          :openKeys="openKeys"
+          @openChange="onOpenChange"
+          style="height: 100%; border-right: 0; text-align: start"
         >
-          <a-typography style="text-align: center; padding: 15px">CMS</a-typography>
+          <a-typography style="text-align: center; padding: 15px"
+            >CMS</a-typography
+          >
+
+          
+
           <a-menu-item key="dashboard" @click="$router.push('/dashboard')">
             <template #icon>
-              <DashboardOutlined/>
+              <DashboardOutlined />
             </template>
             Dashboard
           </a-menu-item>
 
           <a-menu-item key="profile" @click="$router.push('/profile')">
             <template #icon>
-              <UserOutlined/>
+              <UserOutlined />
             </template>
             Profile
           </a-menu-item>
 
-          <a-sub-menu key="users">
+          <a-menu-item key="work" @click="$router.push('/work')">
+            <template #icon>
+              <LaptopOutlined />
+            </template>
+            Work
+          </a-menu-item>
+
+          <!-- <a-sub-menu key="users">
             <template #icon>
               <TeamOutlined/>
             </template>
@@ -101,9 +52,9 @@
             <a-menu-item key="user-roles" @click="$router.push('/users/roles')">
               User Roles
             </a-menu-item>
-          </a-sub-menu>
+          </a-sub-menu> -->
 
-          <a-sub-menu key="products">
+          <!-- <a-sub-menu key="products">
             <template #icon>
               <ShoppingOutlined/>
             </template>
@@ -114,49 +65,60 @@
             <a-menu-item key="categories" @click="$router.push('/products/categories')">
               Categories
             </a-menu-item>
-          </a-sub-menu>
+          </a-sub-menu> -->
 
           <a-menu-item key="about" @click="$router.push('/about')">
             <template #icon>
-              <AliwangwangOutlined/>
+              <AliwangwangOutlined />
             </template>
             About
           </a-menu-item>
 
-          <a-menu-item key="reports" @click="$router.push('/reports')">
+          <a-menu-item key="contact" @click="$router.push('/contact')">
             <template #icon>
-              <BarChartOutlined/>
+              <LaptopOutlined />
+            </template>
+            Contact
+          </a-menu-item>
+
+          <!-- <a-menu-item key="reports" @click="$router.push('/reports')">
+            <template #icon>
+              <BarChartOutlined />
             </template>
             Reports
-          </a-menu-item>
+          </a-menu-item> -->
 
           <a-menu-item key="settings" @click="$router.push('/settings')">
             <template #icon>
-              <SettingOutlined/>
+              <SettingOutlined />
             </template>
             Settings
           </a-menu-item>
+
+          <!-- <a-menu-item key="settings" @click="$router.push('/settings')">
+            <a-button @click="handleLogout">Logout</a-button>
+          </a-menu-item> -->
         </a-menu>
       </a-layout-sider>
       <a-layout>
         <!--          <a-typography style="padding: 15px">CMS</a-typography>-->
         <a-layout-header :style="headerStyle">
-          <a-breadcrumb style="margin: 12px 0px;">
+          <a-breadcrumb style="margin: 12px 0px">
             <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
-              <router-link v-if="item.path" :to="item.path">{{ item.name }}
+              <router-link v-if="item.path" :to="item.path"
+                >{{ item.name }}
               </router-link>
               <span v-else>{{ item.name }}</span>
             </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
         <a-layout-content>
-          <router-view/>
+          <router-view />
         </a-layout-content>
         <!--        <a-layout-footer :style="footerStyle">Footer</a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-flex>
-
 
   <!--    <a-layout style="width: 100%; max-width: 1024px">-->
   <!--      &lt;!&ndash; Sidebar &ndash;&gt;-->
@@ -257,48 +219,58 @@
 </template>
 
 <script setup lang="ts">
-import {computed, type CSSProperties, ref} from 'vue'
-import {useRoute} from 'vue-router'
 import {
   AliwangwangOutlined,
-  BarChartOutlined,
   DashboardOutlined,
+  LaptopOutlined,
   SettingOutlined,
-  ShoppingOutlined,
-  TeamOutlined,
   UserOutlined
-} from '@ant-design/icons-vue'
+} from "@ant-design/icons-vue";
+import { computed, type CSSProperties, ref } from "vue";
+import { useRoute } from "vue-router";
+import router from "../router";
+import { useAuthStore } from "../stores/auth";
 
-const route = useRoute()
-const collapsed = ref(false)
-const openKeys = ref(['users', 'products'])
+const authStore = useAuthStore();
+const route = useRoute();
+const collapsed = ref(false);
+const openKeys = ref(["users", "products"]);
 
 // Active menu based on current route
 const activeMenu = computed(() => {
-  const path = route.path
-  if (path === '/dashboard') return 'dashboard'
-  if (path === '/profile') return 'profile'
-  if (path === '/about') return 'about'
-  if (path === '/users') return 'user-list'
-  if (path === '/users/roles') return 'user-roles'
-  if (path === '/products') return 'product-list'
-  if (path === '/products/categories') return 'categories'
-  if (path === '/reports') return 'reports'
-  if (path === '/settings') return 'settings'
-  return 'home'
-})
+  const path = route.path;
+  if (path === "/dashboard") return "dashboard";
+  if (path === "/profile") return "profile";
+  if (path === "/work") return "work";
+  if (path === "/about") return "about";
+  if (path === "/contact") return "contact";
+  if (path === "/settings") return "settings";
+  if (path === "/users") return "user-list";
+  if (path === "/users/roles") return "user-roles";
+  if (path === "/products") return "product-list";
+  if (path === "/products/categories") return "categories";
+  if (path === "/reports") return "reports";
+  if (path === "/settings") return "settings";
+  return "home";
+});
 
 // Breadcrumbs based on current route
 const breadcrumbs = computed(() => {
-  const path = route.path
-  const crumbs: { name: string, path?: string }[] = [{name: 'Home', path: '/'}]
+  const path = route.path;
+  const crumbs: { name: string; path?: string }[] = [
+    { name: "Home", path: "/" },
+  ];
 
-  if (path === '/about') {
-    crumbs.push({name: 'About'})
-  } else if (path === '/dashboard') {
-    crumbs.push({name: 'Dashboard'})
-  }else if (path === '/profile') {
-    crumbs.push({name: 'Profile'})
+  if (path === "/about") {
+    crumbs.push({ name: "About" });
+  } else if (path === "/dashboard") {
+    crumbs.push({ name: "Dashboard" });
+  } else if (path === "/profile") {
+    crumbs.push({ name: "Profile" });
+  } else if (path === "/work") {
+    crumbs.push({ name: "Work" });
+  } else if (path === "/contact") {
+    crumbs.push({ name: "Contact" });
   }
 
   // else if (path === '/dashboard') {
@@ -319,18 +291,24 @@ const breadcrumbs = computed(() => {
   //   crumbs.push({name: 'Settings', path: ''})
   // }
 
-  return crumbs
-})
+  return crumbs;
+});
 
 const onOpenChange = (keys: any) => {
-  openKeys.value = keys
+  openKeys.value = keys;
+};
+
+const handleLogout = async () => {
+  authStore.signOut().then(() => {
+    router.push('/login')
+  }).catch(err => console.log("err", err));
 }
 
 const headerStyle: CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  maxHeight: '48px',
-  backgroundColor: '#fff',
+  textAlign: "center",
+  color: "#fff",
+  maxHeight: "48px",
+  backgroundColor: "#fff",
 };
 
 // const contentStyle: CSSProperties = {
@@ -342,18 +320,17 @@ const headerStyle: CSSProperties = {
 // };
 
 const siderStyle: CSSProperties = {
-  textAlign: 'center',
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#3ba0e9',
+  textAlign: "center",
+  lineHeight: "120px",
+  color: "#fff",
+  backgroundColor: "#3ba0e9",
 };
 
 const footerStyle: CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#7dbcea',
+  textAlign: "center",
+  color: "#fff",
+  backgroundColor: "#7dbcea",
 };
-
 </script>
 
 <style scoped>
