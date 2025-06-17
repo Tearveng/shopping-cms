@@ -18,6 +18,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async fetchUser() {
       const { data, error } = await supabase.auth.getSession();
+      if (error) throw error.message;
       this.session = data.session;
       this.user = data.session?.user ?? null;
       this.loading = false;
@@ -35,7 +36,8 @@ export const useAuthStore = defineStore("auth", {
       this.session = data.session;
     },
     async signOut() {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error.message;
       this.user = null;
       this.session = null;
     },

@@ -18,7 +18,7 @@
             >CMS</a-typography
           >
 
-          
+
 
           <a-menu-item key="dashboard" @click="$router.push('/dashboard')">
             <template #icon>
@@ -220,18 +220,15 @@
 
 <script setup lang="ts">
 import {
-  AliwangwangOutlined,
-  DashboardOutlined,
-  LaptopOutlined,
-  SettingOutlined,
-  UserOutlined
+AliwangwangOutlined,
+DashboardOutlined,
+LaptopOutlined,
+SettingOutlined,
+UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
-import router from "../router";
-import { useAuthStore } from "../stores/auth";
 
-const authStore = useAuthStore();
 const route = useRoute();
 const collapsed = ref(false);
 const openKeys = ref(["users", "products"]);
@@ -271,25 +268,9 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Work" });
   } else if (path === "/contact") {
     crumbs.push({ name: "Contact" });
+  }else if (path === "/settings") {
+    crumbs.push({ name: "Settings" });
   }
-
-  // else if (path === '/dashboard') {
-  //   crumbs.push({name: 'Dashboard'})
-  // } else if (path === '/users') {
-  //   crumbs.push({name: 'Users'})
-  // } else if (path === '/users/roles') {
-  //   crumbs.push({name: 'Users', path: '/users'})
-  //   crumbs.push({name: 'Roles'})
-  // } else if (path === '/products') {
-  //   crumbs.push({name: 'Products'})
-  // } else if (path === '/products/categories') {
-  //   crumbs.push({name: 'Products', path: '/products'})
-  //   crumbs.push({name: 'Categories'})
-  // } else if (path === '/reports') {
-  //   crumbs.push({name: 'Reports'})
-  // } else if (path === '/settings') {
-  //   crumbs.push({name: 'Settings', path: ''})
-  // }
 
   return crumbs;
 });
@@ -298,11 +279,11 @@ const onOpenChange = (keys: any) => {
   openKeys.value = keys;
 };
 
-const handleLogout = async () => {
-  authStore.signOut().then(() => {
-    router.push('/login')
-  }).catch(err => console.log("err", err));
-}
+// const handleLogout = async () => {
+//   authStore.signOut().then(() => {
+//     router.push('/login')
+//   }).catch(err => console.log("err", err));
+// }
 
 const headerStyle: CSSProperties = {
   textAlign: "center",
@@ -311,26 +292,19 @@ const headerStyle: CSSProperties = {
   backgroundColor: "#fff",
 };
 
-// const contentStyle: CSSProperties = {
-//   textAlign: 'center',
-//   minHeight: 120,
-//   lineHeight: '120px',
-//   color: '#fff',
-//   backgroundColor: '#108ee9',
+// const siderStyle: CSSProperties = {
+//   textAlign: "center",
+//   lineHeight: "120px",
+//   color: "#fff",
+//   backgroundColor: "#3ba0e9",
 // };
 
-const siderStyle: CSSProperties = {
-  textAlign: "center",
-  lineHeight: "120px",
-  color: "#fff",
-  backgroundColor: "#3ba0e9",
-};
+// const footerStyle: CSSProperties = {
+//   textAlign: "center",
+//   color: "#fff",
+//   backgroundColor: "#7dbcea",
+// };
 
-const footerStyle: CSSProperties = {
-  textAlign: "center",
-  color: "#fff",
-  backgroundColor: "#7dbcea",
-};
 </script>
 
 <style scoped>

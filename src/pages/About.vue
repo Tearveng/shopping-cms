@@ -27,15 +27,13 @@
   </a-form>
 </template>
 
-<style scope></style>
-
 <script setup lang="ts">
 import { message } from "ant-design-vue";
 import { onMounted, reactive, ref } from "vue";
 import {
-  getAboutMeById,
-  insertAboutMe,
-  updateAboutById,
+getAboutMeById,
+insertAboutMe,
+updateAboutById,
 } from "../services/AboutService";
 import { useAuthStore } from "../stores/auth";
 
@@ -71,6 +69,10 @@ const success = () => {
   message.success("Created successfully", 5);
 };
 
+const updated = () => {
+  message.success("Updated successfully", 5);
+};
+
 const errors = (msg: string) => {
   message.error(msg, 5);
 };
@@ -87,7 +89,7 @@ const onFinish = () => {
             about: formState.about,
             user_id: `${auth.user?.id}`,
           })
-            .then(() => success())
+            .then(() => updated())
             .catch((e) => errors(e))
             .finally(() => {
               isLoading.value = false;

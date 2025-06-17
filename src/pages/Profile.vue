@@ -10,30 +10,37 @@
       <a-typography-text>Avatar</a-typography-text>
       <a-flex justify="start" align="center" gap="middle">
         <a-avatar
-          src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1"
+          :src="formState.avatar"
           :size="{ xs: 40, sm: 40, md: 40, lg: 64, xl: 64, xxl: 64 }"
         >
           <template #icon>
             <AntDesignOutlined />
           </template>
         </a-avatar>
-        <a-button type="primary" html-type="submit">Upload</a-button>
+        <a-upload
+          :before-upload="beforeUpload"
+          :custom-request="customUpload"
+          accept="image/*"
+          list-type="picture"
+          :show-upload-list="false"
+        >
+          <a-button :loading="isLoadingAvatar">
+            <upload-outlined></upload-outlined>
+            Upload Image
+          </a-button>
+        </a-upload>
       </a-flex>
     </a-space>
 
-    <!-- <a-space direction="vertical" style="width: 100%;"> -->
     <a-typography-text>Username</a-typography-text>
     <a-form-item name="username" style="margin-bottom: -16px">
       <a-input v-model:value="formState.username" placeholder="Username" />
     </a-form-item>
-    <!-- </a-space> -->
 
-    <!-- <a-space direction="vertical" style="width: 100%"> -->
     <a-typography-text>Bio</a-typography-text>
     <a-form-item name="bio" style="margin-bottom: -16px">
       <a-input v-model:value="formState.bio" placeholder="Bio ( optional )" />
     </a-form-item>
-    <!-- </a-space> -->
 
     <a-typography-text>Website</a-typography-text>
     <a-form-item name="website">
@@ -52,16 +59,14 @@
       </a-tooltip>
     </a-form-item>
 
-    <!-- <a-form-item name="bio">
-      <a-input v-model:value="formState.bio" placeholder="Website ( optional )" />
-    </a-form-item> -->
-
     <a-space>
       <a-form-item>
         <a-button @click="resetForm">Reset</a-button>
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="isLoading">Save</a-button>
+        <a-button type="primary" html-type="submit" :loading="isLoading"
+          >Save</a-button
+        >
       </a-form-item>
     </a-space>
   </a-form>
@@ -76,12 +81,25 @@
 
 <script setup lang="ts">
 import { CopyOutlined } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
 import { onMounted, reactive, ref } from "vue";
-import { getProfileById, updateProfileById, type IProfile } from "../services/ProfileService";
+import { supabase } from "../lib/supabase";
+import {
+getProfileById,
+updateProfileById,
+type IProfile,
+} from "../services/ProfileService";
 import { useAuthStore } from "../stores/auth";
 
+interface Profile {
+  avatar: string | null;
+  username: string;
+  bio: string;
+  website: string;
+}
+
 // Reactive form state
-const formState = reactive({
+const formState = reactive<Profile>({
   avatar: null,
   username: "",
   bio: "",
@@ -90,23 +108,9 @@ const formState = reactive({
 
 // Form reference
 const formRef = ref();
-const isLoading = ref(false)
+const isLoading = ref(false);
+const isLoadingAvatar = ref(false);
 const auth = useAuthStore();
-const profileUser = ref<IProfile>();
-
-// Custom validator for password
-// const validatePassword = async (_, value) => {
-//   if (!value) {
-//     return Promise.reject('Please input your password!');
-//   }
-//   if (value.length < 8) {
-//     return Promise.reject('Password must be at least 8 characters!');
-//   }
-//   if (!/[A-Z]/.test(value)) {
-//     return Promise.reject('Password must contain at least one uppercase letter!');
-//   }
-//   return Promise.resolve();
-// };
 
 // Validation rules
 const rules = {
@@ -119,13 +123,67 @@ const rules = {
       trigger: "blur",
     },
   ],
-  // password: [
-  //   { required: true, validator: validatePassword, trigger: 'blur' },
-  // ],
   email: [
     { required: true, message: "Please input your email!", trigger: "blur" },
     { type: "email", message: "Please enter a valid email!", trigger: "blur" },
   ],
+};
+
+// Validate file before upload
+const beforeUpload = (file: any) => {
+  const isImage = file.type.startsWith("image/");
+  const isLt5M = file.size / 1024 / 1024 < 5; // Limit to 5MB
+  if (!isImage) {
+    message.error("You can only upload image files!");
+  }
+  if (!isLt5M) {
+    message.error("Image must be smaller than 5MB!");
+  }
+  return isImage && isLt5M; // Allow upload if valid
+};
+
+// const success = () => {
+//   message.success("Created successfully", 5);
+// };
+
+const update = () => {
+  message.success("Updated successfully", 5);
+};
+
+const errors = (msg: string) => {
+  message.error(msg, 5);
+};
+
+// Custom upload handler for Supabase
+const customUpload = async ({ file, onSuccess, onError }: any) => {
+  try {
+    isLoadingAvatar.value = true;
+    // Generate unique file path
+    const filePath = `${auth.user?.id}/${Date.now()}-${file.name}`;
+    const { data, error: uploadError } = await supabase.storage
+      .from("portfolio-cms") // Replace with your bucket name
+      .upload(filePath, file, {
+        cacheControl: "3600", // Cache for 1 hour
+        upsert: false, // Prevent overwriting
+        contentType: file.type, // Set MIME type (e.g., image/jpeg)
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    // Get public URL for the uploaded image
+    const { data: urlData } = supabase.storage
+      .from("portfolio-cms")
+      .getPublicUrl(filePath);
+
+    formState.avatar = urlData.publicUrl;
+    onSuccess(data); // Notify Ant Design upload success
+    await saveAvatar({ profile_url: urlData.publicUrl });
+  } catch (err: any) {
+    message.error(`Upload failed: ${err.message}`);
+    onError(err); // Notify Ant Design upload failure
+  }
 };
 
 // Handle form submission
@@ -138,18 +196,30 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 
+const saveAvatar = async (profile: Partial<IProfile>) => {
+  updateProfileById(`${auth.user?.id}`, profile)
+    .then(() => message.success("Image uploaded successfully!"))
+    .catch((e) => errors(e))
+    .finally(() => {
+      isLoadingAvatar.value = false;
+    });
+};
+
 const saveProfile = async (profile: Partial<IProfile>) => {
-  isLoading.value = true
-  updateProfileById(`${auth.user?.id}`, profile).then().catch(e => e).finally(() => {
-    isLoading.value = false
-  })
+  isLoading.value = true;
+  updateProfileById(`${auth.user?.id}`, profile)
+    .then(() => update())
+    .catch((e) => errors(e))
+    .finally(() => {
+      isLoading.value = false;
+    });
 };
 
 onMounted(async () => {
   if (auth.user) {
-   const profile = await getProfileById(auth.user.id);
-   Object.assign(formState, profile)
+    const profile = await getProfileById(auth.user.id);
+    formState.avatar = profile.profile_url;
+    Object.assign(formState, profile);
   }
-})
-
+});
 </script>

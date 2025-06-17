@@ -64,7 +64,8 @@
         <a-upload
           v-model:file-list="experience.fileList"
           @preview="handlePreview"
-          action="/upload.do"
+          :before-upload="beforeUpload"
+          :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
           <div>
@@ -88,7 +89,7 @@
         Add field
       </a-button>
     </a-form-item>
-    <!-- <a-form-item v-bind="formItemLayoutWithOutLabel"> -->
+
     <a-button @click="resetForm">Reset</a-button>
     <a-button
       type="primary"
@@ -98,20 +99,26 @@
       @click="submitForm"
       >Submit</a-button
     >
-    <!-- </a-form-item> -->
   </a-form>
+  <contextHolder />
 </template>
 
 <script setup lang="ts">
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import { message, type FormInstance } from "ant-design-vue";
-import dayjs from "dayjs";
-import { onMounted, reactive, ref, toRaw } from "vue";
 import {
-  getWorkExperiences,
-  insertWorkExperiences,
-  updateWorkExperiences,
-  type IWorkExperiences,
+ExclamationCircleOutlined,
+MinusCircleOutlined,
+PlusOutlined,
+} from "@ant-design/icons-vue";
+import { message, Modal, type FormInstance } from "ant-design-vue";
+import dayjs from "dayjs";
+import { h, onMounted, reactive, ref, toRaw } from "vue";
+import { supabase } from "../lib/supabase";
+import {
+deleteWorkExperience,
+getWorkExperiences,
+insertWorkExperiences,
+updateWorkExperiences,
+type IWorkExperiences,
 } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
@@ -121,7 +128,7 @@ interface WorkExperience {
   dateRange: any;
   link: string;
   description: string;
-  fileList: [];
+  fileList: any[];
 }
 
 const auth = useAuthStore();
@@ -132,6 +139,7 @@ const isLoading = ref(false);
 const previewVisible = ref(false);
 const previewImage = ref("");
 const previewTitle = ref("");
+const [modal, contextHolder] = Modal.useModal();
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -161,8 +169,116 @@ function getBase64(file: File) {
   });
 }
 
+// Validate file before upload
+const beforeUpload = (file: any) => {
+  const isImage = file.type.startsWith("image/");
+  const isLt5M = file.size / 1024 / 1024 < 5; // Limit to 5MB
+  if (!isImage) {
+    message.error("You can only upload image files!");
+  }
+  if (!isLt5M) {
+    message.error("Image must be smaller than 5MB!");
+  }
+  return isImage && isLt5M; // Allow upload if valid
+};
+
+const customUpload = ({ indexRow }: any) => {
+  return async ({ file, onSuccess, onError }: any) => {
+    try {
+      // isLoadingAvatar.value = true;
+      // Generate unique file path
+      const filePath = `${auth.user?.id}/${Date.now()}-${file.name}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from("portfolio-cms") // Replace with your bucket name
+        .upload(filePath, file, {
+          cacheControl: "3600", // Cache for 1 hour
+          upsert: false, // Prevent overwriting
+          contentType: file.type, // Set MIME type (e.g., image/jpeg)
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL for the uploaded image
+      const { data: urlData } = supabase.storage
+        .from("portfolio-cms")
+        .getPublicUrl(filePath);
+
+      // Store metadata in the database
+      const metadata = {
+        fileName: file.name,
+        tag: "default",
+        uploadedAt: new Date().toISOString(),
+      };
+      const workExperience = dynamicValidateForm.experiences[indexRow];
+      if (workExperience.id) {
+        const rest = {
+          id: workExperience.id,
+          start_date: workExperience.dateRange[0],
+          end_date: workExperience.dateRange[1],
+          link: workExperience.link,
+          description: workExperience.description,
+          images: metadata,
+          user_id: auth.user?.id,
+        } as IWorkExperiences;
+        updateWorkExperiences(rest)
+          .then()
+          .catch((e) => errors(e))
+          .finally(() => {
+            isLoading.value = false;
+          });
+      }
+
+      // dynamicValidateForm.experiences[indexRow].fileList = [
+      //   ...dynamicValidateForm.experiences[indexRow].fileList,
+      //   {
+      //     uid: file.uid,
+      //     name: file.name,
+      //     status: "done",
+      //     url: urlData.publicUrl,
+      //   },
+      // ];
+      onSuccess(data); // Notify Ant Design upload success
+      // await saveAvatar({ profile_url: urlData.publicUrl });
+    } catch (err: any) {
+      message.error(`Upload failed: ${err.message}`);
+      onError(err); // Notify Ant Design upload failure
+    }
+  };
+};
+
+const showConfirm = (item: WorkExperience) => {
+  modal.confirm({
+    title: "Delete",
+    icon: h(ExclamationCircleOutlined),
+    content: h(
+      "div",
+      { style: "color:red;" },
+      "Are you sure to delete this item."
+    ),
+    onOk() {
+      if (item.id) {
+        deleteWorkExperience(item.id)
+          .then(() => {
+            const index = dynamicValidateForm.experiences.indexOf(item);
+            if (index !== -1) {
+              dynamicValidateForm.experiences.splice(index, 1);
+            }
+            deleted();
+          })
+          .catch()
+          .finally();
+      }
+    },
+    onCancel() {
+      console.log("Cancel");
+    },
+    class: "test",
+  });
+};
+
 const submitForm = () => {
-  console.log("values", dynamicValidateForm.experiences);
   if (formRef.value) {
     formRef.value
       .validate()
@@ -191,16 +307,17 @@ const submitForm = () => {
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertWorkExperiences(insertPlainData)
-            .then(() => success())
-            .catch((e) => errors(e))
-            .finally(() => {
-              isLoading.value = false;
-            });
+            insertWorkExperiences(
+              insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
+            )
+              .then(() => success())
+              .catch((e) => errors(e))
+              .finally(() => {
+                isLoading.value = false;
+              });
           } catch (error) {
             console.log("error", error);
           }
-          
         }
 
         if (updatePlainData.length > 0) {
@@ -239,9 +356,13 @@ const handleCancel = () => {
 };
 
 const removeDomain = (item: WorkExperience) => {
-  const index = dynamicValidateForm.experiences.indexOf(item);
-  if (index !== -1) {
-    dynamicValidateForm.experiences.splice(index, 1);
+  if (item.id) {
+    showConfirm(item);
+  } else {
+    const index = dynamicValidateForm.experiences.indexOf(item);
+    if (index !== -1) {
+      dynamicValidateForm.experiences.splice(index, 1);
+    }
   }
 };
 
@@ -272,6 +393,10 @@ const success = () => {
 
 const update = () => {
   message.success("Updated successfully", 5);
+};
+
+const deleted = () => {
+  message.success("Deleted successfully", 5);
 };
 
 const errors = (msg: string) => {

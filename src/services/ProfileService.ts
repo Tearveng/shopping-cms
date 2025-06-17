@@ -32,3 +32,21 @@ export const updateProfileById = async (
 
   return data;
 };
+
+export const uploadFile = async (file: any) => {
+  const filePath = `public/${file.name}`; // Path in the bucket
+  const { data, error } = await supabase.storage
+    .from("portfolio-cms") // Replace with your bucket name
+    .upload(filePath, file, {
+      cacheControl: "3600", // Cache duration in seconds
+      upsert: false, // Set to true to overwrite existing files
+      contentType: file.type, // Optional: specify MIME type (e.g., 'image/jpeg')
+    });
+
+  if (error) {
+    console.error("Upload error:", error.message);
+    return null;
+  }
+  console.log("File uploaded:", data);
+  return data;
+};

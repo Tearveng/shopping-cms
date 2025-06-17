@@ -46,6 +46,7 @@ const routes: RouteRecordRaw[] = [
           title: "Home",
           icon: "home",
           breadcrumb: ["Home"],
+          requiresAuth: true,
         },
       },
       {
@@ -56,6 +57,7 @@ const routes: RouteRecordRaw[] = [
           title: "Dashboard",
           icon: "dashboard",
           breadcrumb: ["Dashboard"],
+          requiresAuth: true,
         },
       },
       {
@@ -77,6 +79,7 @@ const routes: RouteRecordRaw[] = [
           title: "Work",
           icon: "work",
           breadcrumb: ["Work"],
+          requiresAuth: true,
         },
       },
       {
@@ -87,6 +90,7 @@ const routes: RouteRecordRaw[] = [
           title: "About",
           icon: "About",
           breadcrumb: ["About"],
+          requiresAuth: true,
         },
       },
       {
@@ -97,6 +101,7 @@ const routes: RouteRecordRaw[] = [
           title: "Contact",
           icon: "About",
           breadcrumb: ["Contact"],
+          requiresAuth: true,
         },
       },
       {
@@ -107,6 +112,7 @@ const routes: RouteRecordRaw[] = [
           title: "Setting",
           icon: "Setting",
           breadcrumb: ["Setting"],
+          requiresAuth: true,
         },
       },
       // {
@@ -230,7 +236,7 @@ const router: Router = createRouter({
   },
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   const authStore = useAuthStore();
 
   if (authStore.loading) {
