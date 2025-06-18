@@ -65,6 +65,7 @@
           v-model:file-list="experience.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
+          :remove="handleRemove(Number(experience.id), index)"
           :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
@@ -99,6 +100,7 @@
       @click="submitForm"
       >Submit</a-button
     >
+    <a-button @click="getImageUrl"> get image </a-button>
   </a-form>
   <contextHolder />
 </template>
@@ -116,6 +118,7 @@ import { supabase } from "../lib/supabase";
 import {
 deleteWorkExperience,
 getWorkExperiences,
+getWorkExperiencesById,
 insertWorkExperiences,
 updateWorkExperiences,
 type IWorkExperiences,
@@ -175,6 +178,7 @@ const beforeUpload = (file: any) => {
   const isLt5M = file.size / 1024 / 1024 < 5; // Limit to 5MB
   if (!isImage) {
     message.error("You can only upload image files!");
+    return false;
   }
   if (!isLt5M) {
     message.error("Image must be smaller than 5MB!");
@@ -187,7 +191,8 @@ const customUpload = ({ indexRow }: any) => {
     try {
       // isLoadingAvatar.value = true;
       // Generate unique file path
-      const filePath = `${auth.user?.id}/${Date.now()}-${file.name}`;
+      const fileName = file.name.replace(/\s+/g, "_");
+      const filePath = `${auth.user?.id}/${Date.now()}-${fileName}`;
       const { data, error: uploadError } = await supabase.storage
         .from("portfolio-cms") // Replace with your bucket name
         .upload(filePath, file, {
@@ -195,57 +200,66 @@ const customUpload = ({ indexRow }: any) => {
           upsert: false, // Prevent overwriting
           contentType: file.type, // Set MIME type (e.g., image/jpeg)
         });
+      console.log("data", data);
 
       if (uploadError) {
         throw uploadError;
       }
-
-      // Get public URL for the uploaded image
-      const { data: urlData } = supabase.storage
-        .from("portfolio-cms")
-        .getPublicUrl(filePath);
-
       // Store metadata in the database
-      const metadata = {
-        fileName: file.name,
-        tag: "default",
-        uploadedAt: new Date().toISOString(),
-      };
+      const metadata = [
+        {
+          id: data.id,
+          fileName: filePath.split("/")[1],
+          status: "default",
+          uploadedAt: new Date().toISOString(),
+        },
+      ];
+      console.log("metadata", metadata);
       const workExperience = dynamicValidateForm.experiences[indexRow];
       if (workExperience.id) {
+        const getByUserId = await getWorkExperiencesById(workExperience.id);
+        const oldImages =
+          getByUserId.images && getByUserId.images.length > 0
+            ? [...getByUserId.images, ...metadata]
+            : metadata;
         const rest = {
           id: workExperience.id,
           start_date: workExperience.dateRange[0],
           end_date: workExperience.dateRange[1],
           link: workExperience.link,
           description: workExperience.description,
-          images: metadata,
+          images: oldImages,
           user_id: auth.user?.id,
         } as IWorkExperiences;
+
         updateWorkExperiences(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
             isLoading.value = false;
           });
-      }
+        const { data: publicUrl } = supabase.storage
+          .from("portfolio-cms")
+          .getPublicUrl(filePath);
 
-      // dynamicValidateForm.experiences[indexRow].fileList = [
-      //   ...dynamicValidateForm.experiences[indexRow].fileList,
-      //   {
-      //     uid: file.uid,
-      //     name: file.name,
-      //     status: "done",
-      //     url: urlData.publicUrl,
-      //   },
-      // ];
-      onSuccess(data); // Notify Ant Design upload success
+        onSuccess(data
+
+        );
+      }
+      // Notify Ant Design upload success
       // await saveAvatar({ profile_url: urlData.publicUrl });
     } catch (err: any) {
       message.error(`Upload failed: ${err.message}`);
       onError(err); // Notify Ant Design upload failure
     }
   };
+};
+
+const getImageUrl = async (fileName: string) => {
+  const { data } = supabase.storage
+    .from("portfolio-cms")
+    .getPublicUrl(`${auth.user?.id}/${fileName}`);
+  return data.publicUrl;
 };
 
 const showConfirm = (item: WorkExperience) => {
@@ -387,6 +401,64 @@ const handlePreview = async (file: any) => {
     file.name || file.url.substring(file.url.lastIndexOf("/") + 1);
 };
 
+const deleteImage = async (bucketName: string, filePath: string) => {
+  const { data, error } = await supabase.storage
+    .from(bucketName)
+    .remove([filePath]);
+
+  if (error) {
+    throw new Error(`Error deleting image: ${error.message}`);
+  }
+  return data;
+};
+
+const handleRemove = (id: number, indexRow: number) => {
+  return async (file: any) => {
+    return new Promise((resolve) => {
+      modal.confirm({
+        title: "Are you sure you want to delete this image?",
+        content: `Image: ${file.name}`,
+        async onOk() {
+          try {
+            // Extract file path (e.g., from file.path or parse file.url)
+            const fileName = file.name.replace(/\s+/g, "_");
+            const filePath = `${auth.user?.id}/${fileName}`;
+            if (!filePath) {
+              message.error("Invalid file path");
+              resolve(false);
+              return;
+            }
+            console.log("fileName", fileName);
+            // Wait for Supabase deletion
+            await deleteImage("portfolio-cms", filePath);
+            const getByUserId = await getWorkExperiencesById(id);
+            console.log("getByUserId", getByUserId);
+            const oldImages = getByUserId.images.filter(
+              (i) => i.fileName !== fileName
+            );
+            updateWorkExperiences({ ...getByUserId, images: oldImages })
+              .then()
+              .catch((e) => errors(e))
+              .finally(() => {
+                isLoading.value = false;
+              });
+            deleted();
+            resolve(true); // Allow removal from preview
+          } catch (err: any) {
+            message.error(`Failed to remove image: ${err.message}`);
+            resolve(false); // Prevent removal from preview
+          }
+        },
+        onCancel() {
+          console.log("Cancel");
+          resolve(false); // Return false if user cancels
+        },
+        class: "test",
+      });
+    });
+  };
+};
+
 const success = () => {
   message.success("Created successfully", 5);
 };
@@ -406,14 +478,29 @@ const errors = (msg: string) => {
 onMounted(async () => {
   if (auth.user) {
     const workExperiences = await getWorkExperiences(auth.user.id);
-    workExperiences.map((i) => {
+    workExperiences.forEach(async (i) => {
+      let imagesList: any[] = [];
+      if (i.images && i.images.length > 0) {
+        i.images.forEach(async (img) => {
+          const tempImg = await getImageUrl(img.fileName);
+          console.log("tempImg", tempImg);
+          imagesList.push({
+            uid: img.id,
+            name: img.fileName,
+            status: "done",
+            url: tempImg,
+            thumbUrl: tempImg,
+          });
+        });
+      }
+      // const publicUrl = await getImageUrl(i.);
       const pre = {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
         dateRange: [dayjs(i.start_date), dayjs(i.end_date)],
         link: i.link,
         description: i.description,
-        fileList: [],
+        fileList: imagesList,
       } as WorkExperience;
       dynamicValidateForm.experiences.push(pre);
     });

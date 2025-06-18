@@ -15,7 +15,7 @@
         :model="formState"
         name="basic"
         :label-col="{ span: 4 }"
-        :wrapper-col="{ offset: 4, span: 16 }"
+        :wrapper-col="{ offset: 0, span: 0 }"
         autocomplete="off"
         @finish="onFinish"
         @finishFailed="onFinishFailed"
@@ -46,13 +46,13 @@
           />
         </a-form-item>
 
-        <a-form-item name="remember" :wrapper-col="{ offset: 4, span: 12 }">
+        <a-form-item name="remember" :wrapper-col="{ offset: 0, span: 12 }">
           <a-checkbox v-model:checked="formState.remember"
             >Remember me</a-checkbox
           >
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ offset: 4, span: 16 }">
+        <a-form-item :wrapper-col="{ offset: 0, span: 16 }">
           <a-button type="primary" html-type="submit" :loading="formLoading">Submit</a-button>
         </a-form-item>
       </a-form>

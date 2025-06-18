@@ -6,7 +6,7 @@ export interface IWorkExperiences {
   end_date: string;
   link: string;
   description: string;
-  images: object;
+  images: Array<any>;
   user_id: string;
   created_at?: string;
 }
@@ -42,6 +42,18 @@ export const getWorkExperiences = async (
     .select("*")
     .eq("user_id", user_id) // Replace with the actual user ID
     .select();
+  if (error) throw error.message;
+  return data;
+};
+
+export const getWorkExperiencesById = async (
+  id: number
+): Promise<IWorkExperiences> => {
+  const { data, error } = await supabase
+    .from("work_cms")
+    .select("*")
+    .eq("id", id) // Replace with the actual user ID
+    .maybeSingle();
   if (error) throw error.message;
   return data;
 };
