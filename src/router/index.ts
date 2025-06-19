@@ -225,7 +225,7 @@ const routes: RouteRecordRaw[] = [
 const router: Router = createRouter({
   // Use HTML5 History API (Vue 3 syntax)
   // history: createWebHistory(import.meta.env.BASE_URL),
-  history: createWebHistory("/admin/"),
+  history: createWebHistory(),
   routes,
   // Scroll behavior (Vue 3 enhanced)
   scrollBehavior(to, _, savedPosition) {
