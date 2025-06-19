@@ -15,7 +15,7 @@
           style="height: 100%; border-right: 0; text-align: start"
         >
           <a-typography
-            style="text-align: center; padding: 15px"
+            style="text-align: center; padding: 15px; cursor: pointer;"
             @click="$router.push('/admin')"
             >CMS</a-typography
           >

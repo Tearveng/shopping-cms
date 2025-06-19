@@ -26,7 +26,7 @@
           <a-input
             v-model:value="formState.subdomain"
             placeholder="Subdomain"
-            addon-after="portfolio.byveng.store"
+            addon-after="byveng.store"
           />
         </a-form-item>
         <div style="display: flex; flex-wrap: wrap;">

@@ -40,7 +40,7 @@
    <iframe
     :src="`https://${subdomain}.byveng.store`"
     width="100%"
-    height="600"
+    height="100vh"
     style="border: none"
   ></iframe>
 </template>
