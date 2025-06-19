@@ -6,8 +6,9 @@ import Login from "../pages/auth/Login.vue";
 import Contact from "../pages/Contact.vue";
 import Dashboard from "../pages/Dashboard.vue";
 import Home from "../pages/Home.vue";
-import HomePageVue from "../pages/publish/HomePage.vue";
+import NotFound from "../pages/NotFound.vue";
 import Profile from "../pages/Profile.vue";
+import HomePageVue from "../pages/publish/HomePage.vue";
 import Setting from "../pages/Setting.vue";
 import Work from "../pages/Work.vue";
 import { useAuthStore } from "../stores/auth";
@@ -25,6 +26,7 @@ declare module "vue-router" {
 
 // Vue 3 Router Configuration
 const routes: RouteRecordRaw[] = [
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
   {
     path: "",
     name: "HomePage",
@@ -345,3 +347,4 @@ export default router;
 // Export additional utilities
 export { routes };
 export type { RouteRecordRaw };
+

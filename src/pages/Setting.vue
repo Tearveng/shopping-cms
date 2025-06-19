@@ -35,9 +35,9 @@
           >
           <a
             style="text-decoration: underline;"
-            :href="`https://${formState.subdomain}.portfolio.byveng.store`"
+            :href="`https://${formState.subdomain}.byveng.store`"
             target="_blank"
-            >{{ `https://${formState.subdomain}.portfolio.byveng.store` }}</a
+            >{{ `https://${formState.subdomain}.byveng.store` }}</a
           >
         </div>
       </a-space>
@@ -56,9 +56,9 @@ import { message } from "ant-design-vue";
 import { onMounted, reactive, ref } from "vue";
 import router from "../router";
 import {
-getSubdomainById,
-insertSubdomain,
-updateSubdomainById,
+  getSubdomainById,
+  insertSubdomain,
+  updateSubdomainById,
 } from "../services/SubdomainService";
 import { useAuthStore } from "../stores/auth";
 
