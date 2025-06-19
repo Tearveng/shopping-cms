@@ -31,6 +31,18 @@ export const getSubdomainById = async (
   return data;
 };
 
+export const getSubdomainBySubdomain = async (
+  subdomain: string
+): Promise<ISubdomain> => {
+  const { data, error } = await supabase
+    .from("subdomain_cms")
+    .select("*")
+    .eq("subdomain", subdomain) // Replace with the actual user ID
+    .maybeSingle();
+  if (error) throw error.message;
+  return data;
+};
+
 export const updateSubdomainById = async (
   user_id: string,
   subdomain: Partial<ISubdomain>

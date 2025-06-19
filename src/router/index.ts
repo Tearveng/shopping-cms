@@ -6,7 +6,7 @@ import Login from "../pages/auth/Login.vue";
 import Contact from "../pages/Contact.vue";
 import Dashboard from "../pages/Dashboard.vue";
 import Home from "../pages/Home.vue";
-import HomePageVue from "../pages/HomePage.vue";
+import HomePageVue from "../pages/publish/HomePage.vue";
 import Profile from "../pages/Profile.vue";
 import Setting from "../pages/Setting.vue";
 import Work from "../pages/Work.vue";

@@ -45,13 +45,16 @@ import { ArrowRightOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
 import { getContacts } from "../../services/ContactService";
 import type { Contact } from "../Contact.vue";
+const props = defineProps({
+  user_id: String,
+})
 
 const dynamicValidateForm = reactive<{ contacts: Contact[] }>({
   contacts: [],
 });
 
 onMounted(async () => {
-  const contacts = await getContacts("07fea073-f8ae-4aeb-897e-1a53cf81b54e");
+  const contacts = await getContacts(`${props.user_id}`);
   contacts.map((i) => {
     const pre = {
       id: i.id,
