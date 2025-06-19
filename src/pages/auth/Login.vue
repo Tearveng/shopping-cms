@@ -82,7 +82,7 @@ const formState = reactive<FormState>({
 
 const success = () => {
   message.success("Login successfully", 5);
-  router.push('/dashboard')
+  router.push('admin/dashboard')
 };
 
 const errors = (msg: string) => {
@@ -111,7 +111,7 @@ onMounted(async () => {
   }
 
   if (authStore.user) {
-    router.replace('/admin/dashboard') // already logged in, redirect
+    router.replace('admin/dashboard') // already logged in, redirect
   }
 })
 </script>
