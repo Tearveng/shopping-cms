@@ -257,7 +257,7 @@ router.beforeEach(async (to, _, next) => {
   if (to.meta.requiresAuth && !authStore.user) {
     next("/login");
   } else if (to.path === "/login" && authStore.user) {
-    return next("/dashboard"); // already logged in, skip login
+    return next("admin/dashboard"); // already logged in, skip login
   }
 
   next();
