@@ -38,7 +38,7 @@
     </a-row>
   </div> -->
    <iframe
-    :src="`https://${subdomain.value}.byveng.store`"
+    :src="`https://${subdomain}.byveng.store`"
     width="100%"
     height="600"
     style="border: none"
@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-
 const subdomain = computed(() => {
   const hostname = window.location.hostname; // e.g., "sub.example.com"
   const parts = hostname.split(".");
