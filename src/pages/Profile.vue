@@ -82,16 +82,18 @@
 <script setup lang="ts">
 import { CopyOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, toRaw } from "vue";
 import { supabase } from "../lib/supabase";
 import {
 getProfileById,
+insertProfileById,
 updateProfileById,
 type IProfile,
 } from "../services/ProfileService";
 import { useAuthStore } from "../stores/auth";
 
-interface Profile {
+export interface Profile {
+  id?: number;
   avatar: string | null;
   username: string;
   bio: string;
@@ -179,7 +181,8 @@ const customUpload = async ({ file, onSuccess, onError }: any) => {
 
     formState.avatar = urlData.publicUrl;
     onSuccess(data); // Notify Ant Design upload success
-    await saveAvatar({ profile_url: urlData.publicUrl });
+    const { avatar, ...rest } = formState;
+    await saveAvatar({ ...rest, profile_url: urlData.publicUrl, });
   } catch (err: any) {
     message.error(`Upload failed: ${err.message}`);
     onError(err); // Notify Ant Design upload failure
@@ -187,8 +190,9 @@ const customUpload = async ({ file, onSuccess, onError }: any) => {
 };
 
 // Handle form submission
-const onFinish = async (values: IProfile) => {
-  await saveProfile(values);
+const onFinish = async () => {
+  const { avatar, ...rest } = toRaw(formState);
+  await saveProfile(rest);
 };
 
 // Reset form
@@ -197,22 +201,53 @@ const resetForm = () => {
 };
 
 const saveAvatar = async (profile: Partial<IProfile>) => {
-  updateProfileById(`${auth.user?.id}`, profile)
-    .then(() => message.success("Image uploaded successfully!"))
-    .catch((e) => errors(e))
-    .finally(() => {
-      isLoadingAvatar.value = false;
-    });
+  if (profile.id) {
+    console.log("profile", profile)
+    updateProfileById(`${auth.user?.id}`, profile)
+      .then(() => message.success("Image updated successfully!"))
+      .catch((e) => errors(e))
+      .finally(() => {
+        isLoadingAvatar.value = false;
+      });
+  } else {
+    insertProfileById({ ...profile, user_id: `${auth.user?.id}` })
+      .then((res) => {
+        console.log("res", res);
+        formState.avatar = res.profile_url;
+        Object.assign(formState, res);
+        message.success("Image created successfully!");
+      })
+      .catch((e) => errors(e))
+      .finally(() => {
+        isLoadingAvatar.value = false;
+      });
+  }
 };
 
 const saveProfile = async (profile: Partial<IProfile>) => {
+  console.log("profile", profile);
   isLoading.value = true;
-  updateProfileById(`${auth.user?.id}`, profile)
-    .then(() => update())
-    .catch((e) => errors(e))
-    .finally(() => {
-      isLoading.value = false;
-    });
+  if (profile.id) {
+    updateProfileById(`${auth.user?.id}`, profile)
+      .then(() => update())
+      .catch((e) => errors(e))
+      .finally(() => {
+        isLoading.value = false;
+      });
+  } else {
+    insertProfileById({
+      ...profile,
+      user_id: `${auth.user?.id}`,
+    })
+      .then((res) => {
+        Object.assign(formState, res);
+        update();
+      })
+      .catch((e) => errors(e))
+      .finally(() => {
+        isLoading.value = false;
+      });
+  }
 };
 
 onMounted(async () => {

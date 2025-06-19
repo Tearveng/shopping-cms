@@ -1,10 +1,10 @@
 import { supabase } from "../lib/supabase";
 
 interface IAbout {
-    id: number | null;
-    user_id: string;
-    about: string
-    created_at?: string;
+  id?: number;
+  user_id: string;
+  about: string;
+  created_at?: string;
 }
 
 export const insertAboutMe = async (props: IAbout): Promise<IAbout[]> => {
@@ -27,9 +27,7 @@ export const getAboutMeById = async (user_id: string): Promise<IAbout> => {
   return data;
 };
 
-export const updateAboutById = async (
-  prop: IAbout
-): Promise<IAbout> => {
+export const updateAboutById = async (prop: IAbout): Promise<IAbout> => {
   const { data, error } = await supabase
     .from("about_cms")
     .update(prop)

@@ -20,21 +20,21 @@
 
 
 
-          <a-menu-item key="dashboard" @click="$router.push('/dashboard')">
+          <a-menu-item key="dashboard" @click="$router.push('/admin/dashboard')">
             <template #icon>
               <DashboardOutlined />
             </template>
             Dashboard
           </a-menu-item>
 
-          <a-menu-item key="profile" @click="$router.push('/profile')">
+          <a-menu-item key="profile" @click="$router.push('/admin/profile')">
             <template #icon>
               <UserOutlined />
             </template>
             Profile
           </a-menu-item>
 
-          <a-menu-item key="work" @click="$router.push('/work')">
+          <a-menu-item key="work" @click="$router.push('/admin/work')">
             <template #icon>
               <LaptopOutlined />
             </template>
@@ -67,14 +67,14 @@
             </a-menu-item>
           </a-sub-menu> -->
 
-          <a-menu-item key="about" @click="$router.push('/about')">
+          <a-menu-item key="about" @click="$router.push('/admin/about')">
             <template #icon>
               <AliwangwangOutlined />
             </template>
             About
           </a-menu-item>
 
-          <a-menu-item key="contact" @click="$router.push('/contact')">
+          <a-menu-item key="contact" @click="$router.push('/admin/contact')">
             <template #icon>
               <LaptopOutlined />
             </template>
@@ -88,7 +88,7 @@
             Reports
           </a-menu-item> -->
 
-          <a-menu-item key="settings" @click="$router.push('/settings')">
+          <a-menu-item key="settings" @click="$router.push('/admin/settings')">
             <template #icon>
               <SettingOutlined />
             </template>
@@ -236,19 +236,19 @@ const openKeys = ref(["users", "products"]);
 // Active menu based on current route
 const activeMenu = computed(() => {
   const path = route.path;
-  if (path === "/dashboard") return "dashboard";
-  if (path === "/profile") return "profile";
-  if (path === "/work") return "work";
-  if (path === "/about") return "about";
-  if (path === "/contact") return "contact";
-  if (path === "/settings") return "settings";
-  if (path === "/users") return "user-list";
-  if (path === "/users/roles") return "user-roles";
-  if (path === "/products") return "product-list";
-  if (path === "/products/categories") return "categories";
-  if (path === "/reports") return "reports";
-  if (path === "/settings") return "settings";
-  return "home";
+  if (path === "/admin/dashboard") return "dashboard";
+  if (path === "/admin/profile") return "profile";
+  if (path === "/admin/work") return "work";
+  if (path === "/admin/about") return "about";
+  if (path === "/admin/contact") return "contact";
+  if (path === "/admin/settings") return "settings";
+  if (path === "/admin/users") return "user-list";
+  if (path === "/admin/users/roles") return "user-roles";
+  if (path === "/admin/products") return "product-list";
+  if (path === "/admin/products/categories") return "categories";
+  if (path === "/admin/reports") return "reports";
+  if (path === "/admin/settings") return "settings";
+  return "admin/home";
 });
 
 // Breadcrumbs based on current route
@@ -258,17 +258,17 @@ const breadcrumbs = computed(() => {
     { name: "Home", path: "/" },
   ];
 
-  if (path === "/about") {
-    crumbs.push({ name: "About" });
-  } else if (path === "/dashboard") {
+  if (path === "/admin/about") {
+    crumbs.push({ name: "/adminAbout" });
+  } else if (path === "/admin/dashboard") {
     crumbs.push({ name: "Dashboard" });
-  } else if (path === "/profile") {
+  } else if (path === "/admin/profile") {
     crumbs.push({ name: "Profile" });
-  } else if (path === "/work") {
+  } else if (path === "/admin/work") {
     crumbs.push({ name: "Work" });
-  } else if (path === "/contact") {
+  } else if (path === "/admin/contact") {
     crumbs.push({ name: "Contact" });
-  }else if (path === "/settings") {
+  }else if (path === "/admin/settings") {
     crumbs.push({ name: "Settings" });
   }
 

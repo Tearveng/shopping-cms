@@ -37,8 +37,8 @@ updateAboutById,
 } from "../services/AboutService";
 import { useAuthStore } from "../stores/auth";
 
-interface AboutMe {
-  id: number | null;
+export interface AboutMe {
+  id?: number;
   about: string;
 }
 
@@ -56,7 +56,6 @@ const auth = useAuthStore();
 const isLoading = ref(false);
 const formRef = ref();
 const formState = reactive<AboutMe>({
-  id: null,
   about: "",
 });
 
@@ -96,11 +95,13 @@ const onFinish = () => {
             });
         } else {
           insertAboutMe({
-            id: null,
             about: formState.about,
             user_id: `${auth.user?.id}`,
           })
-            .then(() => success())
+            .then((res) => {
+              Object.assign(formState, res);
+              success();
+            })
             .catch((e) => errors(e))
             .finally(() => {
               isLoading.value = false;

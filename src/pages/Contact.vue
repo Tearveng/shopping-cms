@@ -106,8 +106,8 @@ type IContact,
 } from "../services/ContactService";
 import { useAuthStore } from "../stores/auth";
 
-interface Contact {
-  id: number | null;
+export interface Contact {
+  id?: number;
   key: number;
   title: string;
   alias: string;
@@ -195,7 +195,7 @@ const submitForm = () => {
         const plainDataMap = plainData.map(
           (i) =>
             ({
-              id: i.id ?? null,
+              id: i.id ?? undefined,
               title: i.title,
               alias: i.alias,
               url: i.url,
@@ -223,6 +223,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach((u) => {
+              console.log("u", u)
               updateContacts(u)
                 .then()
                 .catch((e) => errors(e))
@@ -262,7 +263,6 @@ const removeDomain = (item: Contact) => {
 };
 const addDomain = () => {
   dynamicValidateForm.contacts.push({
-    id: null,
     key: Date.now(),
     title: "",
     alias: "",

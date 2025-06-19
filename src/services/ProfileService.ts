@@ -18,6 +18,18 @@ export const getProfileById = async (user_id: string): Promise<IProfile> => {
   return data;
 };
 
+export const insertProfileById = async (
+  props: Partial<IProfile>
+): Promise<IProfile> => {
+  const { data, error } = await supabase
+    .from("profile_cms")
+    .insert([props])
+    .select()
+    .single();
+  if (error) throw error.message;
+  return data;
+};
+
 export const updateProfileById = async (
   user_id: string,
   profile: Partial<IProfile>

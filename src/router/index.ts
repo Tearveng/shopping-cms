@@ -6,6 +6,7 @@ import Login from "../pages/auth/Login.vue";
 import Contact from "../pages/Contact.vue";
 import Dashboard from "../pages/Dashboard.vue";
 import Home from "../pages/Home.vue";
+import HomePageVue from "../pages/HomePage.vue";
 import Profile from "../pages/Profile.vue";
 import Setting from "../pages/Setting.vue";
 import Work from "../pages/Work.vue";
@@ -25,6 +26,16 @@ declare module "vue-router" {
 // Vue 3 Router Configuration
 const routes: RouteRecordRaw[] = [
   {
+    path: "",
+    name: "HomePage",
+    component: HomePageVue,
+    meta: {
+      title: "HomePage",
+      icon: "home",
+      breadcrumb: ["HomePage"],
+    },
+  },
+  {
     path: "/login",
     name: "Login",
     component: Login,
@@ -35,7 +46,7 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/",
+    path: "/admin",
     component: MainLayout,
     children: [
       {
@@ -245,8 +256,8 @@ router.beforeEach(async (to, _, next) => {
 
   if (to.meta.requiresAuth && !authStore.user) {
     next("/login");
-  } else if (to.path === '/login' && authStore.user) {
-    return next('/dashboard') // already logged in, skip login
+  } else if (to.path === "/login" && authStore.user) {
+    return next("/dashboard"); // already logged in, skip login
   }
 
   next();
@@ -334,4 +345,3 @@ export default router;
 // Export additional utilities
 export { routes };
 export type { RouteRecordRaw };
-

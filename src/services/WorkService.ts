@@ -5,6 +5,7 @@ export interface IWorkExperiences {
   start_date: string;
   end_date: string;
   link: string;
+  alias: string;
   description: string;
   images: Array<any>;
   user_id: string;
@@ -62,4 +63,11 @@ export const deleteWorkExperience = async (id: number): Promise<boolean> => {
   const { error } = await supabase.from("work_cms").delete().eq("id", id);
   if (error) throw error.message;
   return true;
+};
+
+export const getImageUrl = async (fileName: string, user_id: string) => {
+  const { data } = supabase.storage
+    .from("portfolio-cms")
+    .getPublicUrl(`${user_id}/${fileName}`);
+  return data.publicUrl;
 };

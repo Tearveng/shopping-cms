@@ -31,6 +31,20 @@
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
+        :name="['experiences', index, 'alias']"
+        :rules="[
+          { required: true, message: 'Alias is required', trigger: 'change' },
+        ]"
+      >
+        <a-input
+          name="experience.alias"
+          v-model:value="experience.alias"
+          placeholder="Alias"
+          style="width: 100%; margin-right: 8px"
+        />
+      </a-form-item>
+      <a-form-item
+        style="margin-bottom: -16px"
         :name="['experiences', index, 'link']"
         :rules="[
           { required: true, message: 'Link is required', trigger: 'change' },
@@ -100,7 +114,6 @@
       @click="submitForm"
       >Submit</a-button
     >
-    <a-button @click="getImageUrl"> get image </a-button>
   </a-form>
   <contextHolder />
 </template>
@@ -117,6 +130,7 @@ import { h, onMounted, reactive, ref, toRaw } from "vue";
 import { supabase } from "../lib/supabase";
 import {
 deleteWorkExperience,
+getImageUrl,
 getWorkExperiences,
 getWorkExperiencesById,
 insertWorkExperiences,
@@ -125,11 +139,12 @@ type IWorkExperiences,
 } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
-interface WorkExperience {
+export interface WorkExperience {
   id: number | null;
   key: number;
   dateRange: any;
   link: string;
+  alias: string;
   description: string;
   fileList: any[];
 }
@@ -238,13 +253,11 @@ const customUpload = ({ indexRow }: any) => {
           .finally(() => {
             isLoading.value = false;
           });
-        const { data: publicUrl } = supabase.storage
-          .from("portfolio-cms")
-          .getPublicUrl(filePath);
+        // const { data: publicUrl } = supabase.storage
+        //   .from("portfolio-cms")
+        //   .getPublicUrl(filePath);
 
-        onSuccess(data
-
-        );
+        onSuccess(data);
       }
       // Notify Ant Design upload success
       // await saveAvatar({ profile_url: urlData.publicUrl });
@@ -253,13 +266,6 @@ const customUpload = ({ indexRow }: any) => {
       onError(err); // Notify Ant Design upload failure
     }
   };
-};
-
-const getImageUrl = async (fileName: string) => {
-  const { data } = supabase.storage
-    .from("portfolio-cms")
-    .getPublicUrl(`${auth.user?.id}/${fileName}`);
-  return data.publicUrl;
 };
 
 const showConfirm = (item: WorkExperience) => {
@@ -312,6 +318,7 @@ const submitForm = () => {
               start_date: i.dateRange[0],
               end_date: i.dateRange[1],
               link: i.link,
+              alias: i.alias,
               description: i.description,
               images: {},
               user_id: auth.user?.id,
@@ -385,6 +392,7 @@ const addExperience = () => {
     id: null,
     dateRange: "",
     link: "",
+    alias: "",
     description: "",
     key: Date.now(),
     fileList: [],
@@ -412,7 +420,7 @@ const deleteImage = async (bucketName: string, filePath: string) => {
   return data;
 };
 
-const handleRemove = (id: number, indexRow: number) => {
+const handleRemove = (id: number, _: number) => {
   return async (file: any) => {
     return new Promise((resolve) => {
       modal.confirm({
@@ -478,11 +486,11 @@ const errors = (msg: string) => {
 onMounted(async () => {
   if (auth.user) {
     const workExperiences = await getWorkExperiences(auth.user.id);
-    workExperiences.forEach(async (i) => {
-      let imagesList: any[] = [];
+    for (const i of workExperiences) {
+      const imagesList = [];
       if (i.images && i.images.length > 0) {
-        i.images.forEach(async (img) => {
-          const tempImg = await getImageUrl(img.fileName);
+        for (const img of i.images) {
+          const tempImg = await getImageUrl(img.fileName, auth.user.id);
           console.log("tempImg", tempImg);
           imagesList.push({
             uid: img.id,
@@ -491,19 +499,19 @@ onMounted(async () => {
             url: tempImg,
             thumbUrl: tempImg,
           });
-        });
+        }
       }
-      // const publicUrl = await getImageUrl(i.);
       const pre = {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
         dateRange: [dayjs(i.start_date), dayjs(i.end_date)],
         link: i.link,
+        alias: i.alias,
         description: i.description,
         fileList: imagesList,
       } as WorkExperience;
       dynamicValidateForm.experiences.push(pre);
-    });
+    }
   }
 });
 </script>
