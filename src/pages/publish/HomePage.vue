@@ -65,7 +65,7 @@ onMounted(async () => {
     user_id.value = subdomainn.user_id;
     found.value = true;
     isLoading.value = false;
-  } else {
+  } else if((subdomainn as any).length < 1) {
     isLoading.value = false;
   }
 });
