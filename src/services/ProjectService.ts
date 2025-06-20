@@ -41,6 +41,7 @@ export const getProjectExperiences = async (
   const { data, error } = await supabase
     .from("project_cms")
     .select("*")
+    .order("created_at", { ascending: true })
     .eq("user_id", user_id) // Replace with the actual user ID
     .select();
   if (error) throw error.message;
