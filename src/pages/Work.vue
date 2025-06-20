@@ -347,7 +347,6 @@ const submitForm = () => {
                 .catch((e) => errors(e))
                 .finally();
             });
-            update();
           } catch (error) {
             console.log("error", error);
           }
