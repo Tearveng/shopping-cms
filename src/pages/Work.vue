@@ -341,7 +341,7 @@ const submitForm = () => {
 
         if (updatePlainData.length > 0) {
           try {
-            updatePlainData.forEach((u) => {
+            updatePlainData.forEach(({ images, ...u }) => {
               updateWorkExperiences(u)
                 .then()
                 .catch((e) => errors(e))
@@ -440,7 +440,7 @@ const handleRemove = (id: number, _: number) => {
             await deleteImage("portfolio-cms", filePath);
             const getByUserId = await getWorkExperiencesById(id);
             console.log("getByUserId", getByUserId);
-            const oldImages = getByUserId.images.filter(
+            const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
             updateWorkExperiences({ ...getByUserId, images: oldImages })

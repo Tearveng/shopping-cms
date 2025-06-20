@@ -7,7 +7,7 @@ export interface IWorkExperiences {
   link: string;
   alias: string;
   description: string;
-  images: Array<any>;
+  images?: Array<any>;
   user_id: string;
   created_at?: string;
 }
