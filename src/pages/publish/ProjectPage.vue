@@ -22,7 +22,12 @@
               "
             ></div>
             <a-typography-text style="color: dimgrey">
-              {{ experience.dateRange[1].split("-")[0] }}</a-typography-text
+              {{
+                experience.dateRange[1].split("-")[0] ===
+                new Date(Date.now()).getFullYear()
+                  ? "Now"
+                  : experience.dateRange[1].split("-")[0]
+              }}</a-typography-text
             >
           </a-flex>
           <a-flex vertical>
