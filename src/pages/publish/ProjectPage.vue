@@ -45,7 +45,7 @@
                 <a-typography-text>{{ experience.alias }}</a-typography-text></a
               >
             </a-badge>
-            <a-typography-text>{{ experience.description }} </a-typography-text>
+            <a-typography-text style="color: dimgrey">{{ experience.description }} </a-typography-text>
           </a-flex>
         </a-flex>
         <a-flex class="image-responsive" style="overflow-x: auto" gap="12">
