@@ -23,7 +23,7 @@
             ></div>
             <a-typography-text style="color: dimgrey">
               {{
-                2025 ===
+                Number(experience.dateRange[1].split("-")[0]) ===
                 new Date(Date.now()).getFullYear()
                   ? "Now"
                   : experience.dateRange[1].split("-")[0]
