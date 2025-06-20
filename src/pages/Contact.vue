@@ -86,6 +86,7 @@
       type="primary"
       style="margin-left: 10px"
       html-type="submit"
+      :loading="isLoading"
       @click="submitForm"
       >Submit
     </a-button>
@@ -94,15 +95,19 @@
 </template>
 
 <script setup lang="ts">
-import { ExclamationCircleOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import { message, Modal, type FormInstance } from "ant-design-vue";
-import { h, onMounted, reactive, ref, toRaw } from "vue";
 import {
-deleteContact,
-getContacts,
-insertContacts,
-updateContacts,
-type IContact,
+  ExclamationCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons-vue";
+import { message, Modal, type FormInstance } from "ant-design-vue";
+import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
+import {
+  deleteContact,
+  getContacts,
+  insertContacts,
+  updateContacts,
+  type IContact,
 } from "../services/ContactService";
 import { useAuthStore } from "../stores/auth";
 
@@ -114,6 +119,7 @@ export interface Contact {
   url: string;
 }
 
+const refreshKey = ref(0);
 const auth = useAuthStore();
 const isLoading = ref();
 const formRef = ref<FormInstance>();
@@ -169,9 +175,9 @@ const dynamicValidateForm = reactive<{ contacts: Contact[] }>({
   contacts: [],
 });
 
-const success = () => {
-  message.success("Created successfully", 5);
-};
+// const success = () => {
+//   message.success("Created successfully", 5);
+// };
 
 const update = () => {
   message.success("Updated successfully", 5);
@@ -185,11 +191,11 @@ const errors = (msg: string) => {
   message.error(msg, 5);
 };
 
-const submitForm = () => {
+const submitForm = async () => {
   if (formRef.value) {
     formRef.value
       .validate()
-      .then(() => {
+      .then(async () => {
         isLoading.value = true;
         const plainData = toRaw(dynamicValidateForm.contacts);
         const plainDataMap = plainData.map(
@@ -210,11 +216,9 @@ const submitForm = () => {
             insertContacts(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
-              .then(() => success())
+              .then()
               .catch((e) => errors(e))
-              .finally(() => {
-                isLoading.value = false;
-              });
+              .finally();
           } catch (error) {
             console.log("error", error);
           }
@@ -223,21 +227,21 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach((u) => {
-              console.log("u", u)
               updateContacts(u)
                 .then()
                 .catch((e) => errors(e))
-                .finally(() => {
-                  isLoading.value = false;
-                });
+                .finally();
             });
-            update();
           } catch (error) {
             console.log("error", error);
           }
         }
 
-        console.log("values", plainData);
+        setTimeout(() => {
+          update();
+          refreshKey.value += 1;
+          isLoading.value = false;
+        }, 3000);
       })
       .catch((error) => {
         console.log("error", error);
@@ -270,7 +274,7 @@ const addDomain = () => {
   });
 };
 
-onMounted(async () => {
+const fetchAllData = async () => {
   if (auth.user) {
     const contacts = await getContacts(auth.user.id);
     contacts.map((i) => {
@@ -284,6 +288,15 @@ onMounted(async () => {
       dynamicValidateForm.contacts.push(pre);
     });
   }
+};
+
+watch(refreshKey, () => {
+  dynamicValidateForm.contacts = [];
+  fetchAllData();
+});
+
+onMounted(async () => {
+  await fetchAllData();
 });
 </script>
 <style scoped>

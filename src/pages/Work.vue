@@ -120,22 +120,22 @@
 
 <script setup lang="ts">
 import {
-ExclamationCircleOutlined,
-MinusCircleOutlined,
-PlusOutlined,
+  ExclamationCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import dayjs from "dayjs";
-import { h, onMounted, reactive, ref, toRaw } from "vue";
+import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-deleteWorkExperience,
-getImageUrl,
-getWorkExperiences,
-getWorkExperiencesById,
-insertWorkExperiences,
-updateWorkExperiences,
-type IWorkExperiences,
+  deleteWorkExperience,
+  getImageUrl,
+  getWorkExperiences,
+  getWorkExperiencesById,
+  insertWorkExperiences,
+  updateWorkExperiences,
+  type IWorkExperiences,
 } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
@@ -150,7 +150,7 @@ export interface WorkExperience {
 }
 
 const auth = useAuthStore();
-
+const refreshKey = ref(0);
 const formRef = ref<FormInstance>();
 // const fileList = ref<UploadProps['fileList']>([])
 const isLoading = ref(false);
@@ -215,7 +215,6 @@ const customUpload = ({ indexRow }: any) => {
           upsert: false, // Prevent overwriting
           contentType: file.type, // Set MIME type (e.g., image/jpeg)
         });
-      console.log("data", data);
 
       if (uploadError) {
         throw uploadError;
@@ -229,7 +228,7 @@ const customUpload = ({ indexRow }: any) => {
           uploadedAt: new Date().toISOString(),
         },
       ];
-      console.log("metadata", metadata);
+
       const workExperience = dynamicValidateForm.experiences[indexRow];
       if (workExperience.id) {
         const getByUserId = await getWorkExperiencesById(workExperience.id);
@@ -257,7 +256,8 @@ const customUpload = ({ indexRow }: any) => {
         //   .from("portfolio-cms")
         //   .getPublicUrl(filePath);
 
-        onSuccess(data);
+        onSuccess();
+        return false
       }
       // Notify Ant Design upload success
       // await saveAvatar({ profile_url: urlData.publicUrl });
@@ -333,9 +333,7 @@ const submitForm = () => {
             )
               .then(() => success())
               .catch((e) => errors(e))
-              .finally(() => {
-                isLoading.value = false;
-              });
+              .finally();
           } catch (error) {
             console.log("error", error);
           }
@@ -347,9 +345,7 @@ const submitForm = () => {
               updateWorkExperiences(u)
                 .then()
                 .catch((e) => errors(e))
-                .finally(() => {
-                  isLoading.value = false;
-                });
+                .finally();
             });
             update();
           } catch (error) {
@@ -357,7 +353,11 @@ const submitForm = () => {
           }
         }
 
-        console.log("values", plainData);
+        setTimeout(() => {
+          update();
+          refreshKey.value += 1;
+          isLoading.value = false;
+        }, 3000);
       })
       .catch((error) => {
         console.log("error", error);
@@ -483,7 +483,7 @@ const errors = (msg: string) => {
   message.error(msg, 5);
 };
 
-onMounted(async () => {
+const fetchAllData = async () => {
   if (auth.user) {
     const workExperiences = await getWorkExperiences(auth.user.id);
     for (const i of workExperiences) {
@@ -513,6 +513,16 @@ onMounted(async () => {
       dynamicValidateForm.experiences.push(pre);
     }
   }
+}
+
+watch(refreshKey, () => {
+  dynamicValidateForm.experiences = [];
+  fetchAllData();
+});
+
+
+onMounted(async () => {
+  await fetchAllData()
 });
 </script>
 <style scoped>
