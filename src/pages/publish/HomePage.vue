@@ -5,6 +5,7 @@
         <ProfilePage :user_id="user_id" />
         <AboutPage :user_id="user_id" />
         <WorkExperiencePage :user_id="user_id" />
+        <ProjectPage :user_id="user_id" />
         <ContactPage :user_id="user_id" />
       </a-flex>
       <div v-else style="height: 80vh; display: flex; align-items: center; justify-content: center;">
@@ -32,6 +33,7 @@ import { getSubdomainBySubdomain } from "../../services/SubdomainService";
 import AboutPage from "./AboutPage.vue";
 import ContactPage from "./ContactPage.vue";
 import ProfilePage from "./ProfilePage.vue";
+import ProjectPage from "./ProjectPage.vue";
 import WorkExperiencePage from "./WorkExperiencePage.vue";
 
 const user_id = ref<string>("");

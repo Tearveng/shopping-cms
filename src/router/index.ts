@@ -8,6 +8,7 @@ import Dashboard from "../pages/Dashboard.vue";
 import Home from "../pages/Home.vue";
 import NotFound from "../pages/NotFound.vue";
 import Profile from "../pages/Profile.vue";
+import Project from "../pages/Project.vue";
 import HomePageVue from "../pages/publish/HomePage.vue";
 import Setting from "../pages/Setting.vue";
 import Work from "../pages/Work.vue";
@@ -92,6 +93,17 @@ const routes: RouteRecordRaw[] = [
           title: "Work",
           icon: "work",
           breadcrumb: ["Work"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "project",
+        name: "Project",
+        component: Project,
+        meta: {
+          title: "Project",
+          icon: "project",
+          breadcrumb: ["Project"],
           requiresAuth: true,
         },
       },
@@ -347,4 +359,3 @@ export default router;
 // Export additional utilities
 export { routes };
 export type { RouteRecordRaw };
-

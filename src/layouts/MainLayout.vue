@@ -15,7 +15,7 @@
           style="height: 100%; border-right: 0; text-align: start"
         >
           <a-typography
-            style="text-align: center; padding: 15px; cursor: pointer;"
+            style="text-align: center; padding: 15px; cursor: pointer"
             @click="$router.push('/admin')"
             >CMS</a-typography
           >
@@ -39,36 +39,17 @@
 
           <a-menu-item key="work" @click="$router.push('/admin/work')">
             <template #icon>
-              <LaptopOutlined />
+              <MediumWorkmarkOutlined />
             </template>
             Work
           </a-menu-item>
 
-          <!-- <a-sub-menu key="users">
+          <a-menu-item key="project" @click="$router.push('/admin/project')">
             <template #icon>
-              <TeamOutlined/>
+              <FundProjectionScreenOutlined />
             </template>
-            <template #title>Users</template>
-            <a-menu-item key="user-list" @click="$router.push('/users')">
-              User List
-            </a-menu-item>
-            <a-menu-item key="user-roles" @click="$router.push('/users/roles')">
-              User Roles
-            </a-menu-item>
-          </a-sub-menu> -->
-
-          <!-- <a-sub-menu key="products">
-            <template #icon>
-              <ShoppingOutlined/>
-            </template>
-            <template #title>Products</template>
-            <a-menu-item key="product-list" @click="$router.push('/products')">
-              Product List
-            </a-menu-item>
-            <a-menu-item key="categories" @click="$router.push('/products/categories')">
-              Categories
-            </a-menu-item>
-          </a-sub-menu> -->
+            Project
+          </a-menu-item>
 
           <a-menu-item key="about" @click="$router.push('/admin/about')">
             <template #icon>
@@ -84,27 +65,15 @@
             Contact
           </a-menu-item>
 
-          <!-- <a-menu-item key="reports" @click="$router.push('/reports')">
-            <template #icon>
-              <BarChartOutlined />
-            </template>
-            Reports
-          </a-menu-item> -->
-
           <a-menu-item key="settings" @click="$router.push('/admin/settings')">
             <template #icon>
               <SettingOutlined />
             </template>
             Settings
           </a-menu-item>
-
-          <!-- <a-menu-item key="settings" @click="$router.push('/settings')">
-            <a-button @click="handleLogout">Logout</a-button>
-          </a-menu-item> -->
         </a-menu>
       </a-layout-sider>
       <a-layout>
-        <!--          <a-typography style="padding: 15px">CMS</a-typography>-->
         <a-layout-header :style="headerStyle">
           <a-breadcrumb style="margin: 12px 0px">
             <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
@@ -118,114 +87,18 @@
         <a-layout-content>
           <router-view />
         </a-layout-content>
-        <!--        <a-layout-footer :style="footerStyle">Footer</a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-flex>
-
-  <!--    <a-layout style="width: 100%; max-width: 1024px">-->
-  <!--      &lt;!&ndash; Sidebar &ndash;&gt;-->
-  <!--      <a-layout-sider-->
-  <!--          v-model:collapsed="collapsed"-->
-  <!--          collapsible-->
-  <!--          theme="light"-->
-  <!--          width="250"-->
-  <!--      >-->
-  <!--        <a-menu-->
-  <!--            mode="inline"-->
-  <!--            :selectedKeys="[activeMenu]"-->
-  <!--            :openKeys="openKeys"-->
-  <!--            @openChange="onOpenChange"-->
-  <!--            style="height: 100%; border-right: 0;"-->
-  <!--        >-->
-  <!--          <a-menu-item key="dashboard" @click="$router.push('/dashboard')">-->
-  <!--            <template #icon>-->
-  <!--              <DashboardOutlined/>-->
-  <!--            </template>-->
-  <!--            Dashboard-->
-  <!--          </a-menu-item>-->
-
-  <!--          <a-sub-menu key="users">-->
-  <!--            <template #icon>-->
-  <!--              <TeamOutlined/>-->
-  <!--            </template>-->
-  <!--            <template #title>Users</template>-->
-  <!--            <a-menu-item key="user-list" @click="$router.push('/users')">-->
-  <!--              User List-->
-  <!--            </a-menu-item>-->
-  <!--            <a-menu-item key="user-roles" @click="$router.push('/users/roles')">-->
-  <!--              User Roles-->
-  <!--            </a-menu-item>-->
-  <!--          </a-sub-menu>-->
-
-  <!--          <a-sub-menu key="products">-->
-  <!--            <template #icon>-->
-  <!--              <ShoppingOutlined/>-->
-  <!--            </template>-->
-  <!--            <template #title>Products</template>-->
-  <!--            <a-menu-item key="product-list" @click="$router.push('/products')">-->
-  <!--              Product List-->
-  <!--            </a-menu-item>-->
-  <!--            <a-menu-item key="categories" @click="$router.push('/products/categories')">-->
-  <!--              Categories-->
-  <!--            </a-menu-item>-->
-  <!--          </a-sub-menu>-->
-
-  <!--          <a-menu-item key="reports" @click="$router.push('/reports')">-->
-  <!--            <template #icon>-->
-  <!--              <BarChartOutlined/>-->
-  <!--            </template>-->
-  <!--            Reports-->
-  <!--          </a-menu-item>-->
-
-  <!--          <a-menu-item key="settings" @click="$router.push('/settings')">-->
-  <!--            <template #icon>-->
-  <!--              <SettingOutlined/>-->
-  <!--            </template>-->
-  <!--            Settings-->
-  <!--          </a-menu-item>-->
-  <!--        </a-menu>-->
-  <!--      </a-layout-sider>-->
-
-  <!--      &lt;!&ndash; Main Content &ndash;&gt;-->
-  <!--&lt;!&ndash;      <a-layout style="padding: 0;">&ndash;&gt;-->
-  <!--&lt;!&ndash;        &lt;!&ndash; Breadcrumb &ndash;&gt;&ndash;&gt;-->
-  <!--&lt;!&ndash;        <a-breadcrumb style="margin: 16px 24px;">&ndash;&gt;-->
-  <!--&lt;!&ndash;          <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">&ndash;&gt;-->
-  <!--&lt;!&ndash;            <router-link v-if="item.path" :to="item.path">&ndash;&gt;-->
-  <!--&lt;!&ndash;              {{ item.name }}&ndash;&gt;-->
-  <!--&lt;!&ndash;            </router-link>&ndash;&gt;-->
-  <!--&lt;!&ndash;            <span v-else>{{ item.name }}</span>&ndash;&gt;-->
-  <!--&lt;!&ndash;          </a-breadcrumb-item>&ndash;&gt;-->
-  <!--&lt;!&ndash;        </a-breadcrumb>&ndash;&gt;-->
-
-  <!--&lt;!&ndash;        &lt;!&ndash; Page Content &ndash;&gt;&ndash;&gt;-->
-  <!--&lt;!&ndash;        <a-layout-content&ndash;&gt;-->
-  <!--&lt;!&ndash;            style="&ndash;&gt;-->
-  <!--&lt;!&ndash;            margin: 0 24px 24px;&ndash;&gt;-->
-  <!--&lt;!&ndash;            padding: 24px;&ndash;&gt;-->
-  <!--&lt;!&ndash;            background: #fff;&ndash;&gt;-->
-  <!--&lt;!&ndash;            min-height: 280px;&ndash;&gt;-->
-  <!--&lt;!&ndash;            border-radius: 8px;&ndash;&gt;-->
-  <!--&lt;!&ndash;          "&ndash;&gt;-->
-  <!--&lt;!&ndash;        >&ndash;&gt;-->
-  <!--&lt;!&ndash;          <router-view/>&ndash;&gt;-->
-  <!--&lt;!&ndash;        </a-layout-content>&ndash;&gt;-->
-  <!--&lt;!&ndash;      </a-layout>&ndash;&gt;-->
-  <!--    </a-layout>-->
-
-  <!-- Footer -->
-  <!--    <a-layout-footer style="text-align: center; background: #f0f2f5;">-->
-  <!--      My Vue App ©2024 Created with Vue 3 + Ant Design-->
-  <!--    </a-layout-footer>-->
-  <!--  </a-layout>-->
 </template>
 
 <script setup lang="ts">
 import {
   AliwangwangOutlined,
   DashboardOutlined,
+  FundProjectionScreenOutlined,
   LaptopOutlined,
+  MediumWorkmarkOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
@@ -242,6 +115,7 @@ const activeMenu = computed(() => {
   if (path === "/admin/dashboard") return "dashboard";
   if (path === "/admin/profile") return "profile";
   if (path === "/admin/work") return "work";
+  if (path === "/admin/project") return "project";
   if (path === "/admin/about") return "about";
   if (path === "/admin/contact") return "contact";
   if (path === "/admin/settings") return "settings";
@@ -269,6 +143,8 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Profile" });
   } else if (path === "/admin/work") {
     crumbs.push({ name: "Work" });
+  } else if (path === "/admin/project") {
+    crumbs.push({ name: "Project" });
   } else if (path === "/admin/contact") {
     crumbs.push({ name: "Contact" });
   } else if (path === "/admin/settings") {
@@ -282,31 +158,12 @@ const onOpenChange = (keys: any) => {
   openKeys.value = keys;
 };
 
-// const handleLogout = async () => {
-//   authStore.signOut().then(() => {
-//     router.push('/login')
-//   }).catch(err => console.log("err", err));
-// }
-
 const headerStyle: CSSProperties = {
   textAlign: "center",
   color: "#fff",
   maxHeight: "48px",
   backgroundColor: "#fff",
 };
-
-// const siderStyle: CSSProperties = {
-//   textAlign: "center",
-//   lineHeight: "120px",
-//   color: "#fff",
-//   backgroundColor: "#3ba0e9",
-// };
-
-// const footerStyle: CSSProperties = {
-//   textAlign: "center",
-//   color: "#fff",
-//   backgroundColor: "#7dbcea",
-// };
 </script>
 
 <style scoped>
