@@ -1,5 +1,5 @@
 <template>
-  <a-flex style="justify-content: center" class="responsive-padding">
+  <a-flex v-if=" !isLoading" style="justify-content: center" class="responsive-padding">
     <a-layout style="width: 100%; max-width: 600px; background-color: inherit">
       <a-flex vertical gap="55" v-if="user_id">
         <ProfilePage :user_id="user_id" />
