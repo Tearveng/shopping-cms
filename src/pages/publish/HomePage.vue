@@ -21,7 +21,7 @@
       </div>
     </a-layout>
   </a-flex>
-  <div v-if="!found && isLoading">
+  <div v-if="!found && !isLoading">
     <NotFound />
   </div>
 </template>
@@ -65,7 +65,7 @@ onMounted(async () => {
     user_id.value = subdomainn.user_id;
     found.value = true;
     isLoading.value = false;
-  } else if((subdomainn as any).length < 1) {
+  } else {
     isLoading.value = false;
   }
 });
