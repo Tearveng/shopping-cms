@@ -50,7 +50,7 @@ import WorkExperiencePage from "./WorkExperiencePage.vue";
 
 const user_id = ref<string>("");
 const found = ref<boolean>(false);
-const isLoading = ref<boolean>(false);
+const isLoading = ref<boolean>(true);
 
 const subdomain = computed(() => {
   const hostname = window.location.hostname; // e.g., "sub.example.com"
@@ -59,7 +59,6 @@ const subdomain = computed(() => {
 });
 
 onMounted(async () => {
-  isLoading.value = true;
   const subdomainn = await getSubdomainBySubdomain(subdomain.value);
   if (subdomainn) {
     user_id.value = subdomainn.user_id;
