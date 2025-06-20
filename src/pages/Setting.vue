@@ -26,7 +26,7 @@
           <a-input
             v-model:value="formState.subdomain"
             placeholder="Subdomain"
-            addon-after="portfolio.byveng.store"
+            addon-after="byveng.store"
           />
         </a-form-item>
         <div style="display: flex; flex-wrap: wrap;">
@@ -35,9 +35,9 @@
           >
           <a
             style="text-decoration: underline;"
-            :href="`https://${formState.subdomain}.portfolio.byveng.store`"
+            :href="`https://${formState.subdomain}.byveng.store`"
             target="_blank"
-            >{{ `https://${formState.subdomain}.portfolio.byveng.store` }}</a
+            >{{ `https://${formState.subdomain}.byveng.store` }}</a
           >
         </div>
       </a-space>
@@ -56,9 +56,9 @@ import { message } from "ant-design-vue";
 import { onMounted, reactive, ref } from "vue";
 import router from "../router";
 import {
-getSubdomainById,
-insertSubdomain,
-updateSubdomainById,
+  getSubdomainById,
+  insertSubdomain,
+  updateSubdomainById,
 } from "../services/SubdomainService";
 import { useAuthStore } from "../stores/auth";
 

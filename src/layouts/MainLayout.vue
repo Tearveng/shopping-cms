@@ -14,13 +14,16 @@
           @openChange="onOpenChange"
           style="height: 100%; border-right: 0; text-align: start"
         >
-          <a-typography style="text-align: center; padding: 15px"
+          <a-typography
+            style="text-align: center; padding: 15px; cursor: pointer;"
+            @click="$router.push('/admin')"
             >CMS</a-typography
           >
 
-
-
-          <a-menu-item key="dashboard" @click="$router.push('/admin/dashboard')">
+          <a-menu-item
+            key="dashboard"
+            @click="$router.push('/admin/dashboard')"
+          >
             <template #icon>
               <DashboardOutlined />
             </template>
@@ -220,11 +223,11 @@
 
 <script setup lang="ts">
 import {
-AliwangwangOutlined,
-DashboardOutlined,
-LaptopOutlined,
-SettingOutlined,
-UserOutlined
+  AliwangwangOutlined,
+  DashboardOutlined,
+  LaptopOutlined,
+  SettingOutlined,
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -268,7 +271,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Work" });
   } else if (path === "/admin/contact") {
     crumbs.push({ name: "Contact" });
-  }else if (path === "/admin/settings") {
+  } else if (path === "/admin/settings") {
     crumbs.push({ name: "Settings" });
   }
 
@@ -304,7 +307,6 @@ const headerStyle: CSSProperties = {
 //   color: "#fff",
 //   backgroundColor: "#7dbcea",
 // };
-
 </script>
 
 <style scoped>

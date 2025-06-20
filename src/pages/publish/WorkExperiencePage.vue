@@ -5,7 +5,7 @@
       <a-flex
         gap="24"
         vertical
-        v-for="(experience) in dynamicValidateForm.experiences"
+        v-for="experience in dynamicValidateForm.experiences"
         :key="experience.key"
       >
         <a-flex>
@@ -13,7 +13,14 @@
             <a-typography-text style="color: dimgrey">{{
               experience.dateRange[0].split("-")[0]
             }}</a-typography-text>
-            <div style="width:12px; height: 1.5px; margin-top: 11px; background-color: dimgrey;"></div>
+            <div
+              style="
+                width: 12px;
+                height: 1.5px;
+                margin-top: 11px;
+                background-color: dimgrey;
+              "
+            ></div>
             <a-typography-text style="color: dimgrey">
               {{ experience.dateRange[1].split("-")[0] }}</a-typography-text
             >
@@ -75,6 +82,9 @@ import { ArrowRightOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
 import { getImageUrl, getWorkExperiences } from "../../services/WorkService";
 import { type WorkExperience } from "../Work.vue";
+const props = defineProps({
+  user_id: String,
+});
 
 const dynamicValidateForm = reactive<{ experiences: WorkExperience[] }>({
   experiences: [],
@@ -83,17 +93,12 @@ const dynamicValidateForm = reactive<{ experiences: WorkExperience[] }>({
 console.log("dynamicValidateForm.experiences", dynamicValidateForm.experiences);
 
 onMounted(async () => {
-  const workExperiences = await getWorkExperiences(
-    "07fea073-f8ae-4aeb-897e-1a53cf81b54e"
-  );
+  const workExperiences = await getWorkExperiences(`${props.user_id}`);
   for (const i of workExperiences) {
     const imagesList = [];
     if (i.images && i.images.length > 0) {
       for (const img of i.images) {
-        const tempImg = await getImageUrl(
-          img.fileName,
-          "07fea073-f8ae-4aeb-897e-1a53cf81b54e"
-        );
+        const tempImg = await getImageUrl(img.fileName, `${props.user_id}`);
         console.log("tempImg", tempImg);
         imagesList.push({
           uid: img.id,

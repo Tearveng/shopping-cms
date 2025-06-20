@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <a-row :gutter="[16, 16]">
       <a-col :span="24">
         <a-card>
@@ -36,14 +36,20 @@
         </a-card>
       </a-col>
     </a-row>
-  </div>
+  </div> -->
+   <iframe
+    :src="`https://${subdomain}.byveng.store`"
+    width="100%"
+    height="800"
+    style="border: none"
+  ></iframe>
 </template>
 
 <script setup lang="ts">
-import { HomeOutlined } from '@ant-design/icons-vue'
-import router from "../router";
-
-const navigateToAbout = () => {
-  router.push('/about')
-}
+import { computed } from 'vue';
+const subdomain = computed(() => {
+  const hostname = window.location.hostname; // e.g., "sub.example.com"
+  const parts = hostname.split(".");
+  return parts.length > 2 ? parts[0] : ""; // Returns "sub" or empty string
+});
 </script>

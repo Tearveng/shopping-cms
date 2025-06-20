@@ -22,6 +22,9 @@
 import { onMounted, reactive } from "vue";
 import { getProfileById } from "../../services/ProfileService";
 import type { Profile } from "../Profile.vue";
+const props = defineProps({
+  user_id: String,
+})
 
 const formState = reactive<Profile>({
   avatar: null,
@@ -30,15 +33,9 @@ const formState = reactive<Profile>({
   website: "",
 });
 
-// const subdomain = computed(() => {
-//   const hostname = window.location.hostname; // e.g., "sub.example.com"
-//   const parts = hostname.split('.');
-//   return parts.length > 2 ? parts[0] : ''; // Returns "sub" or empty string
-// });
-
 onMounted(async () => {
   // const hostname = subdomain.value;
-  const profile = await getProfileById('07fea073-f8ae-4aeb-897e-1a53cf81b54e');
+  const profile = await getProfileById(`${props.user_id}`);
     formState.avatar = profile.profile_url;
     Object.assign(formState, profile);
 });
