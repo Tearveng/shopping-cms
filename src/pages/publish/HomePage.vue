@@ -8,7 +8,15 @@
         <ProjectPage :user_id="user_id" />
         <ContactPage :user_id="user_id" />
       </a-flex>
-      <div v-else style="height: 80vh; display: flex; align-items: center; justify-content: center;">
+      <div
+        v-else
+        style="
+          height: 80vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
         <a-button type="ghost" loading>Loading</a-button>
       </div>
     </a-layout>
@@ -41,8 +49,8 @@ import ProjectPage from "./ProjectPage.vue";
 import WorkExperiencePage from "./WorkExperiencePage.vue";
 
 const user_id = ref<string>("");
-const found = ref<boolean>(false)
-const isLoading =ref<boolean>(false);
+const found = ref<boolean>(false);
+const isLoading = ref<boolean>(false);
 
 const subdomain = computed(() => {
   const hostname = window.location.hostname; // e.g., "sub.example.com"
@@ -51,12 +59,14 @@ const subdomain = computed(() => {
 });
 
 onMounted(async () => {
-  isLoading.value = true
+  isLoading.value = true;
   const subdomainn = await getSubdomainBySubdomain(subdomain.value);
   if (subdomainn) {
-    user_id.value = subdomainn.user_id
-    found.value = true
-    isLoading.value = false
+    user_id.value = subdomainn.user_id;
+    found.value = true;
+    isLoading.value = false;
+  } else {
+    isLoading.value = false;
   }
 });
 </script>
