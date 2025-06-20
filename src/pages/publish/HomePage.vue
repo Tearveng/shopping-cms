@@ -1,5 +1,5 @@
 <template>
-  <a-flex style="justify-content: center" class="responsive-padding">
+  <a-flex v-if="found" style="justify-content: center" class="responsive-padding">
     <a-layout style="width: 100%; max-width: 600px; background-color: inherit">
       <a-flex vertical gap="55" v-if="user_id">
         <ProfilePage :user_id="user_id" />
@@ -13,6 +13,9 @@
       </div>
     </a-layout>
   </a-flex>
+  <div v-else>
+    <NotFound />
+  </div>
 </template>
 
 <style>
@@ -30,6 +33,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { getSubdomainBySubdomain } from "../../services/SubdomainService";
+import NotFound from "../NotFound.vue";
 import AboutPage from "./AboutPage.vue";
 import ContactPage from "./ContactPage.vue";
 import ProfilePage from "./ProfilePage.vue";
@@ -37,6 +41,7 @@ import ProjectPage from "./ProjectPage.vue";
 import WorkExperiencePage from "./WorkExperiencePage.vue";
 
 const user_id = ref<string>("");
+const found = ref<boolean>(false)
 
 const subdomain = computed(() => {
   const hostname = window.location.hostname; // e.g., "sub.example.com"
@@ -48,6 +53,7 @@ onMounted(async () => {
   const subdomainn = await getSubdomainBySubdomain(subdomain.value);
   if (subdomainn) {
     user_id.value = subdomainn.user_id
+    found.value = true
   }
 });
 </script>
