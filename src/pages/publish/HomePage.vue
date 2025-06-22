@@ -64,18 +64,18 @@ const subdomain = computed(() => {
 });
 
 useHead({
-  title: `Portfolio | ${subdomain} `,
+  title: `Portfolio | ${subdomain.value} `,
   meta: [
     { name: 'description', content: 'A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.' },
     { name: 'keywords', content: 'portfolio, programming, seo, developer, frontend' },
-    { property: 'og:title', content: `Portfolio | ${subdomain} ` },
+    { property: 'og:title', content: `Portfolio | ${subdomain.value} ` },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: `https://${subdomain}.byveng.store` },
+    { property: 'og:url', content: `https://${subdomain.value}.byveng.store` },
     { property: 'og:description', content: 'A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.' },
     { name: 'robots', content: 'index, follow' }
   ],
   link: [
-    { rel: 'canonical', href: `https://${subdomain}.byveng.store` }
+    { rel: 'canonical', href: `https://${subdomain.value}.byveng.store` }
   ]
 })
 
