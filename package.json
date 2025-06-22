@@ -1,17 +1,34 @@
 {
   "name": "portfolio-cms",
+  "description": "Manage your portfolio website",
+  "author": "Veng Tear",
+  "license": "MIT",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tearveng/portfolio-cms-ant.git"
+  },
+  "keywords": [
+    "vue",
+    "frontend",
+    "component"
+  ],
+  "homepage": "https://vengtear.byveng.store",
+  "bugs": {
+    "url": "https://github.com/Tearveng/portfolio-cms-ant/issues"
+  },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "@supabase/supabase-js": "^2.50.0",
     "@vorms/core": "^1.1.0",
+    "@vueuse/head": "^2.0.0",
     "ant-design-vue": "^4.2.6",
     "dayjs": "^1.11.13",
     "pinia": "^3.0.3",

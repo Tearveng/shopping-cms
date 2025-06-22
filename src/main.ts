@@ -1,3 +1,4 @@
+import { createHead } from "@vueuse/head";
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/reset.css";
 import { createPinia } from "pinia";
@@ -10,8 +11,10 @@ import "./style.css";
 
 const app = createApp(App);
 const pinia = createPinia();
+const head = createHead()
 
 app.use(Antd);
+app.use(head)
 app.use(pinia);
 app.use(router);
 

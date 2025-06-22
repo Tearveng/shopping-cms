@@ -14,13 +14,16 @@
           @openChange="onOpenChange"
           style="height: 100%; border-right: 0; text-align: start"
         >
-          <a-typography
+          <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px">
+            <img src="/public/lemon-logo.svg" alt="logo-app" width="30" height="30" style="text-align: center;"  />
+          </div>
+          <!-- <a-typography
             style="text-align: center; padding: 15px; cursor: pointer"
             @click="$router.push('/admin')"
             >CMS</a-typography
-          >
+          > -->
 
-          <a-menu-item
+          <!-- <a-menu-item
             key="dashboard"
             @click="$router.push('/admin/dashboard')"
           >
@@ -28,7 +31,7 @@
               <DashboardOutlined />
             </template>
             Dashboard
-          </a-menu-item>
+          </a-menu-item> -->
 
           <a-menu-item key="profile" @click="$router.push('/admin/profile')">
             <template #icon>
@@ -84,7 +87,7 @@
             </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
-        <a-layout-content>
+        <a-layout-content style="overflow-y: scroll; max-height: calc(100vh - 60px)">
           <router-view />
         </a-layout-content>
       </a-layout>
@@ -95,12 +98,11 @@
 <script setup lang="ts">
 import {
   AliwangwangOutlined,
-  DashboardOutlined,
   FundProjectionScreenOutlined,
   LaptopOutlined,
   MediumWorkmarkOutlined,
   SettingOutlined,
-  UserOutlined,
+  UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";

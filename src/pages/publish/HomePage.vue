@@ -1,5 +1,9 @@
 <template>
-  <a-flex v-if=" !isLoading" style="justify-content: center" class="responsive-padding">
+  <a-flex
+    v-if="!isLoading"
+    style="justify-content: center"
+    class="responsive-padding"
+  >
     <a-layout style="width: 100%; max-width: 600px; background-color: inherit">
       <a-flex vertical gap="55" v-if="user_id">
         <ProfilePage :user_id="user_id" />
@@ -39,6 +43,7 @@
 </style>
 
 <script setup lang="ts">
+import { useHead } from "@vueuse/head";
 import { computed, onMounted, ref } from "vue";
 import { getSubdomainBySubdomain } from "../../services/SubdomainService";
 import NotFound from "../NotFound.vue";
@@ -57,6 +62,22 @@ const subdomain = computed(() => {
   const parts = hostname.split(".");
   return parts.length > 2 ? parts[0] : ""; // Returns "sub" or empty string
 });
+
+useHead({
+  title: `Portfolio | ${subdomain} `,
+  meta: [
+    { name: 'description', content: 'A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.' },
+    { name: 'keywords', content: 'portfolio, programming, seo, developer, frontend' },
+    { property: 'og:title', content: `Portfolio | ${subdomain} ` },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: `https://${subdomain}.byveng.store` },
+    { property: 'og:description', content: 'A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.' },
+    { name: 'robots', content: 'index, follow' }
+  ],
+  link: [
+    { rel: 'canonical', href: `https://${subdomain}.byveng.store` }
+  ]
+})
 
 onMounted(async () => {
   const subdomainn = await getSubdomainBySubdomain(subdomain.value);
