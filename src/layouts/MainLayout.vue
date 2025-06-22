@@ -15,7 +15,7 @@
           style="height: 100%; border-right: 0; text-align: start"
         >
           <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px">
-            <img src="/public/lemon-logo.svg" alt="logo-app" width="30" height="30" style="text-align: center;"  />
+            <img src="/public/lemon-logo.svg" @click="$router.push('/admin')" alt="logo-app" width="30" height="30" style="text-align: center;"  />
           </div>
           <!-- <a-typography
             style="text-align: center; padding: 15px; cursor: pointer"
