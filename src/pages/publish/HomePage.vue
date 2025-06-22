@@ -89,15 +89,13 @@ useHead({
 });
 
 onMounted(async () => {
-  // const subdomainn = "vengtear" await getSubdomainBySubdomain(subdomain.value);
-  const subdomainn = await getSubdomainBySubdomain("vengtear");
-
-  // if (subdomainn) {
-    user_id.value = "bb42aa7f-8f0d-4d40-987c-a1c2fc5699bb";
+  const subdomainn = await getSubdomainBySubdomain(subdomain.value);
+  if (subdomainn) {
+    user_id.value = subdomainn.user_id;
     found.value = true;
     isLoading.value = false;
-  // } else {
-    // isLoading.value = false;
-  // }
+  } else {
+    isLoading.value = false;
+  }
 });
 </script>
