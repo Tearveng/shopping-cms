@@ -59,6 +59,20 @@
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
+        :name="['experiences', index, 'skills']"
+        :rules="[
+          { required: true, message: 'Skills is required', trigger: 'change' },
+        ]"
+      >
+        <a-input
+          name="experience.skills"
+          v-model:value="experience.skills"
+          placeholder="Skills ex: 'Node JS, React JS, Javascript'"
+          style="width: 100%; margin-right: 8px"
+        />
+      </a-form-item>
+      <a-form-item
+        style="margin-bottom: -16px"
         :name="['experiences', index, 'description']"
         :rules="[
           {
@@ -145,6 +159,7 @@ export interface ProjectExperience {
   dateRange: any;
   link: string;
   alias: string;
+  skills: string;
   description: string;
   fileList: any[];
 }
@@ -320,6 +335,7 @@ const submitForm = () => {
               end_date: i.dateRange[1],
               link: i.link,
               alias: i.alias,
+              skills: i.skills,
               description: i.description,
               images: {},
               user_id: auth.user?.id,
@@ -396,6 +412,7 @@ const addExperience = () => {
     description: "",
     key: Date.now(),
     fileList: [],
+    skills: ""
   });
 };
 
@@ -505,6 +522,7 @@ const fetchAllData = async () => {
         dateRange: [dayjs(i.start_date), dayjs(i.end_date)],
         link: i.link,
         alias: i.alias,
+        skills: i.skills,
         description: i.description,
         fileList: imagesList,
       } as ProjectExperience;

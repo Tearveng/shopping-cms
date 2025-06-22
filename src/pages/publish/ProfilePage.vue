@@ -16,9 +16,12 @@
         <a-typography-text style="color: dimgrey">{{
           formState.bio
         }}</a-typography-text>
-        <a-typography-text style="font-size: 12px">{{
-          formState.website
-        }}</a-typography-text>
+
+        <a :href="formState.website" target="_blank">
+          <a-typography-text style="color: dimgrey; font-size: 12px">{{
+            formState.website
+          }}</a-typography-text></a
+        >
       </a-flex>
     </a-flex>
   </div>

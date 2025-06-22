@@ -14,8 +14,22 @@
           @openChange="onOpenChange"
           style="height: 100%; border-right: 0; text-align: start"
         >
-          <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px">
-            <img src="/public/lemon-logo.svg" @click="$router.push('/admin')" alt="logo-app" width="30" height="30" style="text-align: center;"  />
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 10px;
+            "
+          >
+            <img
+              src="/public/lemon-logo.svg"
+              @click="$router.push('/admin')"
+              alt="logo-app"
+              width="30"
+              height="30"
+              style="text-align: center; cursor: pointer"
+            />
           </div>
           <!-- <a-typography
             style="text-align: center; padding: 15px; cursor: pointer"
@@ -87,7 +101,9 @@
             </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
-        <a-layout-content style="overflow-y: scroll; max-height: calc(100vh - 60px)">
+        <a-layout-content
+          style="overflow-y: scroll; max-height: calc(100vh - 60px)"
+        >
           <router-view />
         </a-layout-content>
       </a-layout>
@@ -102,7 +118,7 @@ import {
   LaptopOutlined,
   MediumWorkmarkOutlined,
   SettingOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";

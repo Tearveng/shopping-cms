@@ -6,6 +6,7 @@ export interface IProjectExperiences {
   end_date: string;
   link: string;
   alias: string;
+  skills: string;
   description: string;
   images?: Array<any>;
   user_id: string;

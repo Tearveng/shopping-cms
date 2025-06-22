@@ -66,27 +66,38 @@ const subdomain = computed(() => {
 useHead({
   title: `Portfolio | ${subdomain.value} `,
   meta: [
-    { name: 'description', content: 'A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.' },
-    { name: 'keywords', content: 'portfolio, programming, seo, developer, frontend' },
-    { property: 'og:title', content: `Portfolio | ${subdomain.value} ` },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: `https://${subdomain.value}.byveng.store` },
-    { property: 'og:description', content: 'A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.' },
-    { name: 'robots', content: 'index, follow' }
+    {
+      name: "description",
+      content:
+        "A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.",
+    },
+    {
+      name: "keywords",
+      content: "portfolio, programming, seo, developer, frontend",
+    },
+    { property: "og:title", content: `Portfolio | ${subdomain.value} ` },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: `https://${subdomain.value}.byveng.store` },
+    {
+      property: "og:description",
+      content:
+        "A personal portfolio highlighting professional work, creative projects, and technical skills in web development and design. Explore my work today.",
+    },
+    { name: "robots", content: "index, follow" },
   ],
-  link: [
-    { rel: 'canonical', href: `https://${subdomain.value}.byveng.store` }
-  ]
-})
+  link: [{ rel: "canonical", href: `https://${subdomain.value}.byveng.store` }],
+});
 
 onMounted(async () => {
-  const subdomainn = await getSubdomainBySubdomain(subdomain.value);
-  if (subdomainn) {
-    user_id.value = subdomainn.user_id;
+  // const subdomainn = "vengtear" await getSubdomainBySubdomain(subdomain.value);
+  const subdomainn = await getSubdomainBySubdomain("vengtear");
+
+  // if (subdomainn) {
+    user_id.value = "bb42aa7f-8f0d-4d40-987c-a1c2fc5699bb";
     found.value = true;
     isLoading.value = false;
-  } else {
-    isLoading.value = false;
-  }
+  // } else {
+    // isLoading.value = false;
+  // }
 });
 </script>
