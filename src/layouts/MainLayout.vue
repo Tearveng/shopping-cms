@@ -120,23 +120,13 @@
 
 <script setup lang="ts">
 import {
-<<<<<<< HEAD
 AliwangwangOutlined,
 CompressOutlined,
-DashboardOutlined,
 FundProjectionScreenOutlined,
 LaptopOutlined,
 MediumWorkmarkOutlined,
 SettingOutlined,
 UserOutlined
-=======
-  AliwangwangOutlined,
-  FundProjectionScreenOutlined,
-  LaptopOutlined,
-  MediumWorkmarkOutlined,
-  SettingOutlined,
-  UserOutlined,
->>>>>>> a7ab8b26222323351c5f0d9f322437de060eec72
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
