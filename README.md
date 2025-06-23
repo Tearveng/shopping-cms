@@ -3,7 +3,8 @@ Sure! Here's a complete, well-formatted `README.md` file for your Vue 3 + Supaba
 ```markdown
 # 🚀 Vue 3 + Supabase Starter Project
 
-This project is a starter template using **Vue 3** and **Supabase** – perfect for quickly bootstrapping your modern web app with a powerful backend-as-a-service.
+This project is a starter template using **Vue 3** and **Supabase** –
+perfect for quickly bootstrapping your modern web app with a powerful backend-as-a-service.
 
 ---
 
