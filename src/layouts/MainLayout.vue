@@ -31,21 +31,6 @@
               style="text-align: center; cursor: pointer"
             />
           </div>
-          <!-- <a-typography
-            style="text-align: center; padding: 15px; cursor: pointer"
-            @click="$router.push('/admin')"
-            >CMS</a-typography
-          > -->
-
-          <!-- <a-menu-item
-            key="dashboard"
-            @click="$router.push('/admin/dashboard')"
-          >
-            <template #icon>
-              <DashboardOutlined />
-            </template>
-            Dashboard
-          </a-menu-item> -->
 
           <a-menu-item key="profile" @click="$router.push('/admin/profile')">
             <template #icon>
