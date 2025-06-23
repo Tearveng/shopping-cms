@@ -48,8 +48,11 @@
             <a-typography-text style="color: dimgrey"
               >{{ experience.description }}
             </a-typography-text>
-            <a-flex horizontal style="margin-top: 10px;" wrap="wrap" gap="4">
-              <div v-for="skill in experience.skills.split(',')">
+            <a-flex horizontal style="margin-top: 10px" wrap="wrap" gap="4">
+              <div
+                v-for="skill in experience.skills.split(',')"
+                :key="skill"
+              >
                 <a-tag>{{ skill }}</a-tag>
               </div>
             </a-flex>
