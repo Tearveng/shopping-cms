@@ -44,6 +44,13 @@
             Work
           </a-menu-item>
 
+          <a-menu-item key="education" @click="$router.push('/admin/education')">
+            <template #icon>
+              <CompressOutlined />
+            </template>
+            Education
+          </a-menu-item>
+
           <a-menu-item key="project" @click="$router.push('/admin/project')">
             <template #icon>
               <FundProjectionScreenOutlined />
@@ -94,13 +101,14 @@
 
 <script setup lang="ts">
 import {
-  AliwangwangOutlined,
-  DashboardOutlined,
-  FundProjectionScreenOutlined,
-  LaptopOutlined,
-  MediumWorkmarkOutlined,
-  SettingOutlined,
-  UserOutlined,
+AliwangwangOutlined,
+CompressOutlined,
+DashboardOutlined,
+FundProjectionScreenOutlined,
+LaptopOutlined,
+MediumWorkmarkOutlined,
+SettingOutlined,
+UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -115,6 +123,7 @@ const activeMenu = computed(() => {
   if (path === "/admin/dashboard") return "dashboard";
   if (path === "/admin/profile") return "profile";
   if (path === "/admin/work") return "work";
+  if (path === "/admin/education") return "education";
   if (path === "/admin/project") return "project";
   if (path === "/admin/about") return "about";
   if (path === "/admin/contact") return "contact";
@@ -143,6 +152,8 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Profile" });
   } else if (path === "/admin/work") {
     crumbs.push({ name: "Work" });
+  } else if (path === "/admin/education") {
+    crumbs.push({ name: "Education" });
   } else if (path === "/admin/project") {
     crumbs.push({ name: "Project" });
   } else if (path === "/admin/contact") {

@@ -5,7 +5,7 @@
       <a-flex
         gap="24"
         vertical
-        v-for="experience in dynamicValidateForm.experiences"
+        v-for="experience in dynamicValidateForm.educations"
         :key="experience.key"
       >
         <a-flex>
@@ -85,24 +85,24 @@ a:hover {
 <script setup lang="ts">
 import { ArrowRightOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
-import { getImageUrl, getWorkExperiences } from "../../services/WorkService";
-import { type WorkExperience } from "../Work.vue";
+import { getEducations } from "../../services/EducationService";
+import { getImageUrl } from "../../services/WorkService";
+import { type Education } from "../Education.vue";
 const props = defineProps({
   user_id: String,
 });
 
-const dynamicValidateForm = reactive<{ experiences: WorkExperience[] }>({
-  experiences: [],
+const dynamicValidateForm = reactive<{ educations: Education[] }>({
+  educations: [],
 });
 
 onMounted(async () => {
-  const workExperiences = await getWorkExperiences(`${props.user_id}`);
-  for (const i of workExperiences) {
+  const educations = await getEducations(`${props.user_id}`);
+  for (const i of educations) {
     const imagesList = [];
     if (i.images && i.images.length > 0) {
       for (const img of i.images) {
         const tempImg = await getImageUrl(img.fileName, `${props.user_id}`);
-        console.log("tempImg", tempImg);
         imagesList.push({
           uid: img.id,
           name: img.fileName,
@@ -120,8 +120,8 @@ onMounted(async () => {
       alias: i.alias,
       description: i.description,
       fileList: imagesList,
-    } as WorkExperience;
-    dynamicValidateForm.experiences.push(pre);
+    } as Education;
+    dynamicValidateForm.educations.push(pre);
   }
 });
 </script>

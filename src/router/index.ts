@@ -5,6 +5,7 @@ import About from "../pages/About.vue";
 import Login from "../pages/auth/Login.vue";
 import Contact from "../pages/Contact.vue";
 import Dashboard from "../pages/Dashboard.vue";
+import Education from "../pages/Education.vue";
 import Home from "../pages/Home.vue";
 import NotFound from "../pages/NotFound.vue";
 import Profile from "../pages/Profile.vue";
@@ -93,6 +94,17 @@ const routes: RouteRecordRaw[] = [
           title: "Work",
           icon: "work",
           breadcrumb: ["Work"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "education",
+        name: "Education",
+        component: Education,
+        meta: {
+          title: "Education",
+          icon: "education",
+          breadcrumb: ["Education"],
           requiresAuth: true,
         },
       },
