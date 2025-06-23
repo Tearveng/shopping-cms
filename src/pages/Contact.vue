@@ -96,18 +96,18 @@
 
 <script setup lang="ts">
 import {
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
+ExclamationCircleOutlined,
+MinusCircleOutlined,
+PlusOutlined,
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import {
-  deleteContact,
-  getContacts,
-  insertContacts,
-  updateContacts,
-  type IContact,
+deleteContact,
+getContacts,
+insertContacts,
+updateContacts,
+type IContact,
 } from "../services/ContactService";
 import { useAuthStore } from "../stores/auth";
 

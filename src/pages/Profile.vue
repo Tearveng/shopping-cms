@@ -202,7 +202,6 @@ const resetForm = () => {
 
 const saveAvatar = async (profile: Partial<IProfile>) => {
   if (profile.id) {
-    console.log("profile", profile)
     updateProfileById(`${auth.user?.id}`, profile)
       .then(() => message.success("Image updated successfully!"))
       .catch((e) => errors(e))
@@ -212,7 +211,6 @@ const saveAvatar = async (profile: Partial<IProfile>) => {
   } else {
     insertProfileById({ ...profile, user_id: `${auth.user?.id}` })
       .then((res) => {
-        console.log("res", res);
         formState.avatar = res.profile_url;
         Object.assign(formState, res);
         message.success("Image created successfully!");
@@ -225,7 +223,6 @@ const saveAvatar = async (profile: Partial<IProfile>) => {
 };
 
 const saveProfile = async (profile: Partial<IProfile>) => {
-  console.log("profile", profile);
   isLoading.value = true;
   if (profile.id) {
     updateProfileById(`${auth.user?.id}`, profile)

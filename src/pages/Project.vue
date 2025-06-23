@@ -456,7 +456,6 @@ const handleRemove = (id: number, _: number) => {
             // Wait for Supabase deletion
             await deleteImage("portfolio-cms", filePath);
             const getByUserId = await getProjectExperiencesById(id);
-            console.log("getByUserId", getByUserId);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );

@@ -435,11 +435,9 @@ const handleRemove = (id: number, _: number) => {
               resolve(false);
               return;
             }
-            console.log("fileName", fileName);
             // Wait for Supabase deletion
             await deleteImage("portfolio-cms", filePath);
             const getByUserId = await getWorkExperiencesById(id);
-            console.log("getByUserId", getByUserId);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
@@ -490,7 +488,6 @@ const fetchAllData = async () => {
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
           const tempImg = await getImageUrl(img.fileName, auth.user.id);
-          console.log("tempImg", tempImg);
           imagesList.push({
             uid: img.id,
             name: img.fileName,
