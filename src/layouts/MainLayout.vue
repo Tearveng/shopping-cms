@@ -14,13 +14,30 @@
           @openChange="onOpenChange"
           style="height: 100%; border-right: 0; text-align: start"
         >
-          <a-typography
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 10px;
+            "
+          >
+            <img
+              src="/public/lemon-logo.svg"
+              @click="$router.push('/admin')"
+              alt="logo-app"
+              width="30"
+              height="30"
+              style="text-align: center; cursor: pointer"
+            />
+          </div>
+          <!-- <a-typography
             style="text-align: center; padding: 15px; cursor: pointer"
             @click="$router.push('/admin')"
             >CMS</a-typography
-          >
+          > -->
 
-          <a-menu-item
+          <!-- <a-menu-item
             key="dashboard"
             @click="$router.push('/admin/dashboard')"
           >
@@ -28,7 +45,7 @@
               <DashboardOutlined />
             </template>
             Dashboard
-          </a-menu-item>
+          </a-menu-item> -->
 
           <a-menu-item key="profile" @click="$router.push('/admin/profile')">
             <template #icon>
@@ -91,7 +108,9 @@
             </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
-        <a-layout-content>
+        <a-layout-content
+          style="overflow-y: scroll; max-height: calc(100vh - 60px)"
+        >
           <router-view />
         </a-layout-content>
       </a-layout>
@@ -101,6 +120,7 @@
 
 <script setup lang="ts">
 import {
+<<<<<<< HEAD
 AliwangwangOutlined,
 CompressOutlined,
 DashboardOutlined,
@@ -109,6 +129,14 @@ LaptopOutlined,
 MediumWorkmarkOutlined,
 SettingOutlined,
 UserOutlined
+=======
+  AliwangwangOutlined,
+  FundProjectionScreenOutlined,
+  LaptopOutlined,
+  MediumWorkmarkOutlined,
+  SettingOutlined,
+  UserOutlined,
+>>>>>>> a7ab8b26222323351c5f0d9f322437de060eec72
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";

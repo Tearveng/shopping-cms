@@ -10,9 +10,18 @@
         </template>
       </a-avatar>
       <a-flex vertical>
-        <a-typography-text style="font-size: 20px; font-weight: 400;">{{ formState.username }}</a-typography-text>
-        <a-typography-text style="color:dimgrey">{{ formState.bio }}</a-typography-text>
-        <a-typography-text style="font-size: 12px">{{ formState.website }}</a-typography-text>
+        <a-typography-text style="font-size: 20px; font-weight: 400">{{
+          formState.username
+        }}</a-typography-text>
+        <a-typography-text style="color: dimgrey">{{
+          formState.bio
+        }}</a-typography-text>
+
+        <a :href="formState.website" target="_blank">
+          <a-typography-text style="color: dimgrey; font-size: 12px">{{
+            formState.website
+          }}</a-typography-text></a
+        >
       </a-flex>
     </a-flex>
   </div>
@@ -24,7 +33,7 @@ import { getProfileById } from "../../services/ProfileService";
 import type { Profile } from "../Profile.vue";
 const props = defineProps({
   user_id: String,
-})
+});
 
 const formState = reactive<Profile>({
   avatar: null,
@@ -36,9 +45,7 @@ const formState = reactive<Profile>({
 onMounted(async () => {
   // const hostname = subdomain.value;
   const profile = await getProfileById(`${props.user_id}`);
-    formState.avatar = profile.profile_url;
-    Object.assign(formState, profile);
+  formState.avatar = profile.profile_url;
+  Object.assign(formState, profile);
 });
-
-
 </script>

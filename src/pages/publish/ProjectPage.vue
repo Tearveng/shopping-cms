@@ -45,7 +45,14 @@
                 <a-typography-text>{{ experience.alias }}</a-typography-text></a
               >
             </a-badge>
-            <a-typography-text style="color: dimgrey">{{ experience.description }} </a-typography-text>
+            <a-typography-text style="color: dimgrey"
+              >{{ experience.description }}
+            </a-typography-text>
+            <a-flex horizontal style="margin-top: 10px;" wrap="wrap" gap="4">
+              <div v-for="skill in experience.skills.split(',')">
+                <a-tag>{{ skill }}</a-tag>
+              </div>
+            </a-flex>
           </a-flex>
         </a-flex>
         <a-flex class="image-responsive" style="overflow-x: auto" gap="12">
@@ -121,6 +128,7 @@ onMounted(async () => {
       dateRange: [i.start_date, i.end_date],
       link: i.link,
       alias: i.alias,
+      skills: i.skills,
       description: i.description,
       fileList: imagesList,
     } as ProjectExperience;
