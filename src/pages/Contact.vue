@@ -175,10 +175,6 @@ const dynamicValidateForm = reactive<{ contacts: Contact[] }>({
   contacts: [],
 });
 
-// const success = () => {
-//   message.success("Created successfully", 5);
-// };
-
 const update = () => {
   message.success("Updated successfully", 5);
 };

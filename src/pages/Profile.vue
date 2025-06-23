@@ -144,10 +144,6 @@ const beforeUpload = (file: any) => {
   return isImage && isLt5M; // Allow upload if valid
 };
 
-// const success = () => {
-//   message.success("Created successfully", 5);
-// };
-
 const update = () => {
   message.success("Updated successfully", 5);
 };
