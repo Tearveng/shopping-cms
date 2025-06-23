@@ -93,10 +93,12 @@ useHead({
 onMounted(async () => {
   const subdomainn = await getSubdomainBySubdomain(subdomain.value);
   if (subdomainn) {
+    console.log("log in here 1")
     user_id.value = subdomainn.user_id;
     found.value = true;
     isLoading.value = false;
   } else {
+    console.log("log in here 2")
     isLoading.value = false;
   }
 });
