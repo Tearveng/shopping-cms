@@ -1,7 +1,7 @@
 <template>
- 
-   <iframe
+  <iframe
     :src="`https://${subdomain}.byveng.store`"
+    title="official website"
     width="100%"
     height="900"
     style="border: none"
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 const subdomain = computed(() => {
   const hostname = window.location.hostname; // e.g., "sub.example.com"
   const parts = hostname.split(".");
