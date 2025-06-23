@@ -9,6 +9,7 @@
         <ProfilePage :user_id="user_id" />
         <AboutPage :user_id="user_id" />
         <WorkExperiencePage :user_id="user_id" />
+        <EducationPage :user_id="user_id" />
         <ProjectPage :user_id="user_id" />
         <ContactPage :user_id="user_id" />
       </a-flex>
@@ -49,6 +50,7 @@ import { getSubdomainBySubdomain } from "../../services/SubdomainService";
 import NotFound from "../NotFound.vue";
 import AboutPage from "./AboutPage.vue";
 import ContactPage from "./ContactPage.vue";
+import EducationPage from "./EducationPage.vue";
 import ProfilePage from "./ProfilePage.vue";
 import ProjectPage from "./ProjectPage.vue";
 import WorkExperiencePage from "./WorkExperiencePage.vue";
