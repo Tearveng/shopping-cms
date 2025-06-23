@@ -1,6 +1,6 @@
 <template>
   <a-flex vertical gap="24">
-    <a-typography-text>Work Experience</a-typography-text>
+    <a-typography-text>Education Experience</a-typography-text>
     <a-flex vertical gap="24">
       <a-flex
         gap="24"
