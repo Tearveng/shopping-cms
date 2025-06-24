@@ -46,7 +46,10 @@
             Work
           </a-menu-item>
 
-          <a-menu-item key="education" @click="$router.push('/admin/education')">
+          <a-menu-item
+            key="education"
+            @click="$router.push('/admin/education')"
+          >
             <template #icon>
               <CompressOutlined />
             </template>
@@ -94,7 +97,11 @@
           </a-breadcrumb>
         </a-layout-header>
         <a-layout-content
-          style="overflow-y: scroll; max-height: calc(100vh - 60px)"
+          style="
+            overflow-y: hidden;
+            overflow: auto;
+            max-height: calc(100vh - 60px);
+          "
         >
           <router-view />
         </a-layout-content>
@@ -105,13 +112,13 @@
 
 <script setup lang="ts">
 import {
-AliwangwangOutlined,
-CompressOutlined,
-FundProjectionScreenOutlined,
-LaptopOutlined,
-MediumWorkmarkOutlined,
-SettingOutlined,
-UserOutlined
+  AliwangwangOutlined,
+  CompressOutlined,
+  FundProjectionScreenOutlined,
+  LaptopOutlined,
+  MediumWorkmarkOutlined,
+  SettingOutlined,
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
