@@ -1,5 +1,3 @@
-Sure! Here's a complete, well-formatted `README.md` file for your Vue 3 + Supabase project, with step-by-step setup instructions and some relevant emojis:
-
 ```markdown
 # 🚀 Vue 3 + Supabase Starter Project
 
