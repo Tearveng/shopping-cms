@@ -1,9 +1,5 @@
 <template>
-  <a-flex
-    v-if="!isLoading && found"
-    style="justify-content: center"
-    class="responsive-padding"
-  >
+  <a-flex style="justify-content: center" class="responsive-padding">
     <a-layout style="width: 100%; max-width: 600px; background-color: inherit">
       <a-flex vertical gap="55" v-if="user_id">
         <ProfilePage :user_id="user_id" />
@@ -14,7 +10,7 @@
         <ContactPage :user_id="user_id" />
       </a-flex>
       <div
-        v-else
+        v-if="isLoading"
         style="
           height: 80vh;
           display: flex;
@@ -47,7 +43,6 @@
 import { useHead } from "@vueuse/head";
 import { computed, onMounted, ref } from "vue";
 import { getSubdomainBySubdomain } from "../../services/SubdomainService";
-import NotFound from "../NotFound.vue";
 import AboutPage from "./AboutPage.vue";
 import ContactPage from "./ContactPage.vue";
 import EducationPage from "./EducationPage.vue";
@@ -56,7 +51,7 @@ import ProjectPage from "./ProjectPage.vue";
 import WorkExperiencePage from "./WorkExperiencePage.vue";
 
 const user_id = ref<string>("");
-const found = ref<boolean>(false);
+const found = ref<boolean>(true);
 const isLoading = ref<boolean>(true);
 
 const subdomain = computed(() => {
@@ -94,9 +89,9 @@ onMounted(async () => {
   const subdomainn = await getSubdomainBySubdomain(subdomain.value);
   if (subdomainn) {
     user_id.value = subdomainn.user_id;
-    found.value = true;
     isLoading.value = false;
   } else {
+    found.value = false;
     isLoading.value = false;
   }
 });
