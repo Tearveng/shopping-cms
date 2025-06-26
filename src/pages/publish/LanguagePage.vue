@@ -1,6 +1,6 @@
 <template>
   <a-flex vertical gap="24">
-    <a-typography-text>Contact</a-typography-text>
+    <a-typography-text>Language</a-typography-text>
     <a-flex vertical gap="24">
       <a-flex
         gap="24"
@@ -41,7 +41,7 @@ a:hover {
 <script setup lang="ts">
 import { ArrowRightOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
-import { getContacts } from "../../services/ContactService";
+import { getLanguages } from "../../services/LanguageService";
 import { type Language } from "../Language.vue";
 const props = defineProps({
   user_id: String,
@@ -52,7 +52,7 @@ const dynamicValidateForm = reactive<{ languages: Language[] }>({
 });
 
 onMounted(async () => {
-  const contacts = await getContacts(`${props.user_id}`);
+  const contacts = await getLanguages(`${props.user_id}`);
   contacts.map((i) => {
     const pre = {
       id: i.id,
