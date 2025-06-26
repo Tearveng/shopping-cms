@@ -4,9 +4,9 @@ import MainLayout from "../layouts/MainLayout.vue";
 import About from "../pages/About.vue";
 import Login from "../pages/auth/Login.vue";
 import Contact from "../pages/Contact.vue";
-import Dashboard from "../pages/Dashboard.vue";
 import Education from "../pages/Education.vue";
 import Home from "../pages/Home.vue";
+import Language from "../pages/Language.vue";
 import NotFound from "../pages/NotFound.vue";
 import Profile from "../pages/Profile.vue";
 import Project from "../pages/Project.vue";
@@ -64,17 +64,17 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
         },
       },
-      {
-        path: "dashboard",
-        name: "Dashboard",
-        component: Dashboard,
-        meta: {
-          title: "Dashboard",
-          icon: "dashboard",
-          breadcrumb: ["Dashboard"],
-          requiresAuth: true,
-        },
-      },
+      // {
+      //   path: "dashboard",
+      //   name: "Dashboard",
+      //   component: Dashboard,
+      //   meta: {
+      //     title: "Dashboard",
+      //     icon: "dashboard",
+      //     breadcrumb: ["Dashboard"],
+      //     requiresAuth: true,
+      //   },
+      // },
       {
         path: "profile",
         name: "Profile",
@@ -120,13 +120,13 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "about",
-        name: "About",
-        component: About,
+        path: "language",
+        name: "Language",
+        component: Language,
         meta: {
-          title: "About",
-          icon: "About",
-          breadcrumb: ["About"],
+          title: "Language",
+          icon: "language",
+          breadcrumb: ["Language"],
           requiresAuth: true,
         },
       },
@@ -138,6 +138,17 @@ const routes: RouteRecordRaw[] = [
           title: "Contact",
           icon: "About",
           breadcrumb: ["Contact"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "about",
+        name: "About",
+        component: About,
+        meta: {
+          title: "About",
+          icon: "About",
+          breadcrumb: ["About"],
           requiresAuth: true,
         },
       },
@@ -192,7 +203,7 @@ router.beforeEach(async (to, _, next) => {
   if (to.meta.requiresAuth && !authStore.user) {
     next("/login");
   } else if (to.path === "/login" && authStore.user) {
-    return next("admin/dashboard"); // already logged in, skip login
+    return next("admin/profile"); // already logged in, skip login
   }
 
   next();

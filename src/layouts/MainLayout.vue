@@ -23,7 +23,7 @@
             "
           >
             <img
-              src="/public/lemon-logo.svg"
+              src="/lemon-logo.svg?url"
               @click="$router.push('/admin')"
               alt="logo-app"
               width="30"
@@ -63,11 +63,11 @@
             Project
           </a-menu-item>
 
-          <a-menu-item key="about" @click="$router.push('/admin/about')">
+          <a-menu-item key="project" @click="$router.push('/admin/language')">
             <template #icon>
-              <AliwangwangOutlined />
+              <TranslationOutlined />
             </template>
-            About
+            Language
           </a-menu-item>
 
           <a-menu-item key="contact" @click="$router.push('/admin/contact')">
@@ -75,6 +75,13 @@
               <LaptopOutlined />
             </template>
             Contact
+          </a-menu-item>
+
+          <a-menu-item key="about" @click="$router.push('/admin/about')">
+            <template #icon>
+              <AliwangwangOutlined />
+            </template>
+            About
           </a-menu-item>
 
           <a-menu-item key="settings" @click="$router.push('/admin/settings')">
@@ -112,13 +119,14 @@
 
 <script setup lang="ts">
 import {
-  AliwangwangOutlined,
-  CompressOutlined,
-  FundProjectionScreenOutlined,
-  LaptopOutlined,
-  MediumWorkmarkOutlined,
-  SettingOutlined,
-  UserOutlined,
+AliwangwangOutlined,
+CompressOutlined,
+FundProjectionScreenOutlined,
+LaptopOutlined,
+MediumWorkmarkOutlined,
+SettingOutlined,
+TranslationOutlined,
+UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -135,8 +143,9 @@ const activeMenu = computed(() => {
   if (path === "/admin/work") return "work";
   if (path === "/admin/education") return "education";
   if (path === "/admin/project") return "project";
-  if (path === "/admin/about") return "about";
+  if (path === "/admin/language") return "language";
   if (path === "/admin/contact") return "contact";
+  if (path === "/admin/about") return "about";
   if (path === "/admin/settings") return "settings";
   if (path === "/admin/users") return "user-list";
   if (path === "/admin/users/roles") return "user-roles";
