@@ -12,18 +12,7 @@
           <a-typography-text style="min-width: 150px; color: dimgrey"
             >{{ language.title }}
           </a-typography-text>
-          <a-badge :offset="[10, -4]">
-            <template #count>
-              <ArrowRightOutlined
-                style="
-                  margin-top: 0;
-                  font-size: 11px;
-                  transform: rotate(-45deg);
-                "
-              />
-            </template>
-            <a-typography-text>{{ language.alias }}</a-typography-text>
-          </a-badge>
+          <a-typography-text>{{ language.alias }}</a-typography-text>
         </a-flex>
       </a-flex>
     </a-flex>
@@ -39,7 +28,6 @@ a:hover {
 </style>
 
 <script setup lang="ts">
-import { ArrowRightOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
 import { getLanguages } from "../../services/LanguageService";
 import { type Language } from "../Language.vue";
