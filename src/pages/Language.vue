@@ -6,17 +6,17 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Contact</a-typography-text>
+    <a-typography-text>Language</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(contact, index) in dynamicValidateForm.contacts"
-      :key="contact.key"
+      v-for="(language, index) in dynamicValidateForm.languages"
+      :key="language.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['contacts', index, 'title']"
+        :name="['languages', index, 'title']"
         :rules="[
           { required: true, message: 'Title is required', trigger: 'change' },
         ]"
@@ -24,13 +24,13 @@
         <a-flex>
           <MinusCircleOutlined
             style="margin-right: 12px"
-            v-if="dynamicValidateForm.contacts.length > 1"
+            v-if="dynamicValidateForm.languages.length > 1"
             class="dynamic-delete-button"
-            @click="removeDomain(contact)"
+            @click="removeDomain(language)"
           />
           <a-input
-            name="contact.title"
-            v-model:value="contact.title"
+            name="language.title"
+            v-model:value="language.title"
             placeholder="Title"
             style="width: 100%"
           />
@@ -39,7 +39,7 @@
 
       <a-form-item
         style="margin-bottom: -16px; width: 100%; flex-direction: row"
-        :name="['contacts', index, 'alias']"
+        :name="['languages', index, 'alias']"
         :rules="[
           {
             required: true,
@@ -49,28 +49,9 @@
         ]"
       >
         <a-input
-          name="contact.alias"
-          v-model:value="contact.alias"
+          name="language.alias"
+          v-model:value="language.alias"
           placeholder="Alias"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['contacts', index, 'url']"
-        :rules="[
-          {
-            required: true,
-            message: 'Url is required',
-            trigger: 'change',
-          },
-        ]"
-      >
-        <a-input
-          addon-before="https://"
-          name="contact.url"
-          v-model:value="contact.url"
-          placeholder="Url"
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
@@ -103,20 +84,19 @@ PlusOutlined,
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import {
-deleteContact,
-getContacts,
-insertContacts,
-updateContacts,
-type IContact,
-} from "../services/ContactService";
+deleteLanguage,
+getLanguages,
+insertLanguages,
+updateLanguage,
+type ILanguage,
+} from "../services/LanguageService";
 import { useAuthStore } from "../stores/auth";
 
-export interface Contact {
+export interface Language {
   id?: number;
   key: number;
   title: string;
   alias: string;
-  url: string;
 }
 
 const refreshKey = ref(0);
@@ -141,7 +121,7 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const showConfirm = (item: Contact) => {
+const showConfirm = (item: Language) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -152,11 +132,11 @@ const showConfirm = (item: Contact) => {
     ),
     onOk() {
       if (item.id) {
-        deleteContact(item.id)
+        deleteLanguage(item.id)
           .then(() => {
-            const index = dynamicValidateForm.contacts.indexOf(item);
+            const index = dynamicValidateForm.languages.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.contacts.splice(index, 1);
+              dynamicValidateForm.languages.splice(index, 1);
             }
             deleted();
           })
@@ -171,8 +151,8 @@ const showConfirm = (item: Contact) => {
   });
 };
 
-const dynamicValidateForm = reactive<{ contacts: Contact[] }>({
-  contacts: [],
+const dynamicValidateForm = reactive<{ languages: Language[] }>({
+  languages: [],
 });
 
 const update = () => {
@@ -193,23 +173,22 @@ const submitForm = async () => {
       .validate()
       .then(async () => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.contacts);
+        const plainData = toRaw(dynamicValidateForm.languages);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id ?? undefined,
               title: i.title,
               alias: i.alias,
-              url: i.url,
               user_id: auth.user?.id,
-            } as IContact)
+            } as ILanguage)
         );
 
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertContacts(
+            insertLanguages(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then()
@@ -223,7 +202,7 @@ const submitForm = async () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach((u) => {
-              updateContacts(u)
+              updateLanguage(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -251,43 +230,41 @@ const resetForm = () => {
   }
 };
 
-const removeDomain = (item: Contact) => {
+const removeDomain = (item: Language) => {
   if (item.id) {
     showConfirm(item);
   } else {
-    const index = dynamicValidateForm.contacts.indexOf(item);
+    const index = dynamicValidateForm.languages.indexOf(item);
     if (index !== -1) {
-      dynamicValidateForm.contacts.splice(index, 1);
+      dynamicValidateForm.languages.splice(index, 1);
     }
   }
 };
 const addDomain = () => {
-  dynamicValidateForm.contacts.push({
+  dynamicValidateForm.languages.push({
     key: Date.now(),
     title: "",
     alias: "",
-    url: "",
   });
 };
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const contacts = await getContacts(auth.user.id);
+    const contacts = await getLanguages(auth.user.id);
     contacts.map((i) => {
       const pre = {
         id: i.id,
         title: i.title,
         key: new Date(`${i.created_at}`).getTime(),
         alias: i.alias,
-        url: i.url,
-      } as Contact;
-      dynamicValidateForm.contacts.push(pre);
+      } as Language;
+      dynamicValidateForm.languages.push(pre);
     });
   }
 };
 
 watch(refreshKey, () => {
-  dynamicValidateForm.contacts = [];
+  dynamicValidateForm.languages = [];
   fetchAllData();
 });
 

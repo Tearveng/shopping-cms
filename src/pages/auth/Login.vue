@@ -111,7 +111,7 @@ onMounted(async () => {
   }
 
   if (authStore.user) {
-    router.replace('admin/dashboard') // already logged in, redirect
+    router.replace('admin/profile') // already logged in, redirect
   }
 })
 </script>

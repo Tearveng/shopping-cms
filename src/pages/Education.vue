@@ -6,24 +6,24 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Work experience</a-typography-text>
+    <a-typography-text>Education experience</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(experience, index) in dynamicValidateForm.experiences"
+      v-for="(experience, index) in dynamicValidateForm.educations"
       :key="experience.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['experiences', index, 'dateRange']"
+        :name="['educations', index, 'dateRange']"
         :rules="[
           { required: true, message: 'Link is required', trigger: 'change' },
         ]"
       >
         <MinusCircleOutlined
           style="margin-right: 12px"
-          v-if="dynamicValidateForm.experiences.length > 1"
+          v-if="dynamicValidateForm.educations.length > 1"
           class="dynamic-delete-button"
           @click="removeDomain(experience)"
         />
@@ -31,7 +31,7 @@
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['experiences', index, 'alias']"
+        :name="['educations', index, 'alias']"
         :rules="[
           { required: true, message: 'Alias is required', trigger: 'change' },
         ]"
@@ -45,7 +45,7 @@
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['experiences', index, 'link']"
+        :name="['educations', index, 'link']"
         :rules="[
           { required: true, message: 'Link is required', trigger: 'change' },
         ]"
@@ -59,7 +59,7 @@
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['experiences', index, 'description']"
+        :name="['educations', index, 'description']"
         :rules="[
           {
             required: true,
@@ -74,7 +74,7 @@
           :auto-size="{ minRows: 3, maxRows: 5 }"
         />
       </a-form-item>
-      <a-form-item :name="['experiences', index, 'fileList']">
+      <a-form-item :name="['educations', index, 'fileList']">
         <a-upload
           v-model:file-list="experience.fileList"
           @preview="handlePreview"
@@ -120,26 +120,26 @@
 
 <script setup lang="ts">
 import {
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
+ExclamationCircleOutlined,
+MinusCircleOutlined,
+PlusOutlined,
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import dayjs from "dayjs";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-  deleteWorkExperience,
-  getImageUrl,
-  getWorkExperiences,
-  getWorkExperiencesById,
-  insertWorkExperiences,
-  updateWorkExperiences,
-  type IWorkExperiences,
-} from "../services/WorkService";
+deleteEducation,
+getEducationById,
+getEducations,
+insertEducation,
+updateEducation,
+type IEducation,
+} from "../services/EducationService";
+import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
-export interface WorkExperience {
+export interface Education {
   id: number | null;
   key: number;
   dateRange: any;
@@ -174,8 +174,8 @@ const formItemLayoutWithOutLabel = {
     sm: { span: 20, offset: 4 },
   },
 };
-const dynamicValidateForm = reactive<{ experiences: WorkExperience[] }>({
-  experiences: [],
+const dynamicValidateForm = reactive<{ educations: Education[] }>({
+  educations: [],
 });
 
 function getBase64(file: File) {
@@ -229,35 +229,32 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const workExperience = dynamicValidateForm.experiences[indexRow];
-      if (workExperience.id) {
-        const getByUserId = await getWorkExperiencesById(workExperience.id);
+      const education = dynamicValidateForm.educations[indexRow];
+      if (education.id) {
+        const getByUserId = await getEducationById(education.id);
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: workExperience.id,
-          start_date: workExperience.dateRange[0],
-          end_date: workExperience.dateRange[1],
-          link: workExperience.link,
-          description: workExperience.description,
+          id: education.id,
+          start_date: education.dateRange[0],
+          end_date: education.dateRange[1],
+          link: education.link,
+          description: education.description,
           images: oldImages,
           user_id: auth.user?.id,
-        } as IWorkExperiences;
+        } as IEducation;
 
-        updateWorkExperiences(rest)
+        updateEducation(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
             isLoading.value = false;
           });
-        // const { data: publicUrl } = supabase.storage
-        //   .from("portfolio-cms")
-        //   .getPublicUrl(filePath);
 
         onSuccess();
-        return false
+        return false;
       }
       // Notify Ant Design upload success
       // await saveAvatar({ profile_url: urlData.publicUrl });
@@ -268,7 +265,7 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const showConfirm = (item: WorkExperience) => {
+const showConfirm = (item: Education) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -279,11 +276,11 @@ const showConfirm = (item: WorkExperience) => {
     ),
     onOk() {
       if (item.id) {
-        deleteWorkExperience(item.id)
+        deleteEducation(item.id)
           .then(() => {
-            const index = dynamicValidateForm.experiences.indexOf(item);
+            const index = dynamicValidateForm.educations.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.experiences.splice(index, 1);
+              dynamicValidateForm.educations.splice(index, 1);
             }
             deleted();
           })
@@ -304,7 +301,7 @@ const submitForm = () => {
       .validate()
       .then(() => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.experiences).map((exp) => {
+        const plainData = toRaw(dynamicValidateForm.educations).map((exp) => {
           const rawRange = toRaw(exp.dateRange);
           return {
             ...exp,
@@ -322,13 +319,13 @@ const submitForm = () => {
               description: i.description,
               images: {},
               user_id: auth.user?.id,
-            } as IWorkExperiences)
+            } as IEducation)
         );
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertWorkExperiences(
+            insertEducation(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then(() => success())
@@ -342,7 +339,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach(({ images, ...u }) => {
-              updateWorkExperiences(u)
+              updateEducation(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -375,19 +372,19 @@ const handleCancel = () => {
   previewTitle.value = "";
 };
 
-const removeDomain = (item: WorkExperience) => {
+const removeDomain = (item: Education) => {
   if (item.id) {
     showConfirm(item);
   } else {
-    const index = dynamicValidateForm.experiences.indexOf(item);
+    const index = dynamicValidateForm.educations.indexOf(item);
     if (index !== -1) {
-      dynamicValidateForm.experiences.splice(index, 1);
+      dynamicValidateForm.educations.splice(index, 1);
     }
   }
 };
 
 const addExperience = () => {
-  dynamicValidateForm.experiences.push({
+  dynamicValidateForm.educations.push({
     id: null,
     dateRange: "",
     link: "",
@@ -437,11 +434,11 @@ const handleRemove = (id: number, _: number) => {
             }
             // Wait for Supabase deletion
             await deleteImage("portfolio-cms", filePath);
-            const getByUserId = await getWorkExperiencesById(id);
+            const getByUserId = await getEducationById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
-            updateWorkExperiences({ ...getByUserId, images: oldImages })
+            updateEducation({ ...getByUserId, images: oldImages })
               .then()
               .catch((e) => errors(e))
               .finally(() => {
@@ -455,7 +452,6 @@ const handleRemove = (id: number, _: number) => {
           }
         },
         onCancel() {
-          console.log("Cancel");
           resolve(false); // Return false if user cancels
         },
         class: "test",
@@ -482,7 +478,7 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const workExperiences = await getWorkExperiences(auth.user.id);
+    const workExperiences = await getEducations(auth.user.id);
     for (const i of workExperiences) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
@@ -505,20 +501,19 @@ const fetchAllData = async () => {
         alias: i.alias,
         description: i.description,
         fileList: imagesList,
-      } as WorkExperience;
-      dynamicValidateForm.experiences.push(pre);
+      } as Education;
+      dynamicValidateForm.educations.push(pre);
     }
   }
-}
+};
 
 watch(refreshKey, () => {
-  dynamicValidateForm.experiences = [];
+  dynamicValidateForm.educations = [];
   fetchAllData();
 });
 
-
 onMounted(async () => {
-  await fetchAllData()
+  await fetchAllData();
 });
 </script>
 <style scoped>

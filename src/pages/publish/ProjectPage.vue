@@ -48,8 +48,11 @@
             <a-typography-text style="color: dimgrey"
               >{{ experience.description }}
             </a-typography-text>
-            <a-flex horizontal style="margin-top: 10px;" wrap="wrap" gap="4">
-              <div v-for="skill in experience.skills.split(',')">
+            <a-flex horizontal style="margin-top: 10px" wrap="wrap" gap="4">
+              <div
+                v-for="skill in experience.skills.split(',')"
+                :key="skill"
+              >
                 <a-tag>{{ skill }}</a-tag>
               </div>
             </a-flex>
@@ -103,8 +106,6 @@ const dynamicValidateForm = reactive<{ experiences: ProjectExperience[] }>({
   experiences: [],
 });
 
-console.log("dynamicValidateForm.experiences", dynamicValidateForm.experiences);
-
 onMounted(async () => {
   const workExperiences = await getProjectExperiences(`${props.user_id}`);
   for (const i of workExperiences) {
@@ -112,7 +113,6 @@ onMounted(async () => {
     if (i.images && i.images.length > 0) {
       for (const img of i.images) {
         const tempImg = await getImageUrl(img.fileName, `${props.user_id}`);
-        console.log("tempImg", tempImg);
         imagesList.push({
           uid: img.id,
           name: img.fileName,

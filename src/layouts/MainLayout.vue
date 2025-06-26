@@ -23,7 +23,7 @@
             "
           >
             <img
-              src="/public/lemon-logo.svg"
+              src="/lemon-logo.svg?url"
               @click="$router.push('/admin')"
               alt="logo-app"
               width="30"
@@ -31,21 +31,6 @@
               style="text-align: center; cursor: pointer"
             />
           </div>
-          <!-- <a-typography
-            style="text-align: center; padding: 15px; cursor: pointer"
-            @click="$router.push('/admin')"
-            >CMS</a-typography
-          > -->
-
-          <!-- <a-menu-item
-            key="dashboard"
-            @click="$router.push('/admin/dashboard')"
-          >
-            <template #icon>
-              <DashboardOutlined />
-            </template>
-            Dashboard
-          </a-menu-item> -->
 
           <a-menu-item key="profile" @click="$router.push('/admin/profile')">
             <template #icon>
@@ -61,6 +46,16 @@
             Work
           </a-menu-item>
 
+          <a-menu-item
+            key="education"
+            @click="$router.push('/admin/education')"
+          >
+            <template #icon>
+              <CompressOutlined />
+            </template>
+            Education
+          </a-menu-item>
+
           <a-menu-item key="project" @click="$router.push('/admin/project')">
             <template #icon>
               <FundProjectionScreenOutlined />
@@ -68,11 +63,11 @@
             Project
           </a-menu-item>
 
-          <a-menu-item key="about" @click="$router.push('/admin/about')">
+          <a-menu-item key="project" @click="$router.push('/admin/language')">
             <template #icon>
-              <AliwangwangOutlined />
+              <TranslationOutlined />
             </template>
-            About
+            Language
           </a-menu-item>
 
           <a-menu-item key="contact" @click="$router.push('/admin/contact')">
@@ -80,6 +75,13 @@
               <LaptopOutlined />
             </template>
             Contact
+          </a-menu-item>
+
+          <a-menu-item key="about" @click="$router.push('/admin/about')">
+            <template #icon>
+              <AliwangwangOutlined />
+            </template>
+            About
           </a-menu-item>
 
           <a-menu-item key="settings" @click="$router.push('/admin/settings')">
@@ -102,7 +104,11 @@
           </a-breadcrumb>
         </a-layout-header>
         <a-layout-content
-          style="overflow-y: scroll; max-height: calc(100vh - 60px)"
+          style="
+            overflow-y: hidden;
+            overflow: auto;
+            max-height: calc(100vh - 60px);
+          "
         >
           <router-view />
         </a-layout-content>
@@ -113,12 +119,14 @@
 
 <script setup lang="ts">
 import {
-  AliwangwangOutlined,
-  FundProjectionScreenOutlined,
-  LaptopOutlined,
-  MediumWorkmarkOutlined,
-  SettingOutlined,
-  UserOutlined,
+AliwangwangOutlined,
+CompressOutlined,
+FundProjectionScreenOutlined,
+LaptopOutlined,
+MediumWorkmarkOutlined,
+SettingOutlined,
+TranslationOutlined,
+UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -133,9 +141,11 @@ const activeMenu = computed(() => {
   if (path === "/admin/dashboard") return "dashboard";
   if (path === "/admin/profile") return "profile";
   if (path === "/admin/work") return "work";
+  if (path === "/admin/education") return "education";
   if (path === "/admin/project") return "project";
-  if (path === "/admin/about") return "about";
+  if (path === "/admin/language") return "language";
   if (path === "/admin/contact") return "contact";
+  if (path === "/admin/about") return "about";
   if (path === "/admin/settings") return "settings";
   if (path === "/admin/users") return "user-list";
   if (path === "/admin/users/roles") return "user-roles";
@@ -161,6 +171,8 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Profile" });
   } else if (path === "/admin/work") {
     crumbs.push({ name: "Work" });
+  } else if (path === "/admin/education") {
+    crumbs.push({ name: "Education" });
   } else if (path === "/admin/project") {
     crumbs.push({ name: "Project" });
   } else if (path === "/admin/contact") {
