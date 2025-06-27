@@ -82,7 +82,7 @@ const formState = reactive<FormState>({
 
 const success = () => {
   message.success("Login successfully", 5);
-  router.push('admin/dashboard')
+  router.push('admin/profile')
 };
 
 const errors = (msg: string) => {

@@ -63,7 +63,7 @@
             Project
           </a-menu-item>
 
-          <a-menu-item key="project" @click="$router.push('/admin/language')">
+          <a-menu-item key="language" @click="$router.push('/admin/language')">
             <template #icon>
               <TranslationOutlined />
             </template>
@@ -119,14 +119,14 @@
 
 <script setup lang="ts">
 import {
-AliwangwangOutlined,
-CompressOutlined,
-FundProjectionScreenOutlined,
-LaptopOutlined,
-MediumWorkmarkOutlined,
-SettingOutlined,
-TranslationOutlined,
-UserOutlined
+  AliwangwangOutlined,
+  CompressOutlined,
+  FundProjectionScreenOutlined,
+  LaptopOutlined,
+  MediumWorkmarkOutlined,
+  SettingOutlined,
+  TranslationOutlined,
+  UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
