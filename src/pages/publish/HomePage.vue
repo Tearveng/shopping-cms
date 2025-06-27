@@ -77,6 +77,7 @@ useHead({
     { property: "og:title", content: `Portfolio | ${subdomain.value} ` },
     { property: "og:type", content: "website" },
     { property: "og:url", content: `https://${subdomain.value}.byveng.store` },
+    { property: "og:image", content: `https://${subdomain.value}.byveng.store/lemon-logo.svg` },
     {
       property: "og:description",
       content:
