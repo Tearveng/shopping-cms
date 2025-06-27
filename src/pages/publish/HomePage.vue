@@ -72,7 +72,7 @@ useHead({
     },
     {
       name: "keywords",
-      content: "portfolio, programming, seo, developer, frontend",
+      content: "portfolio, programming, seo, developer, frontend, Veng Tear",
     },
     { property: "og:title", content: `Portfolio | ${subdomain.value} ` },
     { property: "og:type", content: "website" },
