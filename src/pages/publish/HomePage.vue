@@ -2,13 +2,56 @@
   <a-flex style="justify-content: center" class="responsive-padding">
     <a-layout style="width: 100%; max-width: 600px; background-color: inherit">
       <a-flex vertical gap="55" v-if="user_id">
-        <ProfilePage :user_id="user_id" />
-        <AboutPage :user_id="user_id" />
-        <WorkExperiencePage :user_id="user_id" />
-        <EducationPage :user_id="user_id" />
-        <ProjectPage :user_id="user_id" />
-        <LanguagePage :user_id="user_id" />
-        <ContactPage :user_id="user_id" />
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.2 }"
+        >
+          <ProfilePage :user_id="user_id" />
+        </Motion>
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.4, }"
+        >
+          <AboutPage :user_id="user_id" />
+        </Motion>
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.6, }"
+        >
+          <WorkExperiencePage :user_id="user_id" />
+        </Motion>
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.8, }"
+        >
+          <EducationPage :user_id="user_id" />
+        </Motion>
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 1, }"
+        >
+          <ProjectPage :user_id="user_id" />
+        </Motion>
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 1.2, }"
+        >
+          <LanguagePage :user_id="user_id" />
+        </Motion>
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 1.4, }"
+        >
+          <ContactPage :user_id="user_id" />
+        </Motion>
+
       </a-flex>
       <div
         v-if="isLoading"
@@ -41,6 +84,7 @@
 </style>
 
 <script setup lang="ts">
+import { Motion } from '@motionone/vue';
 import { useHead } from "@vueuse/head";
 import { computed, onMounted, ref } from "vue";
 import { getSubdomainBySubdomain } from "../../services/SubdomainService";
@@ -77,7 +121,10 @@ useHead({
     { property: "og:title", content: `Portfolio | ${subdomain.value} ` },
     { property: "og:type", content: "website" },
     { property: "og:url", content: `https://${subdomain.value}.byveng.store` },
-    { property: "og:image", content: `https://${subdomain.value}.byveng.store/lemon-logo.svg` },
+    {
+      property: "og:image",
+      content: `https://${subdomain.value}.byveng.store/lemon-logo.svg`,
+    },
     {
       property: "og:description",
       content:
@@ -89,7 +136,7 @@ useHead({
 });
 
 onMounted(async () => {
-  const subdomainn = await getSubdomainBySubdomain(subdomain.value);
+  const subdomainn = await getSubdomainBySubdomain("vengtear");
   if (subdomainn) {
     user_id.value = subdomainn.user_id;
     isLoading.value = false;
