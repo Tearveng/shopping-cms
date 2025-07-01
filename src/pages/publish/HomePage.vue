@@ -136,7 +136,7 @@ useHead({
 });
 
 onMounted(async () => {
-  const subdomainn = await getSubdomainBySubdomain("vengtear");
+  const subdomainn = await getSubdomainBySubdomain(subdomain.value);
   if (subdomainn) {
     user_id.value = subdomainn.user_id;
     isLoading.value = false;
