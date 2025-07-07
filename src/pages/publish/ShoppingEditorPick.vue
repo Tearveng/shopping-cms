@@ -1,7 +1,12 @@
 <template>
-  <a-flex class="container" vertical style="background-color: aqua">
+  <a-flex class="container" vertical >
     <a-typography class="responsive-text">Editor's picks</a-typography>
-    <a-carousel ref="carouselRef" arrows v-model:current="currentPage" :afterChange="handleAfterChange">
+    <a-carousel
+      ref="carouselRef"
+      arrows
+      v-model:current="currentPage"
+      :afterChange="handleAfterChange"
+    >
       <!-- Loop through pages -->
       <div
         v-for="(page, pageIndex) in paginatedProducts"
@@ -56,26 +61,22 @@
     </a-carousel>
 
     <!-- Custom pagination controls -->
-    <div class="custom-pagination">
-      <a-button @click="prevPage" :disabled="currentPage === 0">
+    <a-flex style="align-items: center">
+      <a-button @click="prevPage" :disabled="currentPage === 0" type="ghost">
         <template #icon><left-outlined /></template>
-        Previous
       </a-button>
-      <div class="page-indicators">
-        <span
-          v-for="n in 3"
-          :key="n"
-          :class="['page-indicator', { active: currentPage === n - 1 }]"
-          @click="goToPage(n - 1)"
-        >
-          {{ n }}
-        </span>
-      </div>
-      <a-button @click="nextPage" :disabled="currentPage === 2">
-        Next
+      <a-typography
+        style="
+          font-size: .8rem;
+          font-weight: 500;
+          line-height: 1.7em;
+        "
+        >Showing 1-5 of 15 items</a-typography
+      >
+      <a-button @click="nextPage" :disabled="currentPage === 2" type="ghost">
         <template #icon><right-outlined /></template>
       </a-button>
-    </div>
+    </a-flex>
   </a-flex>
 </template>
 
@@ -102,16 +103,21 @@
 }
 :deep(.slick-slide) {
   text-align: center;
-  height: 460px;
+  height: 340px;
   line-height: 160px;
   overflow: hidden;
+}
+/* Hide dots */
+:deep(.ant-carousel .slick-dots) {
+  display: none !important;
 }
 
 .ant-carousel {
   width: 100%;
-  height: 600px; /* Set explicit height */
+  height: 340px; /* Set explicit height */
 }
 .slick-slide {
+  display: none;
   text-align: center;
   overflow: hidden;
 }
