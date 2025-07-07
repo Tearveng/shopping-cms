@@ -30,7 +30,7 @@ declare module "vue-router" {
 const routes: RouteRecordRaw[] = [
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
   {
-    path: "",
+    path: "/",
     name: "HomePage",
     component: HomePageVue,
     meta: {
