@@ -141,7 +141,7 @@ import {
   MediumWorkmarkOutlined,
   SettingOutlined,
   TranslationOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
