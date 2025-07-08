@@ -124,6 +124,11 @@
   padding: 3rem 2rem;
   align-items: center;
 }
+@media (max-width: 575px) {
+  .container {
+    padding: 3rem 1rem
+  }
+}
 </style>
 
 <script setup lang="ts"></script>

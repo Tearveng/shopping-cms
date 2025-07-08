@@ -74,6 +74,7 @@ a:hover {
   text-underline-offset: 6px; /* Space between icon/text and underline */
 }
 
+
 @media (max-width: 575px) {
   .image-responsive {
     margin: 0;

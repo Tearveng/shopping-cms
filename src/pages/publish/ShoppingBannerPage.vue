@@ -1,5 +1,5 @@
 <template>
-  <a-flex class="container">
+  <a-flex class="container" vertical>
     <img
       class="banner-image"
       src="https://images.ctfassets.net/tkr0x069m1it/6WKj5TyCrXMKxBmu5IYK4n/2d83701d98576600aa08e9ab850a2066/Desktop_Hero__8_.jpg?w=1986"
@@ -31,7 +31,7 @@
           >Nicole Richie exclusively for FASHIONPHILE.</a-typography-text
         >
       </a-flex>
-      <a-flex style="padding: 24px 0" gap="20">
+      <a-flex style="padding: 24px 0" gap="20" class="group-button">
         <a-button
           type="primary"
           style="
@@ -81,7 +81,6 @@
   height: 100%;
   object-fit: cover;
 }
-
 .content-banner {
   width: 100%;
   max-width: 1280px;
@@ -93,6 +92,19 @@
 }
 .text-block {
   max-width: 30rem;
+}
+
+@media (max-width: 575px) {
+  .content-banner {
+    padding: 0 1rem;
+  }
+  .container {
+    gap: 20px;
+  }
+  .group-button {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
 

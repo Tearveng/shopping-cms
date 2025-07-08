@@ -1,28 +1,31 @@
 <template>
-  <a-flex class="container" vertical >
+  <a-flex class="container" vertical>
     <a-typography class="responsive-text">Editor's picks</a-typography>
     <a-carousel
+      :style="{
+      maxWidth: carouselMaxWidth + 'px',
+      height: carouselHeight + 'px'
+    }"
       ref="carouselRef"
-      arrows
       v-model:current="currentPage"
       :afterChange="handleAfterChange"
     >
-      <!-- Loop through pages -->
       <div
+      editor="true"
+      ondblclick=""
         v-for="(page, pageIndex) in paginatedProducts"
         :key="pageIndex"
-        class="carousel-page"
       >
-        <!-- Loop through products in current page -->
-        <a-row :gutter="16" type="flex" justify="space-around">
+        <a-row :gutter="16" justify="center">
           <a-col
             v-for="(product, productIndex) in page"
             :key="productIndex"
-            :span="4"
+            :span="8"
           >
-            <a-flex vertical>
+            <a-flex vertical style="max-width: 190px">
               <a-image
                 src="https://prod-images.fashionphile.com/thumb/c2477c3368a156629964a518c7458b90/ad70f75ed52b7d16807f6bdda82ab9b6.jpg"
+                style="max-width: 190px"
                 :width="'100%'"
                 :height="'auto'"
                 :preview="false"
@@ -62,21 +65,29 @@
 
     <!-- Custom pagination controls -->
     <a-flex style="align-items: center">
-      <a-button @click="prevPage" :disabled="currentPage === 0" type="ghost">
+      <a-button
+        @click="prevPage"
+        :disabled="currentPage === 0"
+        type="link"
+        style="color: #000"
+      >
         <template #icon><left-outlined /></template>
       </a-button>
       <a-typography
-        style="
-          font-size: .8rem;
-          font-weight: 500;
-          line-height: 1.7em;
-        "
+        style="font-size: 0.8rem; font-weight: 500; line-height: 1.7em"
         >Showing 1-5 of 15 items</a-typography
       >
-      <a-button @click="nextPage" :disabled="currentPage === 2" type="ghost">
+      <a-button
+        @click="nextPage"
+        :disabled="currentPage === 2"
+        type="link"
+        style="color: #000"
+      >
         <template #icon><right-outlined /></template>
       </a-button>
     </a-flex>
+    <p >{{ breakpoints.greaterOrEqual('sm') }}</p>
+
   </a-flex>
 </template>
 
@@ -98,6 +109,7 @@
 }
 .container {
   max-width: 1280px;
+  background-color: red;
   padding: 2rem;
   align-items: center;
 }
@@ -113,7 +125,7 @@
 }
 
 .ant-carousel {
-  width: 100%;
+
   height: 340px; /* Set explicit height */
 }
 .slick-slide {
@@ -124,8 +136,12 @@
 </style>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch, watchEffect } from "vue";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
+import useBreakpoint from "ant-design-vue";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
 
 // Sample product data (replace with your actual data)
 const products = ref(
@@ -140,13 +156,14 @@ const products = ref(
 
 const carouselRef = ref(null);
 const currentPage = ref(0);
-const itemsPerPage = 5;
+const itemsPerPage =  ref(3)
+const carouselWidth = ref(0)
 
 // Split products into pages of 5 items each
 const paginatedProducts = computed(() => {
   const pages = [];
-  for (let i = 0; i < products.value.length; i += itemsPerPage) {
-    pages.push(products.value.slice(i, i + itemsPerPage));
+  for (let i = 0; i < products.value.length; i += itemsPerPage.value) {
+    pages.push(products.value.slice(i, i + itemsPerPage.value));
   }
   // Ensure we have exactly 3 pages (pad with empty items if needed)
   while (pages.length < 3) {
@@ -179,4 +196,21 @@ const prevPage = () => {
     carouselRef.value.prev();
   }
 };
+
+
+watch(() => breakpoints.sm.value, (isMedium) => {
+  console.log("breakpoints.sm.value", )
+  itemsPerPage.value = 2
+  carouselWidth.value = 576
+})
+watch(() => breakpoints.md.value, (isMedium) => {
+  itemsPerPage.value = 3
+})
+watch(() => breakpoints.lg.value, (isMedium) => {
+  itemsPerPage.value = 4
+})
+watch(() => breakpoints.xl.value, (isMedium) => {
+  itemsPerPage.value = 5
+})
+
 </script>
