@@ -9,9 +9,10 @@ import Home from "../pages/Home.vue";
 import Language from "../pages/Language.vue";
 import NotFound from "../pages/NotFound.vue";
 import Profile from "../pages/Profile.vue";
-import Project from "../pages/Project.vue";
 import HomePageVue from "../pages/publish/HomePage.vue";
 import Setting from "../pages/Setting.vue";
+import ShoppingBanner from "../pages/ShoppingBanner.vue";
+import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
 import Work from "../pages/Work.vue";
 import { useAuthStore } from "../stores/auth";
 
@@ -87,6 +88,28 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "banner",
+        name: "Banner",
+        component: ShoppingBanner,
+        meta: {
+          title: "Banner",
+          icon: "banner",
+          breadcrumb: ["Banner"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "top_design",
+        name: "Top design",
+        component: ShoppingTopDesigners,
+        meta: {
+          title: "Top design",
+          icon: "top_design",
+          breadcrumb: ["Top design"],
+          requiresAuth: true,
+        },
+      },
+      {
         path: "work",
         name: "Work",
         component: Work,
@@ -105,17 +128,6 @@ const routes: RouteRecordRaw[] = [
           title: "Education",
           icon: "education",
           breadcrumb: ["Education"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "project",
-        name: "Project",
-        component: Project,
-        meta: {
-          title: "Project",
-          icon: "project",
-          breadcrumb: ["Project"],
           requiresAuth: true,
         },
       },
@@ -291,3 +303,4 @@ export default router;
 // Export additional utilities
 export { routes };
 export type { RouteRecordRaw };
+

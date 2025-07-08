@@ -1,18 +1,5 @@
 import { supabase } from "../lib/supabase";
 
-export interface IProjectExperiences {
-  id?: number;
-  start_date: string;
-  end_date: string;
-  link: string;
-  alias: string;
-  skills: string;
-  description: string;
-  images?: Array<any>;
-  user_id: string;
-  created_at?: string;
-}
-
 export interface IShoppingBanner {
   id?: number;
   title: string;
@@ -22,18 +9,6 @@ export interface IShoppingBanner {
   user_id: string;
   created_at?: string;
 }
-
-export const insertProjectExperiences = async (
-  props: IProjectExperiences[]
-): Promise<IProjectExperiences[]> => {
-  const { data, error } = await supabase
-    .from("project_cms")
-    .insert(props)
-    .select();
-
-  if (error) throw error.message;
-  return data;
-};
 
 export const insertShoppingBanner = async (
   props: IShoppingBanner[]
@@ -55,30 +30,6 @@ export const updateShoppingBanner = async (prop: IShoppingBanner) => {
     .select();
   if (error) throw error.message;
 
-  return data;
-};
-
-export const updateProjectExperiences = async (prop: IProjectExperiences) => {
-  const { data, error } = await supabase
-    .from("project_cms")
-    .update(prop)
-    .eq("id", prop.id)
-    .select();
-  if (error) throw error.message;
-
-  return data;
-};
-
-export const getProjectExperiences = async (
-  user_id: string
-): Promise<IProjectExperiences[]> => {
-  const { data, error } = await supabase
-    .from("project_cms")
-    .select("*")
-    .order("created_at", { ascending: true })
-    .eq("user_id", user_id) // Replace with the actual user ID
-    .select();
-  if (error) throw error.message;
   return data;
 };
 

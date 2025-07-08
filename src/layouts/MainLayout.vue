@@ -39,6 +39,20 @@
             Profile
           </a-menu-item>
 
+          <a-menu-item key="banner" @click="$router.push('/admin/banner')">
+            <template #icon>
+              <FundProjectionScreenOutlined />
+            </template>
+            Banner
+          </a-menu-item>
+
+           <a-menu-item key="top_design" @click="$router.push('/admin/top_design')">
+            <template #icon>
+              <HighlightOutlined />
+            </template>
+            Top design
+          </a-menu-item>
+
           <a-menu-item key="work" @click="$router.push('/admin/work')">
             <template #icon>
               <MediumWorkmarkOutlined />
@@ -122,6 +136,7 @@ import {
   AliwangwangOutlined,
   CompressOutlined,
   FundProjectionScreenOutlined,
+  HighlightOutlined,
   LaptopOutlined,
   MediumWorkmarkOutlined,
   SettingOutlined,
@@ -153,6 +168,8 @@ const activeMenu = computed(() => {
   if (path === "/admin/products/categories") return "categories";
   if (path === "/admin/reports") return "reports";
   if (path === "/admin/settings") return "settings";
+  if (path === '/admin/banner') return 'banner';
+  if (path === '/admin/top_design') return 'top_design'
   return "admin/home";
 });
 
@@ -179,6 +196,10 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Contact" });
   } else if (path === "/admin/settings") {
     crumbs.push({ name: "Settings" });
+  } else if (path === '/admin/banner') {
+    crumbs.push({name: '/Banner'})
+  } else if (path === '/admin/top_design') {
+    crumbs.push({name: "/Top design"})
   }
 
   return crumbs;

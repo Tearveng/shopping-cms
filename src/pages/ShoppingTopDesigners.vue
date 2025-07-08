@@ -6,80 +6,40 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Education experience</a-typography-text>
+    <a-typography-text>Shopping top designers</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(experience, index) in dynamicValidateForm.educations"
-      :key="experience.key"
+      v-for="(designer, index) in dynamicValidateForm.designers"
+      :key="designer.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['educations', index, 'dateRange']"
-        :rules="[
-          { required: true, message: 'Link is required', trigger: 'change' },
-        ]"
+        :name="['designers', index, 'title']"
+        :rules="[{ required: true, message: 'Title is required', trigger: 'change' }]"
       >
-        <MinusCircleOutlined
-          style="margin-right: 12px"
-          v-if="dynamicValidateForm.educations.length > 1"
-          class="dynamic-delete-button"
-          @click="removeDomain(experience)"
-        />
-        <a-range-picker v-model:value="experience.dateRange" />
+        <a-flex>
+          <MinusCircleOutlined
+            style="margin-right: 12px"
+            v-if="dynamicValidateForm.designers.length > 1"
+            class="dynamic-delete-button"
+            @click="removeBanner(designer)"
+          />
+          <a-input
+            name="designer.alias"
+            v-model:value="designer.title"
+            placeholder="Title"
+            style="width: 100%; margin-right: 8px"
+          />
+        </a-flex>
       </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['educations', index, 'alias']"
-        :rules="[
-          { required: true, message: 'Alias is required', trigger: 'change' },
-        ]"
-      >
-        <a-input
-          name="experience.alias"
-          v-model:value="experience.alias"
-          placeholder="Alias"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['educations', index, 'link']"
-        :rules="[
-          { required: true, message: 'Link is required', trigger: 'change' },
-        ]"
-      >
-        <a-input
-          name="experience.link"
-          v-model:value="experience.link"
-          placeholder="Link"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['educations', index, 'description']"
-        :rules="[
-          {
-            required: true,
-            message: 'Description is required',
-            trigger: 'change',
-          },
-        ]"
-      >
-        <a-textarea
-          v-model:value="experience.description"
-          placeholder="Description"
-          :auto-size="{ minRows: 3, maxRows: 5 }"
-        />
-      </a-form-item>
-      <a-form-item :name="['educations', index, 'fileList']">
+      <a-form-item :name="['designers', index, 'fileList']">
         <a-upload
-          v-model:file-list="experience.fileList"
+          v-model:file-list="designer.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
-          :remove="handleRemove(Number(experience.id), index)"
+          :remove="handleRemove(Number(designer.id), index)"
           :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
@@ -99,7 +59,7 @@
       </a-form-item>
     </a-form-item>
     <a-form-item v-bind="formItemLayoutWithOutLabel">
-      <a-button type="dashed" style="width: 60%" @click="addExperience">
+      <a-button type="dashed" style="width: 60%" @click="addBanner">
         <PlusOutlined />
         Add field
       </a-button>
@@ -120,32 +80,28 @@
 
 <script setup lang="ts">
 import {
-ExclamationCircleOutlined,
-MinusCircleOutlined,
-PlusOutlined,
+  ExclamationCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
-import dayjs from "dayjs";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-deleteEducation,
-getEducationById,
-getEducations,
-insertEducation,
-updateEducation,
-type IEducation,
-} from "../services/EducationService";
+  deleteShoppingTopDesigner,
+  getShoppingTopDesigners,
+  getShoppingTopDesignersById,
+  insertShoppingTopDesigners,
+  updateShoppingTopDesigners,
+  type IShoppingTopDesigners
+} from "../services/TopDesignersService";
 import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
-export interface Education {
+export interface ShoppingTopDesigners {
   id: number | null;
   key: number;
-  dateRange: any;
-  link: string;
-  alias: string;
-  description: string;
+  title: string;
   fileList: any[];
 }
 
@@ -168,14 +124,16 @@ const formItemLayout = {
     sm: { span: 20 },
   },
 };
+
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
     sm: { span: 20, offset: 4 },
   },
 };
-const dynamicValidateForm = reactive<{ educations: Education[] }>({
-  educations: [],
+
+const dynamicValidateForm = reactive<{ designers: ShoppingTopDesigners[] }>({
+  designers: [],
 });
 
 function getBase64(file: File) {
@@ -229,24 +187,21 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const education = dynamicValidateForm.educations[indexRow];
-      if (education.id) {
-        const getByUserId = await getEducationById(education.id);
+      const shoppingBanner = dynamicValidateForm.designers[indexRow];
+      if (shoppingBanner.id) {
+        const getByUserId = await getShoppingTopDesignersById(shoppingBanner.id);
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: education.id,
-          start_date: education.dateRange[0],
-          end_date: education.dateRange[1],
-          link: education.link,
-          description: education.description,
+          id: shoppingBanner.id,
+          title: shoppingBanner.title,
           images: oldImages,
           user_id: auth.user?.id,
-        } as IEducation;
+        } as IShoppingTopDesigners;
 
-        updateEducation(rest)
+        updateShoppingTopDesigners(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
@@ -265,7 +220,18 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const showConfirm = (item: Education) => {
+const removeBanner = (item: ShoppingTopDesigners) => {
+  if (item.id) {
+    showConfirm(item);
+  } else {
+    const index = dynamicValidateForm.designers.indexOf(item);
+    if (index !== -1) {
+      dynamicValidateForm.designers.splice(index, 1);
+    }
+  }
+};
+
+const showConfirm = (item: ShoppingTopDesigners) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -276,11 +242,11 @@ const showConfirm = (item: Education) => {
     ),
     onOk() {
       if (item.id) {
-        deleteEducation(item.id)
+        deleteShoppingTopDesigner(item.id)
           .then(() => {
-            const index = dynamicValidateForm.educations.indexOf(item);
+            const index = dynamicValidateForm.designers.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.educations.splice(index, 1);
+              dynamicValidateForm.designers.splice(index, 1);
             }
             deleted();
           })
@@ -295,37 +261,28 @@ const showConfirm = (item: Education) => {
   });
 };
 
+// submit form
 const submitForm = () => {
   if (formRef.value) {
     formRef.value
       .validate()
       .then(() => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.educations).map((exp) => {
-          const rawRange = toRaw(exp.dateRange);
-          return {
-            ...exp,
-            dateRange: rawRange.map((d: any) => d?.format("YYYY-MM-DD")),
-          };
-        });
+        const plainData = toRaw(dynamicValidateForm.designers);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id,
-              start_date: i.dateRange[0],
-              end_date: i.dateRange[1],
-              link: i.link,
-              alias: i.alias,
-              description: i.description,
-              images: {},
+              title: i.title,
+              images: [],
               user_id: auth.user?.id,
-            } as IEducation)
+            } as IShoppingTopDesigners)
         );
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertEducation(
+            insertShoppingTopDesigners(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then(() => success())
@@ -339,7 +296,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach(({ images, ...u }) => {
-              updateEducation(u)
+              updateShoppingTopDesigners(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -372,24 +329,10 @@ const handleCancel = () => {
   previewTitle.value = "";
 };
 
-const removeDomain = (item: Education) => {
-  if (item.id) {
-    showConfirm(item);
-  } else {
-    const index = dynamicValidateForm.educations.indexOf(item);
-    if (index !== -1) {
-      dynamicValidateForm.educations.splice(index, 1);
-    }
-  }
-};
-
-const addExperience = () => {
-  dynamicValidateForm.educations.push({
+const addBanner = () => {
+  dynamicValidateForm.designers.push({
     id: null,
-    dateRange: "",
-    link: "",
-    alias: "",
-    description: "",
+    title: "",
     key: Date.now(),
     fileList: [],
   });
@@ -434,11 +377,11 @@ const handleRemove = (id: number, _: number) => {
             }
             // Wait for Supabase deletion
             await deleteImage("shopping-storage", filePath);
-            const getByUserId = await getEducationById(id);
+            const getByUserId = await getShoppingTopDesignersById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
-            updateEducation({ ...getByUserId, images: oldImages })
+            updateShoppingTopDesigners({ ...getByUserId, images: oldImages })
               .then()
               .catch((e) => errors(e))
               .finally(() => {
@@ -452,6 +395,7 @@ const handleRemove = (id: number, _: number) => {
           }
         },
         onCancel() {
+          console.log("Cancel");
           resolve(false); // Return false if user cancels
         },
         class: "test",
@@ -478,12 +422,13 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const workExperiences = await getEducations(auth.user.id);
-    for (const i of workExperiences) {
+    const shoppingBanners = await getShoppingTopDesigners(auth.user.id);
+    for (const i of shoppingBanners) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
           const tempImg = await getImageUrl(img.fileName, auth.user.id);
+          console.log("tempImg", tempImg)
           imagesList.push({
             uid: img.id,
             name: img.fileName,
@@ -496,19 +441,16 @@ const fetchAllData = async () => {
       const pre = {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
-        dateRange: [dayjs(i.start_date), dayjs(i.end_date)],
-        link: i.link,
-        alias: i.alias,
-        description: i.description,
+        title: i.title,
         fileList: imagesList,
-      } as Education;
-      dynamicValidateForm.educations.push(pre);
+      } as ShoppingTopDesigners;
+      dynamicValidateForm.designers.push(pre);
     }
   }
 };
 
 watch(refreshKey, () => {
-  dynamicValidateForm.educations = [];
+  dynamicValidateForm.designers = [];
   fetchAllData();
 });
 

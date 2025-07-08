@@ -1,22 +1,18 @@
 import { supabase } from "../lib/supabase";
 
-export interface IWorkExperiences {
+export interface IShoppingFeatureCollections {
   id?: number;
-  start_date: string;
-  end_date: string;
-  link: string;
-  alias: string;
-  description: string;
+  title: string;
   images?: Array<any>;
   user_id: string;
   created_at?: string;
 }
 
-export const insertWorkExperiences = async (
-  props: IWorkExperiences[]
-): Promise<IWorkExperiences[]> => {
+export const insertShoppingFeatureCollections = async (
+  props: IShoppingFeatureCollections[]
+): Promise<IShoppingFeatureCollections[]> => {
   const { data, error } = await supabase
-    .from("work_cms")
+    .from("shopping_feature_collects")
     .insert(props)
     .select();
 
@@ -24,9 +20,9 @@ export const insertWorkExperiences = async (
   return data;
 };
 
-export const updateWorkExperiences = async (prop: IWorkExperiences) => {
+export const updateShoppingFeatureCollections = async (prop: IShoppingFeatureCollections) => {
   const { data, error } = await supabase
-    .from("work_cms")
+    .from("shopping_feature_collections")
     .update(prop)
     .eq("id", prop.id)
     .select();
@@ -35,11 +31,11 @@ export const updateWorkExperiences = async (prop: IWorkExperiences) => {
   return data;
 };
 
-export const getWorkExperiences = async (
+export const getShoppingFeatureCollections = async (
   user_id: string
-): Promise<IWorkExperiences[]> => {
+): Promise<IShoppingFeatureCollections[]> => {
   const { data, error } = await supabase
-    .from("work_cms")
+    .from("shopping_feature_collections")
     .select("*")
     .order("created_at", { ascending: true })
     .eq("user_id", user_id) // Replace with the actual user ID
@@ -48,11 +44,11 @@ export const getWorkExperiences = async (
   return data;
 };
 
-export const getWorkExperiencesById = async (
+export const getShoppingFeatureCollectionsById = async (
   id: number
-): Promise<IWorkExperiences> => {
+): Promise<IShoppingFeatureCollections> => {
   const { data, error } = await supabase
-    .from("work_cms")
+    .from("shopping_feature_collections")
     .select("*")
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();
@@ -60,15 +56,15 @@ export const getWorkExperiencesById = async (
   return data;
 };
 
-export const deleteWorkExperience = async (id: number): Promise<boolean> => {
-  const { error } = await supabase.from("work_cms").delete().eq("id", id);
+export const deleteShoppingFeatureCollections = async (id: number): Promise<boolean> => {
+  const { error } = await supabase.from("shopping_feature_collections").delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };
 
 export const getImageUrl = async (fileName: string, user_id: string) => {
   const { data } = supabase.storage
-    .from("shopping-storage")
+    .from("portfolio-cms")
     .getPublicUrl(`${user_id}/${fileName}`);
   return data.publicUrl;
 };
