@@ -1,93 +1,114 @@
 <template>
   <a-flex class="container" vertical>
     <a-typography class="responsive-text">Editor's picks</a-typography>
-    <a-carousel
-      :style="{
-      maxWidth: carouselMaxWidth + 'px',
-      height: carouselHeight + 'px'
-    }"
-      ref="carouselRef"
-      v-model:current="currentPage"
-      :afterChange="handleAfterChange"
-    >
-      <div
-      editor="true"
-      ondblclick=""
-        v-for="(page, pageIndex) in paginatedProducts"
-        :key="pageIndex"
-      >
-        <a-row :gutter="16" justify="center">
-          <a-col
-            v-for="(product, productIndex) in page"
-            :key="productIndex"
-            :span="8"
+    <div class="carousel__wrapper">
+      <Carousel v-bind="config" ref="carouselRef">
+        <Slide v-for="product in productCategories" :key="product.id">
+          <a-flex
+            vertical
+            style="
+              max-width: 190px;
+              align-items: center;
+              justify-content: center;
+            "
           >
-            <a-flex vertical style="max-width: 190px">
-              <a-image
-                src="https://prod-images.fashionphile.com/thumb/c2477c3368a156629964a518c7458b90/ad70f75ed52b7d16807f6bdda82ab9b6.jpg"
-                style="max-width: 190px"
-                :width="'100%'"
-                :height="'auto'"
-                :preview="false"
-              />
-              <a-typography
-                style="
-                  font-size: 1rem;
-                  font-weight: 600;
-                  letter-spacing: 0.25em;
-                  line-height: 1.4em;
-                  text-transform: uppercase;
-                "
-                >hermes</a-typography
-              >
-              <a-typography
-                style="font-size: 0.8rem; font-weight: 200; line-height: 1.7em"
-                >Negonda Garden Party 30 TPM Bleu Zellige</a-typography
-              >
-              <a-typography
-                style="
-                  font-size: 0.8rem;
-                  font-weight: 200;
-                  line-height: 1.7em;
-                  color: #00000080;
-                "
-                >Condition: Show Wear</a-typography
-              >
-              <a-typography
-                style="font-size: 1rem; font-weight: 500; line-height: 1.7em"
-                >$3,695</a-typography
-              >
-            </a-flex>
-          </a-col>
-        </a-row>
-      </div>
-    </a-carousel>
+            <a-image
+              :src="product.image"
+              style="max-width: 190px"
+              :width="'100%'"
+              :height="'auto'"
+              :preview="false"
+            />
+            <a-typography
+              style="
+                font-size: 1rem;
+                font-weight: 600;
+                letter-spacing: 0.25em;
+                line-height: 1.4em;
+                text-transform: uppercase;
+              "
+              >{{ product.name }}</a-typography
+            >
+            <a-typography
+              style="
+                font-size: 0.8rem;
+                font-weight: 200;
+                line-height: 1.7em;
+                text-align: center;
+              "
+              >{{ product.description }}</a-typography
+            >
+            <a-typography
+              style="
+                font-size: 0.8rem;
+                font-weight: 200;
+                line-height: 1.7em;
+                color: #00000080;
+              "
+              >Condition: {{ product.condition }}</a-typography
+            >
+            <a-typography
+              style="font-size: 1rem; font-weight: 500; line-height: 1.7em"
+              >${{ product.price }}</a-typography
+            >
+          </a-flex>
+        </Slide>
 
-    <!-- Custom pagination controls -->
-    <a-flex style="align-items: center">
-      <a-button
-        @click="prevPage"
-        :disabled="currentPage === 0"
-        type="link"
-        style="color: #000"
-      >
-        <template #icon><left-outlined /></template>
-      </a-button>
-      <a-typography
-        style="font-size: 0.8rem; font-weight: 500; line-height: 1.7em"
-        >Showing 1-5 of 15 items</a-typography
-      >
-      <a-button
-        @click="nextPage"
-        :disabled="currentPage === 2"
-        type="link"
-        style="color: #000"
-      >
-        <template #icon><right-outlined /></template>
-      </a-button>
-    </a-flex>
-    <p >{{ breakpoints.greaterOrEqual('sm') }}</p>
-
+        <template #addons>
+          <CarouselNavigation>
+            <a-flex justify="center" align="center" v-if="carouselRef"
+              ><a-button
+                @click="
+                  () => {
+                    carouselRef.slideTo(
+                      carouselRef.visibleRange.min -
+                        1 -
+                        (carouselRef.visibleRange.max -
+                          carouselRef.visibleRange.min),
+                      false
+                    );
+                    carouselRef.updateSlideSize();
+                  }
+                "
+                type="link"
+                style="color: #000"
+              >
+                <template #icon><left-outlined /></template>
+              </a-button>
+              <a-typography
+                style="font-size: 0.8rem; font-weight: 500; line-height: 1.7em"
+                >Showing {{ carouselRef.visibleRange.min + 1 }}-{{
+                  carouselRef.visibleRange.max + 1
+                }}
+                of {{ productCategories.length }} items</a-typography
+              >
+              <a-button
+                @click="
+                  () => {
+                    if (
+                      carouselRef.visibleRange.max ===
+                      productCategories.length - 1
+                    )
+                      return;
+                    carouselRef.slideTo(
+                      carouselRef.visibleRange.min +
+                        1 +
+                        (carouselRef.visibleRange.max -
+                          carouselRef.visibleRange.min),
+                      false
+                    );
+                    carouselRef.updateSlideSize();
+                  }
+                "
+                type="link"
+                style="color: #000"
+              >
+                <template #icon><right-outlined /></template> </a-button
+            ></a-flex>
+          </CarouselNavigation>
+        </template>
+      </Carousel>
+    </div>
   </a-flex>
 </template>
 
@@ -105,72 +126,210 @@
     1.6rem
   ); /* Min: 1rem, Preferred: 2vw, Max: 1.5rem */
   font-weight: 500;
-  padding-bottom: 2rem;
 }
 .container {
   max-width: 1280px;
-  background-color: red;
   padding: 2rem;
   align-items: center;
 }
-:deep(.slick-slide) {
-  text-align: center;
-  height: 340px;
-  line-height: 160px;
+.carousel {
+  --vc-pgn-background-color: rgba(255, 255, 255, 0.7);
+  --vc-pgn-active-color: rgba(255, 255, 255, 1);
+  --vc-nav-background: rgba(255, 255, 255, 0.7);
+  --vc-nav-border-radius: 100%;
+}
+.carousel__wrapper {
+  height: 370px;
   overflow: hidden;
+  max-width: 1216px;
+  padding: 2px;
 }
-/* Hide dots */
-:deep(.ant-carousel .slick-dots) {
-  display: none !important;
-}
-
-.ant-carousel {
-
-  height: 340px; /* Set explicit height */
-}
-.slick-slide {
-  display: none;
-  text-align: center;
-  overflow: hidden;
+@media (max-width: 575px) {
+  .container {
+    padding: 3rem 1rem
+  }
 }
 </style>
 
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect } from "vue";
+import { ref } from "vue";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
-import useBreakpoint from "ant-design-vue";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+import { Carousel, Slide } from "vue3-carousel";
 
-const breakpoints = useBreakpoints(breakpointsTailwind)
+const config = {
+  height: 340,
+  itemsToShow: 5,
+  gap: 5,
+  snapAlign: "center",
 
-// Sample product data (replace with your actual data)
-const products = ref(
-  Array.from({ length: 15 }, (_, i) => ({
-    id: i + 1,
-    name: `Product ${i + 1}`,
-    price: (19.99 + i).toFixed(2),
-    image: `https://picsum.photos/300/200?random=${i}`,
-    description: `Description for product ${i + 1}`,
-  }))
-);
+  // 'breakpointMode' determines how the carousel breakpoints are calculated
+  // Acceptable values: 'viewport' (default) | 'carousel'
+  // 'viewport' - breakpoints are based on the viewport width
+  // 'carousel' - breakpoints are based on the carousel width
+  breakpointMode: "carousel",
+
+  // Breakpoints are mobile-first
+  // Any settings not specified will fall back to the carousel's default settings
+  breakpoints: {
+    300: {
+      itemsToShow: 2,
+      snapAlign: "start",
+    },
+    575: {
+      itemsToShow: 3,
+      snapAlign: "start",
+    },
+    768: {
+      itemsToShow: 4,
+      snapAlign: "start",
+    },
+    992: {
+      itemsToShow: 5,
+      snapAlign: "start",
+    },
+  },
+} as any;
 
 const carouselRef = ref(null);
 const currentPage = ref(0);
-const itemsPerPage =  ref(3)
-const carouselWidth = ref(0)
-
-// Split products into pages of 5 items each
-const paginatedProducts = computed(() => {
-  const pages = [];
-  for (let i = 0; i < products.value.length; i += itemsPerPage.value) {
-    pages.push(products.value.slice(i, i + itemsPerPage.value));
-  }
-  // Ensure we have exactly 3 pages (pad with empty items if needed)
-  while (pages.length < 3) {
-    pages.push([]);
-  }
-  return pages.slice(0, 3); // Only take first 3 pages
-});
+const productCategories = ref([
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+  {
+    id: 102,
+    image:
+      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+    name: "CHANEL",
+    description: "Chanel",
+    condition: "Excellent",
+    price: 8995,
+  },
+  {
+    id: 101,
+    image:
+      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+    name: "HERMES",
+    description: "Epsom Birkin 30 Flamingo",
+    condition: "Shows Wear",
+    price: 599.99,
+  },
+]);
 
 const handleAfterChange = (current) => {
   currentPage.value = current;
@@ -183,12 +342,7 @@ const goToPage = (pageNumber: number) => {
   }
 };
 
-const nextPage = () => {
-  if (currentPage.value < 2) {
-    currentPage.value++;
-    carouselRef.value.next();
-  }
-};
+const nextPage = () => carouselRef.next();
 
 const prevPage = () => {
   if (currentPage.value > 0) {
@@ -196,21 +350,4 @@ const prevPage = () => {
     carouselRef.value.prev();
   }
 };
-
-
-watch(() => breakpoints.sm.value, (isMedium) => {
-  console.log("breakpoints.sm.value", )
-  itemsPerPage.value = 2
-  carouselWidth.value = 576
-})
-watch(() => breakpoints.md.value, (isMedium) => {
-  itemsPerPage.value = 3
-})
-watch(() => breakpoints.lg.value, (isMedium) => {
-  itemsPerPage.value = 4
-})
-watch(() => breakpoints.xl.value, (isMedium) => {
-  itemsPerPage.value = 5
-})
-
 </script>

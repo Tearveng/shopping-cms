@@ -60,6 +60,28 @@
           <ShoppingEditorPick />
         </Motion>
       </a-flex>
+
+      <!-- shopping live announce -->
+      <a-flex vertical gap="55" style="width: 100%; align-items: center">
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.2 }"
+        >
+          <ShoppingLiveAnnounce />
+        </Motion>
+      </a-flex>
+
+      <!-- shopping in person -->
+      <a-flex vertical gap="55" style="width: 100%; align-items: center">
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.2 }"
+        >
+          <ShoppingInPerson />
+        </Motion>
+      </a-flex>
     </a-layout>
   </a-flex>
   <div v-if="!found && !isLoading">
@@ -98,6 +120,8 @@ import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
 import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
 import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
 import ShoppingEditorPick from "./ShoppingEditorPick.vue";
+import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
+import ShoppingInPerson from "./ShoppingInPerson.vue";
 
 const user_id = ref<string>("");
 const found = ref<boolean>(true);
