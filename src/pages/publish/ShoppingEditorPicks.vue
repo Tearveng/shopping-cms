@@ -331,23 +331,23 @@ const productCategories = ref([
   },
 ]);
 
-const handleAfterChange = (current) => {
-  currentPage.value = current;
-};
+// const handleAfterChange = (current) => {
+//   currentPage.value = current;
+// };
 
-const goToPage = (pageNumber: number) => {
-  if (pageNumber >= 0 && pageNumber < 3) {
-    currentPage.value = pageNumber;
-    carouselRef.value.goTo(pageNumber);
-  }
-};
+// const goToPage = (pageNumber: number) => {
+//   if (pageNumber >= 0 && pageNumber < 3) {
+//     currentPage.value = pageNumber;
+//     carouselRef.value.goTo(pageNumber);
+//   }
+// };
 
-const nextPage = () => carouselRef.next();
+// const nextPage = () => carouselRef.next();
 
-const prevPage = () => {
-  if (currentPage.value > 0) {
-    currentPage.value--;
-    carouselRef.value.prev();
-  }
-};
+// const prevPage = () => {
+//   if (currentPage.value > 0) {
+//     currentPage.value--;
+//     carouselRef.value.prev();
+//   }
+// };
 </script>

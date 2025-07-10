@@ -1,6 +1,6 @@
 <template>
     <a-flex class="container" vertical>
-      <a-typography class="responsive-text">Shopping in person</a-typography>
+      <a-typography class="responsive-text">Shop in person</a-typography>
 
       <a-row :gutter="[24, 24]">
         <a-col :span="6" :xs="12" :sm="6">

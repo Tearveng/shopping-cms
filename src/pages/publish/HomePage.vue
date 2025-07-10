@@ -4,7 +4,15 @@
       style="width: 100%; background-color: inherit; align-items: center"
     >
       <!-- headers  -->
-      <a-flex class="sh-navigation"> Header </a-flex>
+      <a-flex class="sh-navigation">
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.2 }"
+        >
+          <ShoppingHeader />
+        </Motion>
+      </a-flex>
 
       <!-- shopping banner -->
       <a-flex vertical gap="55" style="width: 100%">
@@ -13,7 +21,7 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, delay: 0.2 }"
         >
-          <ShoppingBannerPage />
+          <ShoppingBanner />
         </Motion>
       </a-flex>
 
@@ -57,7 +65,7 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, delay: 0.2 }"
         >
-          <ShoppingEditorPick />
+          <ShoppingEditorPicks />
         </Motion>
       </a-flex>
 
@@ -82,6 +90,20 @@
           <ShoppingInPerson />
         </Motion>
       </a-flex>
+
+      <a-flex
+        vertical
+        gap="55"
+        style="width: 100%; align-items: center; background-color: #000"
+      >
+        <Motion
+          :initial="{ opacity: 0, x: -100 }"
+          :animate="{ opacity: 1, x: 0 }"
+          :transition="{ duration: 0.8, delay: 0.2 }"
+        >
+          <ShoppingFooter />
+        </Motion>
+      </a-flex>
     </a-layout>
   </a-flex>
   <div v-if="!found && !isLoading">
@@ -92,22 +114,16 @@
 <style>
 .sh-navigation {
   width: 100%;
-  height: 50px;
-  background-color: brown;
+  height: auto;
   max-width: 1280px;
   padding: 0 2rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
-/* .responsive-padding {
-  padding: 82px 62px;
-} */
-
-/* Extra small screens (xs: <576px) */
-/* @media (max-width: 575px) {
-  .responsive-padding {
-    padding: 70px 22px 24px;
+@media (max-width: 575px) {
+  .sh-navigation {
+    padding: 0 1rem;
   }
-} */
+}
 </style>
 
 <script setup lang="ts">
@@ -115,13 +131,16 @@ import { Motion } from "@motionone/vue";
 import { useHead } from "@vueuse/head";
 import { computed, onMounted, ref } from "vue";
 import { getSubdomainBySubdomain } from "../../services/SubdomainService";
-import ShoppingBannerPage from "./ShoppingBannerPage.vue";
+import Shopping from "./ShoppingEditorPicks.vue";
+import ShoppingBanner from "./ShoppingBanner.vue";
 import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
 import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
 import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
-import ShoppingEditorPick from "./ShoppingEditorPick.vue";
 import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
 import ShoppingInPerson from "./ShoppingInPerson.vue";
+import ShoppingFooter from "./ShoppingFooter.vue";
+import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
+import ShoppingHeader from "./ShoppingHeader.vue";
 
 const user_id = ref<string>("");
 const found = ref<boolean>(true);
