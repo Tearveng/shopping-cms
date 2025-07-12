@@ -7,6 +7,7 @@ import App from "./App.vue";
 import { supabase } from "./lib/supabase";
 import router from "./router";
 import { useAuthStore } from "./stores/auth";
+import "vue3-carousel/carousel.css";
 import "./style.css";
 
 const app = createApp(App);

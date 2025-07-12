@@ -72,7 +72,6 @@
   min-height: 31.5rem;
   max-height: 37.25rem;
   height: 100px;
-  background-color: aquamarine;
   align-items: center;
   justify-content: center;
 }
