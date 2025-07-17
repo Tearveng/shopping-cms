@@ -6,17 +6,17 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping banner</a-typography-text>
+    <a-typography-text>Shopping live announce</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(banner, index) in dynamicValidateForm.banners"
-      :key="banner.key"
+      v-for="(announce, index) in dynamicValidateForm.announces"
+      :key="announce.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['banners', index, 'title']"
+        :name="['announces', index, 'title']"
         :rules="[
           { required: true, message: 'Title is required', trigger: 'change' },
         ]"
@@ -24,13 +24,13 @@
         <a-flex>
           <MinusCircleOutlined
             style="margin-right: 12px"
-            v-if="dynamicValidateForm.banners.length > 1"
+            v-if="dynamicValidateForm.announces.length > 1"
             class="dynamic-delete-button"
-            @click="removeBanner(banner)"
+            @click="removeBanner(announce)"
           />
           <a-input
-            name="banner.alias"
-            v-model:value="banner.title"
+            name="announce.alias"
+            v-model:value="announce.title"
             placeholder="Title"
             style="width: 100%; margin-right: 8px"
           />
@@ -38,46 +38,64 @@
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['banners', index, 'subtitle']"
+        :name="['announces', index, 'description']"
         :rules="[
           {
             required: true,
-            message: 'Subtitle is required',
+            message: 'Description is required',
             trigger: 'change',
           },
         ]"
       >
         <a-input
-          name="banner.subtitle"
-          v-model:value="banner.subtitle"
-          placeholder="Subtitle"
+          name="announce.subtitle"
+          v-model:value="announce.subtitle"
+          placeholder="Description"
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['banners', index, 'slogan']"
+        :name="['announces', index, 'condition']"
         :rules="[
           {
             required: true,
-            message: 'Slogan is required',
+            message: 'Condition is required',
             trigger: 'change',
           },
         ]"
       >
         <a-input
-          name="banner.slogan"
-          v-model:value="banner.slogan"
-          placeholder="Slogan"
+          name="editor.slogan"
+          v-model:value="editor.condition"
+          placeholder="Condition"
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
-      <a-form-item :name="['banners', index, 'fileList']">
+       <a-form-item
+        style="margin-bottom: -16px"
+        :name="['editors', index, 'price']"
+        :rules="[
+          {
+            required: true,
+            message: 'Price is required',
+            trigger: 'change',
+          },
+        ]"
+      >
+        <a-input
+          name="editor.price"
+          v-model:value="editor.price"
+          placeholder="price"
+          style="width: 100%; margin-right: 8px"
+        />
+      </a-form-item>
+      <a-form-item :name="['editors', index, 'fileList']">
         <a-upload
-          v-model:file-list="banner.fileList"
+          v-model:file-list="editor.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
-          :remove="handleRemove(Number(banner.id), index)"
+          :remove="handleRemove(Number(editor.id), index)"
           :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
@@ -126,22 +144,22 @@ import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-  deleteShoppingFeatureCollections,
-  getShoppingFeatureCollections,
-  getShoppingFeatureCollectionsById,
-  insertShoppingFeatureCollections,
-  updateShoppingFeatureCollections,
-  type IShoppingFeatureCollections,
-} from "../services/FeatureCollectionService";
+  deleteShoppingEditorPicks,
+  getShoppingEditorPicks,
+  getShoppingEditorPicksById,
+  insertShoppingEditorPicks,
+  updateShoppingEditorPicks,
+  type IShoppingEditorPicks
+} from "../services/EditorPickService";
 import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
-export interface ShoppingFeatureCollection {
+export interface ShoppingLiveAnnounce {
   id: number | null;
   key: number;
   title: string;
-  subtitle: string;
-  slogan: string;
+  description: string;
+  link: string;
   fileList: any[];
 }
 
@@ -172,8 +190,8 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const dynamicValidateForm = reactive<{ banners: ShoppingFeatureCollection[] }>({
-  banners: [],
+const dynamicValidateForm = reactive<{ announces: ShoppingEditorPick[] }>({
+  announces: [],
 });
 
 function getBase64(file: File) {
@@ -227,25 +245,26 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const shoppingFeature = dynamicValidateForm.banners[indexRow];
-      if (shoppingFeature.id) {
-        const getByUserId = await getShoppingFeatureCollectionsById(
-          shoppingFeature.id
+      const shoppingEditorPick = dynamicValidateForm.editors[indexRow];
+      if (shoppingEditorPick.id) {
+        const getByUserId = await getShoppingEditorPicksById(
+          shoppingEditorPick.id
         );
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: shoppingFeature.id,
-          title: shoppingFeature.title,
-          subtitle: shoppingFeature.subtitle,
-          slogan: shoppingFeature.slogan,
+          id: shoppingEditorPick.id,
+          title: shoppingEditorPick.title,
+          subtitle: shoppingEditorPick.subtitle,
+          condition: shoppingEditorPick.condition,
+          price: shoppingEditorPick.price,
           images: oldImages,
           user_id: auth.user?.id,
-        } as IShoppingFeatureCollections;
+        } as IShoppingEditorPicks;
 
-        updateShoppingFeatureCollections(rest)
+        updateShoppingEditorPicks(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
@@ -264,18 +283,18 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const removeBanner = (item: ShoppingFeatureCollection) => {
+const removeBanner = (item: ShoppingEditorPick) => {
   if (item.id) {
     showConfirm(item);
   } else {
-    const index = dynamicValidateForm.banners.indexOf(item);
+    const index = dynamicValidateForm.editors.indexOf(item);
     if (index !== -1) {
-      dynamicValidateForm.banners.splice(index, 1);
+      dynamicValidateForm.editors.splice(index, 1);
     }
   }
 };
 
-const showConfirm = (item: ShoppingFeatureCollection) => {
+const showConfirm = (item: ShoppingEditorPick) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -286,11 +305,11 @@ const showConfirm = (item: ShoppingFeatureCollection) => {
     ),
     onOk() {
       if (item.id) {
-        deleteShoppingFeatureCollections(item.id)
+        deleteShoppingEditorPicks(item.id)
           .then(() => {
-            const index = dynamicValidateForm.banners.indexOf(item);
+            const index = dynamicValidateForm.editors.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.banners.splice(index, 1);
+              dynamicValidateForm.editors.splice(index, 1);
             }
             deleted();
           })
@@ -312,23 +331,24 @@ const submitForm = () => {
       .validate()
       .then(() => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.banners);
+        const plainData = toRaw(dynamicValidateForm.editors);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id,
               title: i.title,
               subtitle: i.subtitle,
-              slogan: i.slogan,
+              condition: i.condition,
+              price: i.price,
               images: [],
               user_id: auth.user?.id,
-            } as IShoppingFeatureCollections)
+            } as IShoppingEditorPicks)
         );
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertShoppingFeatureCollections(
+            insertShoppingEditorPicks(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then(() => success())
@@ -342,7 +362,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach(({ images, ...u }) => {
-              updateShoppingFeatureCollections(u)
+              updateShoppingEditorPicks(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -376,11 +396,12 @@ const handleCancel = () => {
 };
 
 const addBanner = () => {
-  dynamicValidateForm.banners.push({
+  dynamicValidateForm.editors.push({
     id: null,
     title: "",
     subtitle: "",
-    slogan: "",
+    condition: "",
+    price: 0,
     key: Date.now(),
     fileList: [],
   });
@@ -425,11 +446,11 @@ const handleRemove = (id: number, _: number) => {
             }
             // Wait for Supabase deletion
             await deleteImage("shopping-storage", filePath);
-            const getByUserId = await getShoppingFeatureCollectionsById(id);
+            const getByUserId = await getShoppingEditorPicksById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
-            updateShoppingFeatureCollections({
+            updateShoppingEditorPicks({
               ...getByUserId,
               images: oldImages,
             })
@@ -473,7 +494,7 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const shoppingBanners = await getShoppingFeatureCollections(auth.user.id);
+    const shoppingBanners = await getShoppingEditorPicks(auth.user.id);
     for (const i of shoppingBanners) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
@@ -493,16 +514,17 @@ const fetchAllData = async () => {
         key: new Date(`${i.created_at}`).getTime(),
         title: i.title,
         subtitle: i.subtitle,
-        slogan: i.slogan,
+        condition: i.condition,
+        price: i.price,
         fileList: imagesList,
-      } as ShoppingFeatureCollection;
-      dynamicValidateForm.banners.push(pre);
+      } as ShoppingEditorPick;
+      dynamicValidateForm.editors.push(pre);
     }
   }
 };
 
 watch(refreshKey, () => {
-  dynamicValidateForm.banners = [];
+  dynamicValidateForm.editors = [];
   fetchAllData();
 });
 

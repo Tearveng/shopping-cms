@@ -46,56 +46,34 @@
             Banner
           </a-menu-item>
 
-           <a-menu-item key="top_design" @click="$router.push('/admin/top_design')">
+          <a-menu-item
+            key="top_design"
+            @click="$router.push('/admin/top_design')"
+          >
             <template #icon>
-              <HighlightOutlined />
+              <ClearOutlined />
             </template>
             Top design
           </a-menu-item>
 
-          <a-menu-item key="work" @click="$router.push('/admin/work')">
+          <a-menu-item
+            key="feature_collection"
+            @click="$router.push('/admin/feature_collection')"
+          >
             <template #icon>
-              <MediumWorkmarkOutlined />
+              <DotChartOutlined />
             </template>
-            Work
+            Feature collection
           </a-menu-item>
 
           <a-menu-item
-            key="education"
-            @click="$router.push('/admin/education')"
+            key="editor_pick"
+            @click="$router.push('/admin/editor_pick')"
           >
             <template #icon>
-              <CompressOutlined />
+              <FireOutlined />
             </template>
-            Education
-          </a-menu-item>
-
-          <a-menu-item key="project" @click="$router.push('/admin/project')">
-            <template #icon>
-              <FundProjectionScreenOutlined />
-            </template>
-            Project
-          </a-menu-item>
-
-          <a-menu-item key="language" @click="$router.push('/admin/language')">
-            <template #icon>
-              <TranslationOutlined />
-            </template>
-            Language
-          </a-menu-item>
-
-          <a-menu-item key="contact" @click="$router.push('/admin/contact')">
-            <template #icon>
-              <LaptopOutlined />
-            </template>
-            Contact
-          </a-menu-item>
-
-          <a-menu-item key="about" @click="$router.push('/admin/about')">
-            <template #icon>
-              <AliwangwangOutlined />
-            </template>
-            About
+            Editor pick
           </a-menu-item>
 
           <a-menu-item key="settings" @click="$router.push('/admin/settings')">
@@ -133,15 +111,12 @@
 
 <script setup lang="ts">
 import {
-  AliwangwangOutlined,
-  CompressOutlined,
+  ClearOutlined,
+  DotChartOutlined,
+  FireOutlined,
   FundProjectionScreenOutlined,
-  HighlightOutlined,
-  LaptopOutlined,
-  MediumWorkmarkOutlined,
   SettingOutlined,
-  TranslationOutlined,
-  UserOutlined,
+  UserOutlined
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -168,8 +143,10 @@ const activeMenu = computed(() => {
   if (path === "/admin/products/categories") return "categories";
   if (path === "/admin/reports") return "reports";
   if (path === "/admin/settings") return "settings";
-  if (path === '/admin/banner') return 'banner';
-  if (path === '/admin/top_design') return 'top_design'
+  if (path === "/admin/banner") return "banner";
+  if (path === "/admin/top_design") return "top_design";
+  if (path === '/admin/feature_collection') return "feature_collection"
+  if (path === '/admin/editor_pick') return "editor_pick"
   return "admin/home";
 });
 
@@ -196,10 +173,14 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Contact" });
   } else if (path === "/admin/settings") {
     crumbs.push({ name: "Settings" });
-  } else if (path === '/admin/banner') {
-    crumbs.push({name: '/Banner'})
-  } else if (path === '/admin/top_design') {
-    crumbs.push({name: "/Top design"})
+  } else if (path === "/admin/banner") {
+    crumbs.push({ name: "Banner" });
+  } else if (path === "/admin/top_design") {
+    crumbs.push({ name: "Top design" });
+  } else if (path === "/admin/feature_collection") {
+    crumbs.push({ name: "Feature collection" });
+  } else if (path === "/admin/editor_pick") {
+    crumbs.push({ name: "Editor pick" });
   }
 
   return crumbs;

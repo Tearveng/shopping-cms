@@ -6,78 +6,40 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping banner</a-typography-text>
+    <a-typography-text>Shopping top designers</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(banner, index) in dynamicValidateForm.banners"
-      :key="banner.key"
+      v-for="(designer, index) in dynamicValidateForm.designers"
+      :key="designer.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['banners', index, 'title']"
-        :rules="[
-          { required: true, message: 'Title is required', trigger: 'change' },
-        ]"
+        :name="['designers', index, 'title']"
+        :rules="[{ required: true, message: 'Title is required', trigger: 'change' }]"
       >
         <a-flex>
           <MinusCircleOutlined
             style="margin-right: 12px"
-            v-if="dynamicValidateForm.banners.length > 1"
+            v-if="dynamicValidateForm.designers.length > 1"
             class="dynamic-delete-button"
-            @click="removeBanner(banner)"
+            @click="removeBanner(designer)"
           />
           <a-input
-            name="banner.alias"
-            v-model:value="banner.title"
+            name="designer.alias"
+            v-model:value="designer.title"
             placeholder="Title"
             style="width: 100%; margin-right: 8px"
           />
         </a-flex>
       </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['banners', index, 'subtitle']"
-        :rules="[
-          {
-            required: true,
-            message: 'Subtitle is required',
-            trigger: 'change',
-          },
-        ]"
-      >
-        <a-input
-          name="banner.subtitle"
-          v-model:value="banner.subtitle"
-          placeholder="Subtitle"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['banners', index, 'slogan']"
-        :rules="[
-          {
-            required: true,
-            message: 'Slogan is required',
-            trigger: 'change',
-          },
-        ]"
-      >
-        <a-input
-          name="banner.slogan"
-          v-model:value="banner.slogan"
-          placeholder="Slogan"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item :name="['banners', index, 'fileList']">
+      <a-form-item :name="['designers', index, 'fileList']">
         <a-upload
-          v-model:file-list="banner.fileList"
+          v-model:file-list="designer.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
-          :remove="handleRemove(Number(banner.id), index)"
+          :remove="handleRemove(Number(designer.id), index)"
           :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
@@ -126,22 +88,20 @@ import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-  deleteShoppingFeatureCollections,
-  getShoppingFeatureCollections,
-  getShoppingFeatureCollectionsById,
-  insertShoppingFeatureCollections,
-  updateShoppingFeatureCollections,
-  type IShoppingFeatureCollections,
-} from "../services/FeatureCollectionService";
+  deleteShoppingMoreTopDesigner,
+  getShoppingMoreTopDesigners,
+  getShoppingMoreTopDesignersById,
+  insertShoppingMoreTopDesigners,
+  updateShoppingMoreTopDesigners,
+  type IShoppingMoreTopDesigners
+} from "../services/MoreTopDesignersService";
 import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
-export interface ShoppingFeatureCollection {
+export interface ShoppingTopDesigners {
   id: number | null;
   key: number;
   title: string;
-  subtitle: string;
-  slogan: string;
   fileList: any[];
 }
 
@@ -172,8 +132,8 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const dynamicValidateForm = reactive<{ banners: ShoppingFeatureCollection[] }>({
-  banners: [],
+const dynamicValidateForm = reactive<{ designers: ShoppingTopDesigners[] }>({
+  designers: [],
 });
 
 function getBase64(file: File) {
@@ -227,25 +187,21 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const shoppingFeature = dynamicValidateForm.banners[indexRow];
-      if (shoppingFeature.id) {
-        const getByUserId = await getShoppingFeatureCollectionsById(
-          shoppingFeature.id
-        );
+      const shoppingBanner = dynamicValidateForm.designers[indexRow];
+      if (shoppingBanner.id) {
+        const getByUserId = await getShoppingMoreTopDesignersById(shoppingBanner.id);
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: shoppingFeature.id,
-          title: shoppingFeature.title,
-          subtitle: shoppingFeature.subtitle,
-          slogan: shoppingFeature.slogan,
+          id: shoppingBanner.id,
+          title: shoppingBanner.title,
           images: oldImages,
           user_id: auth.user?.id,
-        } as IShoppingFeatureCollections;
+        } as IShoppingMoreTopDesigners;
 
-        updateShoppingFeatureCollections(rest)
+        updateShoppingMoreTopDesigners(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
@@ -264,18 +220,18 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const removeBanner = (item: ShoppingFeatureCollection) => {
+const removeBanner = (item: ShoppingTopDesigners) => {
   if (item.id) {
     showConfirm(item);
   } else {
-    const index = dynamicValidateForm.banners.indexOf(item);
+    const index = dynamicValidateForm.designers.indexOf(item);
     if (index !== -1) {
-      dynamicValidateForm.banners.splice(index, 1);
+      dynamicValidateForm.designers.splice(index, 1);
     }
   }
 };
 
-const showConfirm = (item: ShoppingFeatureCollection) => {
+const showConfirm = (item: ShoppingTopDesigners) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -286,11 +242,11 @@ const showConfirm = (item: ShoppingFeatureCollection) => {
     ),
     onOk() {
       if (item.id) {
-        deleteShoppingFeatureCollections(item.id)
+        deleteShoppingMoreTopDesigner(item.id)
           .then(() => {
-            const index = dynamicValidateForm.banners.indexOf(item);
+            const index = dynamicValidateForm.designers.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.banners.splice(index, 1);
+              dynamicValidateForm.designers.splice(index, 1);
             }
             deleted();
           })
@@ -312,23 +268,21 @@ const submitForm = () => {
       .validate()
       .then(() => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.banners);
+        const plainData = toRaw(dynamicValidateForm.designers);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id,
               title: i.title,
-              subtitle: i.subtitle,
-              slogan: i.slogan,
               images: [],
               user_id: auth.user?.id,
-            } as IShoppingFeatureCollections)
+            } as IShoppingMoreTopDesigners)
         );
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertShoppingFeatureCollections(
+            insertShoppingMoreTopDesigners(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then(() => success())
@@ -342,7 +296,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach(({ images, ...u }) => {
-              updateShoppingFeatureCollections(u)
+              updateShoppingMoreTopDesigners(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -376,11 +330,9 @@ const handleCancel = () => {
 };
 
 const addBanner = () => {
-  dynamicValidateForm.banners.push({
+  dynamicValidateForm.designers.push({
     id: null,
     title: "",
-    subtitle: "",
-    slogan: "",
     key: Date.now(),
     fileList: [],
   });
@@ -425,14 +377,11 @@ const handleRemove = (id: number, _: number) => {
             }
             // Wait for Supabase deletion
             await deleteImage("shopping-storage", filePath);
-            const getByUserId = await getShoppingFeatureCollectionsById(id);
+            const getByUserId = await getShoppingMoreTopDesignersById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
-            updateShoppingFeatureCollections({
-              ...getByUserId,
-              images: oldImages,
-            })
+            updateShoppingMoreTopDesigners({ ...getByUserId, images: oldImages })
               .then()
               .catch((e) => errors(e))
               .finally(() => {
@@ -473,12 +422,13 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const shoppingBanners = await getShoppingFeatureCollections(auth.user.id);
+    const shoppingBanners = await getShoppingMoreTopDesigners(auth.user.id);
     for (const i of shoppingBanners) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
           const tempImg = await getImageUrl(img.fileName, auth.user.id);
+          console.log("tempImg", tempImg)
           imagesList.push({
             uid: img.id,
             name: img.fileName,
@@ -492,17 +442,15 @@ const fetchAllData = async () => {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
         title: i.title,
-        subtitle: i.subtitle,
-        slogan: i.slogan,
         fileList: imagesList,
-      } as ShoppingFeatureCollection;
-      dynamicValidateForm.banners.push(pre);
+      } as ShoppingTopDesigners;
+      dynamicValidateForm.designers.push(pre);
     }
   }
 };
 
 watch(refreshKey, () => {
-  dynamicValidateForm.banners = [];
+  dynamicValidateForm.designers = [];
   fetchAllData();
 });
 

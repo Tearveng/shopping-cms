@@ -1,20 +1,23 @@
 import { supabase } from "../lib/supabase";
 
-export interface IShoppingFeatureCollections {
+export interface IShoppingEditorPicks {
   id?: number;
   title: string;
   subtitle: string;
-  slogan: string;
+  condition: string;
+  price: number;
   images?: Array<any>;
   user_id: string;
   created_at?: string;
 }
 
-export const insertShoppingFeatureCollections = async (
-  props: IShoppingFeatureCollections[]
-): Promise<IShoppingFeatureCollections[]> => {
+const tableName = "shopping_editor_pick"
+
+export const insertShoppingEditorPicks = async (
+  props: IShoppingEditorPicks[]
+): Promise<IShoppingEditorPicks[]> => {
   const { data, error } = await supabase
-    .from("shopping_feature_collects")
+    .from(tableName)
     .insert(props)
     .select();
 
@@ -22,11 +25,11 @@ export const insertShoppingFeatureCollections = async (
   return data;
 };
 
-export const updateShoppingFeatureCollections = async (
-  prop: IShoppingFeatureCollections
+export const updateShoppingEditorPicks = async (
+  prop: IShoppingEditorPicks
 ) => {
   const { data, error } = await supabase
-    .from("shopping_feature_collections")
+    .from(tableName)
     .update(prop)
     .eq("id", prop.id)
     .select();
@@ -35,11 +38,11 @@ export const updateShoppingFeatureCollections = async (
   return data;
 };
 
-export const getShoppingFeatureCollections = async (
+export const getShoppingEditorPicks = async (
   user_id: string
-): Promise<IShoppingFeatureCollections[]> => {
+): Promise<IShoppingEditorPicks[]> => {
   const { data, error } = await supabase
-    .from("shopping_feature_collections")
+    .from(tableName)
     .select("*")
     .order("created_at", { ascending: true })
     .eq("user_id", user_id) // Replace with the actual user ID
@@ -48,11 +51,11 @@ export const getShoppingFeatureCollections = async (
   return data;
 };
 
-export const getShoppingFeatureCollectionsById = async (
+export const getShoppingEditorPicksById = async (
   id: number
-): Promise<IShoppingFeatureCollections> => {
+): Promise<IShoppingEditorPicks> => {
   const { data, error } = await supabase
-    .from("shopping_feature_collections")
+    .from(tableName)
     .select("*")
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();
@@ -60,11 +63,11 @@ export const getShoppingFeatureCollectionsById = async (
   return data;
 };
 
-export const deleteShoppingFeatureCollections = async (
+export const deleteShoppingEditorPicks = async (
   id: number
 ): Promise<boolean> => {
   const { error } = await supabase
-    .from("shopping_feature_collections")
+    .from(tableName)
     .delete()
     .eq("id", id);
   if (error) throw error.message;

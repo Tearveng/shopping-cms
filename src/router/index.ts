@@ -12,6 +12,8 @@ import Profile from "../pages/Profile.vue";
 import HomePageVue from "../pages/publish/HomePage.vue";
 import Setting from "../pages/Setting.vue";
 import ShoppingBanner from "../pages/ShoppingBanner.vue";
+import ShoppingEditorPicks from "../pages/ShoppingEditorPicks.vue";
+import ShoppingFeatureCollections from "../pages/ShoppingFeatureCollections.vue";
 import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
 import Work from "../pages/Work.vue";
 import { useAuthStore } from "../stores/auth";
@@ -106,6 +108,28 @@ const routes: RouteRecordRaw[] = [
           title: "Top design",
           icon: "top_design",
           breadcrumb: ["Top design"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "feature_collection",
+        name: "Feature collection",
+        component: ShoppingFeatureCollections,
+        meta: {
+          title: "Feature collection",
+          icon: "feature_collection",
+          breadcrumb: ["Feature collection"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "editor_pick",
+        name: "Editor pick",
+        component: ShoppingEditorPicks,
+        meta: {
+          title: "Editor pick",
+          icon: "editor_pick",
+          breadcrumb: ["Editor pick"],
           requiresAuth: true,
         },
       },
