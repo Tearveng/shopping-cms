@@ -6,7 +6,7 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping banner</a-typography-text>
+    <a-typography-text>Shopping feature collection</a-typography-text>
     <br />
     <br />
     <a-form-item
@@ -473,8 +473,8 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const shoppingBanners = await getShoppingFeatureCollections(auth.user.id);
-    for (const i of shoppingBanners) {
+    const shoppingFeatureCollections = await getShoppingFeatureCollections(auth.user.id);
+    for (const i of shoppingFeatureCollections) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {

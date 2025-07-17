@@ -48,54 +48,37 @@
         ]"
       >
         <a-input
-          name="announce.subtitle"
-          v-model:value="announce.subtitle"
+          name="announce.description"
+          v-model:value="announce.description"
           placeholder="Description"
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['announces', index, 'condition']"
+        :name="['announces', index, 'link']"
         :rules="[
           {
             required: true,
-            message: 'Condition is required',
+            message: 'Link is required',
             trigger: 'change',
           },
         ]"
       >
         <a-input
-          name="editor.slogan"
-          v-model:value="editor.condition"
-          placeholder="Condition"
+          name="announce.link"
+          v-model:value="announce.link"
+          placeholder="Link"
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
-       <a-form-item
-        style="margin-bottom: -16px"
-        :name="['editors', index, 'price']"
-        :rules="[
-          {
-            required: true,
-            message: 'Price is required',
-            trigger: 'change',
-          },
-        ]"
-      >
-        <a-input
-          name="editor.price"
-          v-model:value="editor.price"
-          placeholder="price"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item :name="['editors', index, 'fileList']">
+     
+      <a-form-item :name="['announce', index, 'fileList']">
         <a-upload
-          v-model:file-list="editor.fileList"
+          v-model:file-list="announce.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
-          :remove="handleRemove(Number(editor.id), index)"
+          :remove="handleRemove(Number(announce.id), index)"
           :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
@@ -144,13 +127,13 @@ import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-  deleteShoppingEditorPicks,
-  getShoppingEditorPicks,
-  getShoppingEditorPicksById,
-  insertShoppingEditorPicks,
-  updateShoppingEditorPicks,
-  type IShoppingEditorPicks
-} from "../services/EditorPickService";
+  deleteShoppingLiveAnnounce,
+  getShoppingLiveAnnounce,
+  getShoppingLiveAnnounceById,
+  insertShoppingLiveAnnounce,
+  updateShoppingLiveAnnounce,
+  type IShoppingLiveAnnounce
+} from "../services/LiveAnnounceService";
 import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
@@ -166,7 +149,6 @@ export interface ShoppingLiveAnnounce {
 const auth = useAuthStore();
 const refreshKey = ref(0);
 const formRef = ref<FormInstance>();
-// const fileList = ref<UploadProps['fileList']>([])
 const isLoading = ref(false);
 const previewVisible = ref(false);
 const previewImage = ref("");
@@ -190,7 +172,7 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const dynamicValidateForm = reactive<{ announces: ShoppingEditorPick[] }>({
+const dynamicValidateForm = reactive<{ announces: ShoppingLiveAnnounce[] }>({
   announces: [],
 });
 
@@ -245,26 +227,25 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const shoppingEditorPick = dynamicValidateForm.editors[indexRow];
-      if (shoppingEditorPick.id) {
-        const getByUserId = await getShoppingEditorPicksById(
-          shoppingEditorPick.id
+      const shoppingLiveAnnounce = dynamicValidateForm.announces[indexRow];
+      if (shoppingLiveAnnounce.id) {
+        const getByUserId = await getShoppingLiveAnnounceById(
+          shoppingLiveAnnounce.id
         );
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: shoppingEditorPick.id,
-          title: shoppingEditorPick.title,
-          subtitle: shoppingEditorPick.subtitle,
-          condition: shoppingEditorPick.condition,
-          price: shoppingEditorPick.price,
+          id: shoppingLiveAnnounce.id,
+          title: shoppingLiveAnnounce.title,
+          description: shoppingLiveAnnounce.description,
+          link: shoppingLiveAnnounce.link,
           images: oldImages,
           user_id: auth.user?.id,
-        } as IShoppingEditorPicks;
+        } as IShoppingLiveAnnounce;
 
-        updateShoppingEditorPicks(rest)
+        updateShoppingLiveAnnounce(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
@@ -283,18 +264,18 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const removeBanner = (item: ShoppingEditorPick) => {
+const removeBanner = (item: ShoppingLiveAnnounce) => {
   if (item.id) {
     showConfirm(item);
   } else {
-    const index = dynamicValidateForm.editors.indexOf(item);
+    const index = dynamicValidateForm.announces.indexOf(item);
     if (index !== -1) {
-      dynamicValidateForm.editors.splice(index, 1);
+      dynamicValidateForm.announces.splice(index, 1);
     }
   }
 };
 
-const showConfirm = (item: ShoppingEditorPick) => {
+const showConfirm = (item: ShoppingLiveAnnounce) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -305,11 +286,11 @@ const showConfirm = (item: ShoppingEditorPick) => {
     ),
     onOk() {
       if (item.id) {
-        deleteShoppingEditorPicks(item.id)
+        deleteShoppingLiveAnnounce(item.id)
           .then(() => {
-            const index = dynamicValidateForm.editors.indexOf(item);
+            const index = dynamicValidateForm.announces.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.editors.splice(index, 1);
+              dynamicValidateForm.announces.splice(index, 1);
             }
             deleted();
           })
@@ -331,24 +312,23 @@ const submitForm = () => {
       .validate()
       .then(() => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.editors);
+        const plainData = toRaw(dynamicValidateForm.announces);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id,
               title: i.title,
-              subtitle: i.subtitle,
-              condition: i.condition,
-              price: i.price,
+              description: i.description,
+              link: i.link,
               images: [],
               user_id: auth.user?.id,
-            } as IShoppingEditorPicks)
+            } as IShoppingLiveAnnounce)
         );
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertShoppingEditorPicks(
+            insertShoppingLiveAnnounce(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then(() => success())
@@ -362,7 +342,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach(({ images, ...u }) => {
-              updateShoppingEditorPicks(u)
+              updateShoppingLiveAnnounce(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -396,12 +376,11 @@ const handleCancel = () => {
 };
 
 const addBanner = () => {
-  dynamicValidateForm.editors.push({
+  dynamicValidateForm.announces.push({
     id: null,
     title: "",
-    subtitle: "",
-    condition: "",
-    price: 0,
+    description: "",
+    link: "",
     key: Date.now(),
     fileList: [],
   });
@@ -446,11 +425,11 @@ const handleRemove = (id: number, _: number) => {
             }
             // Wait for Supabase deletion
             await deleteImage("shopping-storage", filePath);
-            const getByUserId = await getShoppingEditorPicksById(id);
+            const getByUserId = await getShoppingLiveAnnounceById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
-            updateShoppingEditorPicks({
+            updateShoppingLiveAnnounce({
               ...getByUserId,
               images: oldImages,
             })
@@ -494,7 +473,7 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const shoppingBanners = await getShoppingEditorPicks(auth.user.id);
+    const shoppingBanners = await getShoppingLiveAnnounce(auth.user.id);
     for (const i of shoppingBanners) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
@@ -513,18 +492,17 @@ const fetchAllData = async () => {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
         title: i.title,
-        subtitle: i.subtitle,
-        condition: i.condition,
-        price: i.price,
+        description: i.description,
+        link: i.link,
         fileList: imagesList,
-      } as ShoppingEditorPick;
-      dynamicValidateForm.editors.push(pre);
+      } as ShoppingLiveAnnounce;
+      dynamicValidateForm.announces.push(pre);
     }
   }
 };
 
 watch(refreshKey, () => {
-  dynamicValidateForm.editors = [];
+  dynamicValidateForm.announces = [];
   fetchAllData();
 });
 

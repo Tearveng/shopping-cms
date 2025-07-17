@@ -17,6 +17,7 @@ import ShoppingFeatureCollections from "../pages/ShoppingFeatureCollections.vue"
 import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
 import Work from "../pages/Work.vue";
 import { useAuthStore } from "../stores/auth";
+import ShoppingLiveAnnounce from "../pages/ShoppingLiveAnnounce.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -130,6 +131,17 @@ const routes: RouteRecordRaw[] = [
           title: "Editor pick",
           icon: "editor_pick",
           breadcrumb: ["Editor pick"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "live_announce",
+        name: "Live announce",
+        component: ShoppingLiveAnnounce,
+        meta: {
+          title: "Live announce",
+          icon: "live_announce",
+          breadcrumb: ["Live announce"],
           requiresAuth: true,
         },
       },

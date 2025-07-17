@@ -76,6 +76,16 @@
             Editor pick
           </a-menu-item>
 
+          <a-menu-item
+            key="live_announce"
+            @click="$router.push('/admin/live_announce')"
+          >
+            <template #icon>
+              <FundOutlined />
+            </template>
+            Live announce
+          </a-menu-item>
+
           <a-menu-item key="settings" @click="$router.push('/admin/settings')">
             <template #icon>
               <SettingOutlined />
@@ -114,9 +124,10 @@ import {
   ClearOutlined,
   DotChartOutlined,
   FireOutlined,
+  FundOutlined,
   FundProjectionScreenOutlined,
   SettingOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -145,8 +156,10 @@ const activeMenu = computed(() => {
   if (path === "/admin/settings") return "settings";
   if (path === "/admin/banner") return "banner";
   if (path === "/admin/top_design") return "top_design";
-  if (path === '/admin/feature_collection') return "feature_collection"
-  if (path === '/admin/editor_pick') return "editor_pick"
+  if (path === "/admin/feature_collection") return "feature_collection";
+  if (path === "/admin/editor_pick") return "editor_pick";
+  if (path === "/admin/live_announce") return "live_announce";
+
   return "admin/home";
 });
 
@@ -181,6 +194,8 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Feature collection" });
   } else if (path === "/admin/editor_pick") {
     crumbs.push({ name: "Editor pick" });
+  }  else if (path === "/admin/live_announce") {
+    crumbs.push({ name: "Live announce" });
   }
 
   return crumbs;

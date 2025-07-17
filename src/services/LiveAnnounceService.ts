@@ -1,20 +1,20 @@
 import { supabase } from "../lib/supabase";
 
-export interface IShoppingFeatureCollections {
+export interface IShoppingLiveAnnounce {
   id?: number;
   title: string;
-  subtitle: string;
-  slogan: string;
+  description: string;
+  link: string;
   images?: Array<any>;
   user_id: string;
   created_at?: string;
 }
 
-const table = "shopping_feature_collections"
+const table = "shopping_live_announce"
 
-export const insertShoppingFeatureCollections = async (
-  props: IShoppingFeatureCollections[]
-): Promise<IShoppingFeatureCollections[]> => {
+export const insertShoppingLiveAnnounce = async (
+  props: IShoppingLiveAnnounce[]
+): Promise<IShoppingLiveAnnounce[]> => {
   const { data, error } = await supabase
     .from(table)
     .insert(props)
@@ -24,9 +24,7 @@ export const insertShoppingFeatureCollections = async (
   return data;
 };
 
-export const updateShoppingFeatureCollections = async (
-  prop: IShoppingFeatureCollections
-) => {
+export const updateShoppingLiveAnnounce = async (prop: IShoppingLiveAnnounce) => {
   const { data, error } = await supabase
     .from(table)
     .update(prop)
@@ -37,9 +35,9 @@ export const updateShoppingFeatureCollections = async (
   return data;
 };
 
-export const getShoppingFeatureCollections = async (
+export const getShoppingLiveAnnounce = async (
   user_id: string
-): Promise<IShoppingFeatureCollections[]> => {
+): Promise<IShoppingLiveAnnounce[]> => {
   const { data, error } = await supabase
     .from(table)
     .select("*")
@@ -50,9 +48,9 @@ export const getShoppingFeatureCollections = async (
   return data;
 };
 
-export const getShoppingFeatureCollectionsById = async (
+export const getShoppingLiveAnnounceById = async (
   id: number
-): Promise<IShoppingFeatureCollections> => {
+): Promise<IShoppingLiveAnnounce> => {
   const { data, error } = await supabase
     .from(table)
     .select("*")
@@ -62,13 +60,8 @@ export const getShoppingFeatureCollectionsById = async (
   return data;
 };
 
-export const deleteShoppingFeatureCollections = async (
-  id: number
-): Promise<boolean> => {
-  const { error } = await supabase
-    .from(table)
-    .delete()
-    .eq("id", id);
+export const deleteShoppingLiveAnnounce = async (id: number): Promise<boolean> => {
+  const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };
