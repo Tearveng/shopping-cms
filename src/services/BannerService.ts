@@ -10,13 +10,13 @@ export interface IShoppingBanner {
   created_at?: string;
 }
 
+const table = "shopping_banner";
+export const storageBanner = "storage-banner";
+
 export const insertShoppingBanner = async (
   props: IShoppingBanner[]
 ): Promise<IShoppingBanner[]> => {
-  const { data, error } = await supabase
-    .from("shopping_banner")
-    .insert(props)
-    .select();
+  const { data, error } = await supabase.from(table).insert(props).select();
 
   if (error) throw error.message;
   return data;
@@ -24,7 +24,7 @@ export const insertShoppingBanner = async (
 
 export const updateShoppingBanner = async (prop: IShoppingBanner) => {
   const { data, error } = await supabase
-    .from("shopping_banner")
+    .from(table)
     .update(prop)
     .eq("id", prop.id)
     .select();
@@ -37,7 +37,7 @@ export const getShoppingBanners = async (
   user_id: string
 ): Promise<IShoppingBanner[]> => {
   const { data, error } = await supabase
-    .from("shopping_banner")
+    .from(table)
     .select("*")
     .order("created_at", { ascending: true })
     .eq("user_id", user_id) // Replace with the actual user ID
@@ -50,7 +50,7 @@ export const getShoppingBannerById = async (
   id: number
 ): Promise<IShoppingBanner> => {
   const { data, error } = await supabase
-    .from("shopping_banner")
+    .from(table)
     .select("*")
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();
@@ -59,7 +59,7 @@ export const getShoppingBannerById = async (
 };
 
 export const deleteShoppingBanner = async (id: number): Promise<boolean> => {
-  const { error } = await supabase.from("shopping_banner").delete().eq("id", id);
+  const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };

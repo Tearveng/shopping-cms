@@ -46,6 +46,16 @@ export const getEducations = async (user_id: string): Promise<IEducation[]> => {
   return data;
 };
 
+export const getEducationsPublic = async (): Promise<IEducation[]> => {
+  const { data, error } = await supabase
+    .from("education_cms")
+    .select("*")
+    .order("created_at", { ascending: true })
+    .select();
+  if (error) throw error.message;
+  return data;
+};
+
 export const getEducationById = async (id: number): Promise<IEducation> => {
   const { data, error } = await supabase
     .from("education_cms")

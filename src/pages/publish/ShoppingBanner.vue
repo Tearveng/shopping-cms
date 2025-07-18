@@ -107,4 +107,46 @@
 }
 </style>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ArrowRightOutlined } from "@ant-design/icons-vue";
+import { onMounted, reactive } from "vue";
+import { getEducationsPublic } from "../../services/EducationService";
+import { getImageUrl } from "../../services/WorkService";
+import { type Education } from "../Education.vue";
+const props = defineProps({
+  user_id: String,
+});
+
+const dynamicValidateForm = reactive<{ banners: Education[] }>({
+  banners: [],
+});
+
+onMounted(async () => {
+  const educations = await getEducationsPublic();
+  for (const i of educations) {
+    const imagesList = [];
+    if (i.images && i.images.length > 0) {
+      for (const img of i.images) {
+        const tempImg = await getImageUrl(img.fileName, `${props.user_id}`);
+        imagesList.push({
+          uid: img.id,
+          name: img.fileName,
+          status: "done",
+          url: tempImg,
+          thumbUrl: tempImg,
+        });
+      }
+    }
+    const pre = {
+      id: i.id,
+      key: new Date(`${i.created_at}`).getTime(),
+      dateRange: [i.start_date, i.end_date],
+      link: i.link,
+      alias: i.alias,
+      description: i.description,
+      fileList: imagesList,
+    } as Education;
+    dynamicValidateForm.banners.push(pre);
+  }
+});
+</script>
