@@ -56,9 +56,9 @@ export const uploadFile = async (file: any) => {
     });
 
   if (error) {
-    console.error("Upload error:", error.message);
+    // console.error("Upload error:", error.message);
     return null;
   }
-  console.log("File uploaded:", data);
+  // console.log("File uploaded:", data);
   return data;
 };

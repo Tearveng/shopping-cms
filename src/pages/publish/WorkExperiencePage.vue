@@ -103,7 +103,6 @@ onMounted(async () => {
     if (i.images && i.images.length > 0) {
       for (const img of i.images) {
         const tempImg = await getImageUrl(img.fileName, `${props.user_id}`);
-        console.log("tempImg", tempImg);
         imagesList.push({
           uid: img.id,
           name: img.fileName,

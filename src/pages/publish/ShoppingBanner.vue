@@ -1,8 +1,13 @@
 <template>
-  <a-flex class="container" vertical>
+  <a-flex
+    class="container"
+    vertical
+    v-for="banner in dynamicValidateForm.banners"
+    :key="banner.key"
+  >
     <img
       class="banner-image"
-      src="https://images.ctfassets.net/tkr0x069m1it/6WKj5TyCrXMKxBmu5IYK4n/2d83701d98576600aa08e9ab850a2066/Desktop_Hero__8_.jpg?w=1986"
+      :src="banner.fileList[0].thumbUrl"
       alt="banner-image"
     />
 
@@ -10,7 +15,7 @@
       <a-flex class="text-block" vertical>
         <a-typography-text
           style="font-size: 1rem; letter-spacing: 0.2em; line-height: 1.4em"
-          >FASHIONPHILE X NICOLE RICHIE</a-typography-text
+          >{{ banner.title }}</a-typography-text
         >
         <a-typography-text
           style="
@@ -20,16 +25,15 @@
             padding-top: 0.5rem;
             padding-bottom: 1rem;
           "
-          >Shop. Sell. Repeat.</a-typography-text
+          >{{ banner.subtitle }}</a-typography-text
         >
         <a-typography-text
-          style="font-size: 1rem; font-weight: 200; line-height: 1.7em"
-          >Discover a haute, cool collection curated by</a-typography-text
+          style="font-size: 1rem; font-weight: 200; line-height: 1.7em; max-width: 350px"
+          >{{ banner.description }}</a-typography-text
         >
-        <a-typography-text
-          style="font-size: 1rem; font-weight: 200; line-height: 1.7em"
+        <!-- <a-typography-text style="font-size: 1rem; font-weight: 200; line-height: 1.7em"
           >Nicole Richie exclusively for FASHIONPHILE.</a-typography-text
-        >
+        > -->
       </a-flex>
       <a-flex style="padding: 24px 0" gap="20" class="group-button">
         <a-button
@@ -108,26 +112,25 @@
 </style>
 
 <script setup lang="ts">
-import { ArrowRightOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
-import { getEducationsPublic } from "../../services/EducationService";
+import { getShoppingBannersPublic, storageBanner } from "../../services/BannerService";
 import { getImageUrl } from "../../services/WorkService";
-import { type Education } from "../Education.vue";
+import type { ShoppingBanner } from "../ShoppingBanner.vue";
 const props = defineProps({
   user_id: String,
 });
 
-const dynamicValidateForm = reactive<{ banners: Education[] }>({
+const dynamicValidateForm = reactive<{ banners: ShoppingBanner[] }>({
   banners: [],
 });
 
 onMounted(async () => {
-  const educations = await getEducationsPublic();
+  const educations = await getShoppingBannersPublic();
   for (const i of educations) {
     const imagesList = [];
     if (i.images && i.images.length > 0) {
       for (const img of i.images) {
-        const tempImg = await getImageUrl(img.fileName, `${props.user_id}`);
+        const tempImg = await getImageUrl(img.fileName, `${storageBanner}`);
         imagesList.push({
           uid: img.id,
           name: img.fileName,
@@ -140,12 +143,11 @@ onMounted(async () => {
     const pre = {
       id: i.id,
       key: new Date(`${i.created_at}`).getTime(),
-      dateRange: [i.start_date, i.end_date],
-      link: i.link,
-      alias: i.alias,
+      title: i.title,
+      subtitle: i.subtitle,
       description: i.description,
       fileList: imagesList,
-    } as Education;
+    } as ShoppingBanner;
     dynamicValidateForm.banners.push(pre);
   }
 });

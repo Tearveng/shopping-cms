@@ -11,6 +11,7 @@ export interface IShoppingFeatureCollections {
 }
 
 const table = "shopping_feature_collections"
+export const storageFeatureCollection = "storage-feature-collection"
 
 export const insertShoppingFeatureCollections = async (
   props: IShoppingFeatureCollections[]

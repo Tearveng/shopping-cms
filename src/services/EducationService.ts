@@ -74,7 +74,7 @@ export const deleteEducation = async (id: number): Promise<boolean> => {
 
 export const getImageUrl = async (fileName: string, user_id: string) => {
   const { data } = supabase.storage
-    .from("portfolio-cms")
+    .from("storage-")
     .getPublicUrl(`${user_id}/${fileName}`);
   return data.publicUrl;
 };

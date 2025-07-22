@@ -11,6 +11,7 @@ export interface IShoppingLiveAnnounce {
 }
 
 const table = "shopping_live_announce"
+export const storageLiveAnnounce = "storage-live-announce"
 
 export const insertShoppingLiveAnnounce = async (
   props: IShoppingLiveAnnounce[]

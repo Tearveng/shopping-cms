@@ -92,6 +92,7 @@ import {
   getShoppingTopDesigners,
   getShoppingTopDesignersById,
   insertShoppingTopDesigners,
+  storageTopDesign,
   updateShoppingTopDesigners,
   type IShoppingTopDesigners
 } from "../services/TopDesignersService";
@@ -165,7 +166,7 @@ const customUpload = ({ indexRow }: any) => {
       // isLoadingAvatar.value = true;
       // Generate unique file path
       const fileName = file.name.replace(/\s+/g, "_");
-      const filePath = `${auth.user?.id}/${Date.now()}-${fileName}`;
+      const filePath = `${storageTopDesign}/${Date.now()}-${fileName}`;
       const { data, error: uploadError } = await supabase.storage
         .from("shopping-storage") // Replace with your bucket name
         .upload(filePath, file, {
@@ -187,16 +188,16 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const shoppingBanner = dynamicValidateForm.designers[indexRow];
-      if (shoppingBanner.id) {
-        const getByUserId = await getShoppingTopDesignersById(shoppingBanner.id);
+      const shoppingTopDesign = dynamicValidateForm.designers[indexRow];
+      if (shoppingTopDesign.id) {
+        const getByUserId = await getShoppingTopDesignersById(shoppingTopDesign.id);
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: shoppingBanner.id,
-          title: shoppingBanner.title,
+          id: shoppingTopDesign.id,
+          title: shoppingTopDesign.title,
           images: oldImages,
           user_id: auth.user?.id,
         } as IShoppingTopDesigners;
@@ -369,7 +370,7 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${auth.user?.id}/${fileName}`;
+            const filePath = `${storageTopDesign}/${fileName}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);
@@ -427,8 +428,7 @@ const fetchAllData = async () => {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, auth.user.id);
-          console.log("tempImg", tempImg)
+          const tempImg = await getImageUrl(img.fileName, storageTopDesign);
           imagesList.push({
             uid: img.id,
             name: img.fileName,

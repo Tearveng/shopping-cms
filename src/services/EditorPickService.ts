@@ -12,6 +12,7 @@ export interface IShoppingEditorPicks {
 }
 
 const tableName = "shopping_editor_pick"
+export const storageEditorPick = "storage-edit-pick";
 
 export const insertShoppingEditorPicks = async (
   props: IShoppingEditorPicks[]

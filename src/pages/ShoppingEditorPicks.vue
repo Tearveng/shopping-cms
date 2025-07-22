@@ -148,6 +148,7 @@ import {
   getShoppingEditorPicks,
   getShoppingEditorPicksById,
   insertShoppingEditorPicks,
+  storageEditorPick,
   updateShoppingEditorPicks,
   type IShoppingEditorPicks
 } from "../services/EditorPickService";
@@ -224,7 +225,7 @@ const customUpload = ({ indexRow }: any) => {
       // isLoadingAvatar.value = true;
       // Generate unique file path
       const fileName = file.name.replace(/\s+/g, "_");
-      const filePath = `${auth.user?.id}/${Date.now()}-${fileName}`;
+      const filePath = `${storageEditorPick}/${Date.now()}-${fileName}`;
       const { data, error: uploadError } = await supabase.storage
         .from("shopping-storage") // Replace with your bucket name
         .upload(filePath, file, {
@@ -439,7 +440,7 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${auth.user?.id}/${fileName}`;
+            const filePath = `${storageEditorPick}/${fileName}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);
@@ -500,7 +501,7 @@ const fetchAllData = async () => {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, auth.user.id);
+          const tempImg = await getImageUrl(img.fileName, storageEditorPick);
           imagesList.push({
             uid: img.id,
             name: img.fileName,

@@ -131,6 +131,7 @@ import {
   getShoppingLiveAnnounce,
   getShoppingLiveAnnounceById,
   insertShoppingLiveAnnounce,
+  storageLiveAnnounce,
   updateShoppingLiveAnnounce,
   type IShoppingLiveAnnounce
 } from "../services/LiveAnnounceService";
@@ -205,7 +206,7 @@ const customUpload = ({ indexRow }: any) => {
       // isLoadingAvatar.value = true;
       // Generate unique file path
       const fileName = file.name.replace(/\s+/g, "_");
-      const filePath = `${auth.user?.id}/${Date.now()}-${fileName}`;
+      const filePath = `${storageLiveAnnounce}/${Date.now()}-${fileName}`;
       const { data, error: uploadError } = await supabase.storage
         .from("shopping-storage") // Replace with your bucket name
         .upload(filePath, file, {
@@ -417,18 +418,21 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${auth.user?.id}/${fileName}`;
+            const filePath = `${storageLiveAnnounce}/${fileName}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);
               return;
             }
             // Wait for Supabase deletion
-            await deleteImage("shopping-storage", filePath);
             const getByUserId = await getShoppingLiveAnnounceById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
+            const oldImage = getByUserId.images?.find(
+              (i) => i.fileName === fileName
+            );
+            await deleteImage("shopping-storage", oldImage?.fileName);
             updateShoppingLiveAnnounce({
               ...getByUserId,
               images: oldImages,
@@ -478,7 +482,7 @@ const fetchAllData = async () => {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, auth.user.id);
+          const tempImg = await getImageUrl(img.fileName, storageLiveAnnounce);
           imagesList.push({
             uid: img.id,
             name: img.fileName,

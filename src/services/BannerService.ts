@@ -46,6 +46,18 @@ export const getShoppingBanners = async (
   return data;
 };
 
+export const getShoppingBannersPublic = async (): Promise<
+  IShoppingBanner[]
+> => {
+  const { data, error } = await supabase
+    .from(table)
+    .select("*")
+    .order("created_at", { ascending: true })
+    .select();
+  if (error) throw error.message;
+  return data;
+};
+
 export const getShoppingBannerById = async (
   id: number
 ): Promise<IShoppingBanner> => {
@@ -66,7 +78,7 @@ export const deleteShoppingBanner = async (id: number): Promise<boolean> => {
 
 export const getImageUrl = async (fileName: string, user_id: string) => {
   const { data } = supabase.storage
-    .from("portfolio-cms")
+    .from("shopping-storage")
     .getPublicUrl(`${user_id}/${fileName}`);
   return data.publicUrl;
 };
