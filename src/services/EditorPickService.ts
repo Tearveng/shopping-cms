@@ -11,24 +11,19 @@ export interface IShoppingEditorPicks {
   created_at?: string;
 }
 
-const tableName = "shopping_editor_pick"
+const tableName = "shopping_editor_pick";
 export const storageEditorPick = "storage-edit-pick";
 
 export const insertShoppingEditorPicks = async (
   props: IShoppingEditorPicks[]
 ): Promise<IShoppingEditorPicks[]> => {
-  const { data, error } = await supabase
-    .from(tableName)
-    .insert(props)
-    .select();
+  const { data, error } = await supabase.from(tableName).insert(props).select();
 
   if (error) throw error.message;
   return data;
 };
 
-export const updateShoppingEditorPicks = async (
-  prop: IShoppingEditorPicks
-) => {
+export const updateShoppingEditorPicks = async (prop: IShoppingEditorPicks) => {
   const { data, error } = await supabase
     .from(tableName)
     .update(prop)
@@ -52,6 +47,18 @@ export const getShoppingEditorPicks = async (
   return data;
 };
 
+export const getShoppingEditorPicksPublic = async (): Promise<
+  IShoppingEditorPicks[]
+> => {
+  const { data, error } = await supabase
+    .from(tableName)
+    .select("*")
+    .order("created_at", { ascending: true })
+    .select();
+  if (error) throw error.message;
+  return data;
+};
+
 export const getShoppingEditorPicksById = async (
   id: number
 ): Promise<IShoppingEditorPicks> => {
@@ -67,10 +74,7 @@ export const getShoppingEditorPicksById = async (
 export const deleteShoppingEditorPicks = async (
   id: number
 ): Promise<boolean> => {
-  const { error } = await supabase
-    .from(tableName)
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from(tableName).delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };

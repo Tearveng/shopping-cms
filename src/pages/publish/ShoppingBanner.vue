@@ -42,13 +42,13 @@
             min-width: 13.4rem;
             min-height: 3.3rem;
             border-radius: 0;
-            background-color: #fff;
-            color: #000;
+            background-color: #000;
+            color: #fff;
             font-weight: 400;
             font-size: 1rem;
             letter-spacing: 0.1rem;
           "
-          >Shop Nicole's collection</a-button
+          >Shop Trending's collection</a-button
         >
         <a-button
           type="primary"
@@ -56,8 +56,8 @@
             min-width: 13.4rem;
             min-height: 3.3rem;
             border-radius: 0;
-            background-color: #fff;
-            color: #000;
+            background-color: #000;
+            color: #fff;
             font-weight: 400;
             font-size: 1rem;
             letter-spacing: 0.1rem;

@@ -6,7 +6,7 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping top designers</a-typography-text>
+    <a-typography-text>Shopping top designers - 572 x 572 px</a-typography-text>
     <br />
     <br />
     <a-form-item

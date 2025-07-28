@@ -4,11 +4,7 @@
     <a-flex v-if="!isMobile" vertical>
       <a-flex align="center" gap="10" style="padding-top: 1rem">
         <a class="logo-link">
-          <img
-            class="logo-image"
-            src="https://imagedelivery.net/qYsB-8vee77hLv8GooRU1g/e980c175-3d16-45b7-1ddc-2cc8d5b83900/public"
-            alt="logo-alt"
-          />
+          <a-typography class="logo-image">Everything L11</a-typography>
         </a>
       </a-flex>
       <a-menu
@@ -35,11 +31,7 @@
           <menu-outlined style="font-size: 18px" />
         </a-button>
         <a class="logo-link">
-          <img
-            class="logo-image"
-            src="https://imagedelivery.net/qYsB-8vee77hLv8GooRU1g/e980c175-3d16-45b7-1ddc-2cc8d5b83900/public"
-            alt="logo-alt"
-          />
+          <a-typography class="logo-image">Everything L11</a-typography>
         </a>
       </a-flex>
       <a-drawer
@@ -131,8 +123,10 @@ onBeforeUnmount(() => {
 
 .logo-image {
   max-width: 280px;
-  height: 100%;
-  object-fit: cover;
+  font-size: 2rem;
+  line-height: 2em;
+  margin-top: -0.3rem;
+  font-weight: 400;
 }
 
 .desktop-menu {
@@ -220,8 +214,10 @@ onBeforeUnmount(() => {
   }
   .logo-image {
     max-width: calc(100% - 2rem);
-    height: 50%;
-    object-fit: cover;
+    font-size: 1.2rem;
+    line-height: 2em;
+    margin-top: -0.3rem;
+    font-weight: 400;
   }
 }
 </style>

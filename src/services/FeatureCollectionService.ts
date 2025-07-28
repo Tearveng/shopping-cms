@@ -10,16 +10,13 @@ export interface IShoppingFeatureCollections {
   created_at?: string;
 }
 
-const table = "shopping_feature_collections"
-export const storageFeatureCollection = "storage-feature-collection"
+const table = "shopping_feature_collections";
+export const storageFeatureCollection = "storage-feature-collection";
 
 export const insertShoppingFeatureCollections = async (
   props: IShoppingFeatureCollections[]
 ): Promise<IShoppingFeatureCollections[]> => {
-  const { data, error } = await supabase
-    .from(table)
-    .insert(props)
-    .select();
+  const { data, error } = await supabase.from(table).insert(props).select();
 
   if (error) throw error.message;
   return data;
@@ -51,6 +48,18 @@ export const getShoppingFeatureCollections = async (
   return data;
 };
 
+export const getShoppingFeatureCollectionsPublic = async (): Promise<
+  IShoppingFeatureCollections[]
+> => {
+  const { data, error } = await supabase
+    .from(table)
+    .select("*")
+    .order("created_at", { ascending: true })
+    .select();
+  if (error) throw error.message;
+  return data;
+};
+
 export const getShoppingFeatureCollectionsById = async (
   id: number
 ): Promise<IShoppingFeatureCollections> => {
@@ -66,10 +75,7 @@ export const getShoppingFeatureCollectionsById = async (
 export const deleteShoppingFeatureCollections = async (
   id: number
 ): Promise<boolean> => {
-  const { error } = await supabase
-    .from(table)
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };

@@ -3,7 +3,7 @@
     <a-typography class="responsive-text">Editor's picks</a-typography>
     <div class="carousel__wrapper">
       <Carousel v-bind="config" ref="carouselRef">
-        <Slide v-for="product in productCategories" :key="product.id">
+        <Slide v-for="product in productCategories" :key="product.key">
           <a-flex
             vertical
             style="
@@ -13,7 +13,7 @@
             "
           >
             <a-image
-              :src="product.image"
+              :src="product.fileList[0].thumbUrl"
               style="max-width: 190px"
               :width="'100%'"
               :height="'auto'"
@@ -27,7 +27,7 @@
                 line-height: 1.4em;
                 text-transform: uppercase;
               "
-              >{{ product.name }}</a-typography
+              >{{ product.title }}</a-typography
             >
             <a-typography
               style="
@@ -36,7 +36,7 @@
                 line-height: 1.7em;
                 text-align: center;
               "
-              >{{ product.description }}</a-typography
+              >{{ product.subtitle }}</a-typography
             >
             <a-typography
               style="
@@ -73,7 +73,7 @@
                 type="link"
                 style="color: #000"
               >
-                <template #icon><left-outlined /></template>
+                <template #icon><LeftOutlined /></template>
               </a-button>
               <a-typography
                 style="font-size: 0.8rem; font-weight: 500; line-height: 1.7em"
@@ -103,7 +103,7 @@
                 type="link"
                 style="color: #000"
               >
-                <template #icon><right-outlined /></template> </a-button
+                <template #icon><RightOutlined /></template> </a-button
             ></a-flex>
           </CarouselNavigation>
         </template>
@@ -146,7 +146,7 @@
 }
 @media (max-width: 575px) {
   .container {
-    padding: 3rem 1rem
+    padding: 3rem 1rem;
   }
 }
 </style>
@@ -154,8 +154,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 import { Carousel, Slide } from "vue3-carousel";
+import { onMounted } from "vue";
+import { getImageUrl } from "../../services/BannerService";
+import {
+  getShoppingEditorPicksPublic,
+  storageEditorPick,
+} from "../../services/EditorPickService";
+import type { ShoppingEditorPick } from "../ShoppingEditorPicks.vue";
 
 const config = {
   height: 340,
@@ -191,144 +197,135 @@ const config = {
   },
 } as any;
 
-const carouselRef = ref(null);
+const carouselRef = ref<any>(null);
 const currentPage = ref(0);
-const productCategories = ref([
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
-  {
-    id: 102,
-    image:
-      "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
-    name: "CHANEL",
-    description: "Chanel",
-    condition: "Excellent",
-    price: 8995,
-  },
-  {
-    id: 101,
-    image:
-      "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
-    name: "HERMES",
-    description: "Epsom Birkin 30 Flamingo",
-    condition: "Shows Wear",
-    price: 599.99,
-  },
+const productCategories = ref<ShoppingEditorPick[]>([
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
+  // {
+  //   id: 102,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/c251059551c6aa53ca7565fc0f935bd5/5ce55312ddd7f8e30d22b06c6236fefc.jpg",
+  //   name: "CHANEL",
+  //   description: "Chanel",
+  //   condition: "Excellent",
+  //   price: 8995,
+  // },
+  // {
+  //   id: 101,
+  //   image:
+  //     "https://prod-images.fashionphile.com/thumb/1effa6b0752cae6bf63e64532ef5baa8/7d43f2f95cf2a4065bd99c68a86ffb81.jpg",
+  //   name: "HERMES",
+  //   description: "Epsom Birkin 30 Flamingo",
+  //   condition: "Shows Wear",
+  //   price: 599.99,
+  // },
 ]);
 
 // const handleAfterChange = (current) => {
@@ -350,4 +347,32 @@ const productCategories = ref([
 //     carouselRef.value.prev();
 //   }
 // };
+onMounted(async () => {
+  const editorPicks = await getShoppingEditorPicksPublic();
+  for (const i of editorPicks) {
+    const imagesList = [];
+    if (i.images && i.images.length > 0) {
+      for (const img of i.images) {
+        const tempImg = await getImageUrl(img.fileName, `${storageEditorPick}`);
+        imagesList.push({
+          uid: img.id,
+          name: img.fileName,
+          status: "done",
+          url: tempImg,
+          thumbUrl: tempImg,
+        });
+      }
+    }
+    const pre = {
+      id: i.id,
+      key: new Date(`${i.created_at}`).getTime(),
+      title: i.title,
+      subtitle: i.subtitle,
+      condition: i.condition,
+      price: i.price,
+      fileList: imagesList,
+    } as ShoppingEditorPick;
+    productCategories.value.push(pre);
+  }
+});
 </script>

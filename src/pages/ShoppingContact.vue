@@ -6,17 +6,17 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Language</a-typography-text>
+    <a-typography-text>Shopping Contact</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(language, index) in dynamicValidateForm.languages"
-      :key="language.key"
+      v-for="(contact, index) in dynamicValidateForm.contacts"
+      :key="contact.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['languages', index, 'title']"
+        :name="['contacts', index, 'title']"
         :rules="[
           { required: true, message: 'Title is required', trigger: 'change' },
         ]"
@@ -24,13 +24,13 @@
         <a-flex>
           <MinusCircleOutlined
             style="margin-right: 12px"
-            v-if="dynamicValidateForm.languages.length > 1"
+            v-if="dynamicValidateForm.contacts.length > 1"
             class="dynamic-delete-button"
-            @click="removeDomain(language)"
+            @click="removeDomain(contact)"
           />
           <a-input
-            name="language.title"
-            v-model:value="language.title"
+            name="contact.title"
+            v-model:value="contact.title"
             placeholder="Title"
             style="width: 100%"
           />
@@ -39,22 +39,43 @@
 
       <a-form-item
         style="margin-bottom: -16px; width: 100%; flex-direction: row"
-        :name="['languages', index, 'alias']"
+        :name="['contacts', index, 'subtitle']"
         :rules="[
           {
             required: true,
-            message: 'Alias is required',
+            message: 'Subtitle is required',
             trigger: 'change',
           },
         ]"
       >
         <a-input
-          name="language.alias"
-          v-model:value="language.alias"
+          name="contact.alias"
+          v-model:value="contact.subtitle"
           placeholder="Alias"
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
+
+      <a-form-item
+        style="margin-bottom: -16px"
+        :name="['contacts', index, 'link']"
+        :rules="[
+          {
+            required: true,
+            message: 'Link is required',
+            trigger: 'change',
+          },
+        ]"
+      >
+        <a-input
+          addon-before="https://"
+          name="contact.link"
+          v-model:value="contact.link"
+          placeholder="Link"
+          style="width: 100%; margin-right: 8px"
+        />
+      </a-form-item>
+
     </a-form-item>
     <a-form-item v-bind="formItemLayoutWithOutLabel">
       <a-button type="dashed" style="width: 60%" @click="addDomain">
@@ -76,6 +97,7 @@
 </template>
 
 <script setup lang="ts">
+
 import {
 ExclamationCircleOutlined,
 MinusCircleOutlined,
@@ -83,20 +105,15 @@ PlusOutlined,
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
-import {
-deleteLanguage,
-getLanguages,
-insertLanguages,
-updateLanguage,
-type ILanguage,
-} from "../services/LanguageService";
 import { useAuthStore } from "../stores/auth";
+import { deleteShoppingContact, getShoppingContacts, insertShoppingContacts, updateShoppingContacts, type IShoppingContact } from "../services/ContactService";
 
-export interface Language {
+export interface ShoppingContact {
   id?: number;
   key: number;
   title: string;
-  alias: string;
+  subtitle: string;
+  link: string;
 }
 
 const refreshKey = ref(0);
@@ -121,7 +138,7 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const showConfirm = (item: Language) => {
+const showConfirm = (item: ShoppingContact) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -132,11 +149,11 @@ const showConfirm = (item: Language) => {
     ),
     onOk() {
       if (item.id) {
-        deleteLanguage(item.id)
+        deleteShoppingContact(item.id)
           .then(() => {
-            const index = dynamicValidateForm.languages.indexOf(item);
+            const index = dynamicValidateForm.contacts.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.languages.splice(index, 1);
+              dynamicValidateForm.contacts.splice(index, 1);
             }
             deleted();
           })
@@ -151,8 +168,8 @@ const showConfirm = (item: Language) => {
   });
 };
 
-const dynamicValidateForm = reactive<{ languages: Language[] }>({
-  languages: [],
+const dynamicValidateForm = reactive<{ contacts: ShoppingContact[] }>({
+  contacts: [],
 });
 
 const update = () => {
@@ -173,22 +190,23 @@ const submitForm = async () => {
       .validate()
       .then(async () => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.languages);
+        const plainData = toRaw(dynamicValidateForm.contacts);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id ?? undefined,
               title: i.title,
-              alias: i.alias,
+              subtitle: i.subtitle,
+              link: i.link,
               user_id: auth.user?.id,
-            } as ILanguage)
+            } as IShoppingContact)
         );
 
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertLanguages(
+            insertShoppingContacts(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then()
@@ -202,7 +220,7 @@ const submitForm = async () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach((u) => {
-              updateLanguage(u)
+              updateShoppingContacts(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -230,41 +248,44 @@ const resetForm = () => {
   }
 };
 
-const removeDomain = (item: Language) => {
+const removeDomain = (item: ShoppingContact) => {
   if (item.id) {
     showConfirm(item);
   } else {
-    const index = dynamicValidateForm.languages.indexOf(item);
+    const index = dynamicValidateForm.contacts.indexOf(item);
     if (index !== -1) {
-      dynamicValidateForm.languages.splice(index, 1);
+      dynamicValidateForm.contacts.splice(index, 1);
     }
   }
 };
+
 const addDomain = () => {
-  dynamicValidateForm.languages.push({
+  dynamicValidateForm.contacts.push({
     key: Date.now(),
     title: "",
-    alias: "",
+    subtitle: "",
+    link: "",
   });
 };
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const contacts = await getLanguages(auth.user.id);
+    const contacts = await getShoppingContacts(auth.user.id);
     contacts.map((i) => {
       const pre = {
         id: i.id,
         title: i.title,
         key: new Date(`${i.created_at}`).getTime(),
-        alias: i.alias,
-      } as Language;
-      dynamicValidateForm.languages.push(pre);
+        subtitle: i.subtitle,
+        link: i.link,
+      } as ShoppingContact;
+      dynamicValidateForm.contacts.push(pre);
     });
   }
 };
 
 watch(refreshKey, () => {
-  dynamicValidateForm.languages = [];
+  dynamicValidateForm.contacts = [];
   fetchAllData();
 });
 

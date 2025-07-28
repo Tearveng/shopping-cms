@@ -2,52 +2,27 @@
   <a-flex class="container" vertical>
     <a-typography class="responsive-text">Shop More Top Designers</a-typography>
     <a-row :gutter="[24, 24]">
-      <a-col :span="6" :xs="12" :sm="6">
+      <a-col
+        :span="6"
+        :xs="12"
+        :sm="6"
+        v-for="moreTopDesign in dynamicValidateForm.moreTopDesigns"
+        :key="moreTopDesign.key"
+      >
         <a-image
-          src="https://images.ctfassets.net/tkr0x069m1it/419VIwoE2ZzleCRGEdpm1q/fcae02c62680b408566320b6168f4fab/Image1.jpg?w=3200"
+          :src="moreTopDesign.fileList[0].thumbUrl"
           :width="'100%'"
           :height="'auto'"
           :preview="false"
         />
         <a-typography
-          style="line-height: 1.7em; padding-top: 0.5rem; font-size: 1rem;  font-weight: 200;"
-          >Chanel</a-typography
-        >
-      </a-col>
-      <a-col :span="6" :xs="12" :sm="6">
-        <a-image
-          src="https://images.ctfassets.net/tkr0x069m1it/2CC23GoBtZra4GrqOLB2xe/c501e3991169c0af70b341e4dad58198/Image2.jpg?w=3200"
-          :width="'100%'"
-          :height="'auto'"
-          :preview="false"
-        />
-        <a-typography
-          style="line-height: 1.7em; padding-top: 0.5rem; font-size: 1rem;  font-weight: 200;"
-          >Louis Vuitton</a-typography
-        >
-      </a-col>
-      <a-col :span="6" :xs="12" :sm="6">
-        <a-image
-          src="https://images.ctfassets.net/tkr0x069m1it/419VIwoE2ZzleCRGEdpm1q/fcae02c62680b408566320b6168f4fab/Image1.jpg?w=3200"
-          :width="'100%'"
-          :height="'auto'"
-          :preview="false"
-        />
-        <a-typography
-          style="line-height: 1.7em; padding-top: 0.5rem; font-size: 1rem;  font-weight: 200;"
-          >Cartier</a-typography
-        >
-      </a-col>
-      <a-col :span="6" :xs="12" :sm="6">
-        <a-image
-          src="https://images.ctfassets.net/tkr0x069m1it/2CC23GoBtZra4GrqOLB2xe/c501e3991169c0af70b341e4dad58198/Image2.jpg?w=3200"
-          :width="'100%'"
-          :height="'auto'"
-          :preview="false"
-        />
-        <a-typography
-          style="line-height: 1.7em; padding-top: 0.5rem; font-size: 1rem; font-weight: 200;"
-          >Hermes</a-typography
+          style="
+            line-height: 1.7em;
+            padding-top: 0.5rem;
+            font-size: 1rem;
+            font-weight: 200;
+          "
+          >{{ moreTopDesign.title }}</a-typography
         >
       </a-col>
     </a-row>
@@ -72,9 +47,57 @@
 }
 @media (max-width: 575px) {
   .container {
-    padding: 3rem 1rem
+    padding: 3rem 1rem;
   }
 }
 </style>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted, reactive } from "vue";
+import { getImageUrl } from "../../services/BannerService";
+import type { ShoppingTopDesigners } from "../ShoppingTopDesigners.vue";
+import type { ShoppingMoreTopDesigners } from "../ShoppingMoreTopDesigners.vue";
+import {
+  getShoppingMoreTopDesignersPublic,
+  storageMoreTopDesign,
+} from "../../services/MoreTopDesignersService";
+
+const props = defineProps({
+  user_id: String,
+});
+
+const dynamicValidateForm = reactive<{
+  moreTopDesigns: ShoppingMoreTopDesigners[];
+}>({
+  moreTopDesigns: [],
+});
+
+onMounted(async () => {
+  const moreTopDesign = await getShoppingMoreTopDesignersPublic();
+  for (const i of moreTopDesign) {
+    const imagesList = [];
+    if (i.images && i.images.length > 0) {
+      for (const img of i.images) {
+        const tempImg = await getImageUrl(
+          img.fileName,
+          `${storageMoreTopDesign}`
+        );
+        imagesList.push({
+          uid: img.id,
+          name: img.fileName,
+          status: "done",
+          url: tempImg,
+          thumbUrl: tempImg,
+        });
+      }
+    }
+    const pre = {
+      id: i.id,
+      key: new Date(`${i.created_at}`).getTime(),
+      title: i.title,
+      fileList: imagesList,
+    } as ShoppingTopDesigners;
+    dynamicValidateForm.moreTopDesigns.push(pre);
+  }
+});
+</script>

@@ -23,12 +23,12 @@
             "
           >
             <img
-              src="/lemon-logo.svg?url"
+              width="70"
+              height="70"
+              src="https://img.icons8.com/clouds/500/bag-front-view.png"
+              alt="bag-front-view"
+              style="cursor: pointer"
               @click="$router.push('/admin')"
-              alt="logo-app"
-              width="30"
-              height="30"
-              style="text-align: center; cursor: pointer"
             />
           </div>
 
@@ -67,6 +67,16 @@
           </a-menu-item>
 
           <a-menu-item
+            key="more_top_design"
+            @click="$router.push('/admin/more_top_design')"
+          >
+            <template #icon>
+              <ClearOutlined />
+            </template>
+            More top design
+          </a-menu-item>
+
+          <a-menu-item
             key="editor_pick"
             @click="$router.push('/admin/editor_pick')"
           >
@@ -84,6 +94,23 @@
               <FundOutlined />
             </template>
             Live announce
+          </a-menu-item>
+
+          <a-menu-item
+            key="shop_in_person"
+            @click="$router.push('/admin/shop_in_person')"
+          >
+            <template #icon>
+              <ShopOutlined />
+            </template>
+            Shop in person
+          </a-menu-item>
+
+          <a-menu-item key="contact" @click="$router.push('/admin/contact')">
+            <template #icon>
+              <ContactsOutlined />
+            </template>
+            Contact
           </a-menu-item>
 
           <a-menu-item key="settings" @click="$router.push('/admin/settings')">
@@ -128,6 +155,9 @@ import {
   FundProjectionScreenOutlined,
   SettingOutlined,
   UserOutlined,
+  ShoppingOutlined,
+  ContactsOutlined,
+  ShopOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -157,8 +187,10 @@ const activeMenu = computed(() => {
   if (path === "/admin/banner") return "banner";
   if (path === "/admin/top_design") return "top_design";
   if (path === "/admin/feature_collection") return "feature_collection";
+  if (path === "/admin/more_top_design") return "more_top_design";
   if (path === "/admin/editor_pick") return "editor_pick";
   if (path === "/admin/live_announce") return "live_announce";
+  if (path === "/admin/shop_in_person") return "shop_in_person";
 
   return "admin/home";
 });
@@ -183,7 +215,7 @@ const breadcrumbs = computed(() => {
   } else if (path === "/admin/project") {
     crumbs.push({ name: "Project" });
   } else if (path === "/admin/contact") {
-    crumbs.push({ name: "Contact" });
+    crumbs.push({ name: "Shopping Contact" });
   } else if (path === "/admin/settings") {
     crumbs.push({ name: "Settings" });
   } else if (path === "/admin/banner") {
@@ -192,10 +224,14 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Top design" });
   } else if (path === "/admin/feature_collection") {
     crumbs.push({ name: "Feature collection" });
+  } else if (path === "/admin/more_top_design") {
+    crumbs.push({ name: "More top design" });
   } else if (path === "/admin/editor_pick") {
     crumbs.push({ name: "Editor pick" });
-  }  else if (path === "/admin/live_announce") {
+  } else if (path === "/admin/live_announce") {
     crumbs.push({ name: "Live announce" });
+  } else if (path === "/admin/shop_in_person") {
+    crumbs.push({ name: "Shop in person" });
   }
 
   return crumbs;

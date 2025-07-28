@@ -1,29 +1,30 @@
 import { supabase } from "../lib/supabase.ts";
 
-export interface IContact {
+export interface IShoppingContact {
   id?: number;
   title: string;
-  alias: string;
-  url: string;
+  subtitle: string;
+  link: string;
   created_at?: string;
   user_id: string;
 }
 
-export const insertContacts = async (
-  props: IContact[]
-): Promise<IContact[]> => {
-  const { data, error } = await supabase
-    .from("contact_cms")
-    .insert(props)
-    .select();
+const table = "shopping_contact";
+
+export const insertShoppingContacts = async (
+  props: IShoppingContact[]
+): Promise<IShoppingContact[]> => {
+  const { data, error } = await supabase.from(table).insert(props).select();
 
   if (error) throw error.message;
   return data;
 };
 
-export const getContacts = async (user_id: string): Promise<IContact[]> => {
+export const getShoppingContacts = async (
+  user_id: string
+): Promise<IShoppingContact[]> => {
   const { data, error } = await supabase
-    .from("contact_cms")
+    .from(table)
     .select("*")
     .order("created_at", { ascending: true })
     .eq("user_id", user_id) // Replace with the actual user ID
@@ -32,9 +33,21 @@ export const getContacts = async (user_id: string): Promise<IContact[]> => {
   return data;
 };
 
-export const updateContacts = async (prop: IContact) => {
+export const getShoppingContactsPublic = async (): Promise<
+  IShoppingContact[]
+> => {
   const { data, error } = await supabase
-    .from("contact_cms")
+    .from(table)
+    .select("*")
+    .order("created_at", { ascending: true })
+    .select();
+  if (error) throw error.message;
+  return data;
+};
+
+export const updateShoppingContacts = async (prop: IShoppingContact) => {
+  const { data, error } = await supabase
+    .from(table)
     .update(prop)
     .eq("id", prop.id)
     .select();
@@ -43,8 +56,8 @@ export const updateContacts = async (prop: IContact) => {
   return data;
 };
 
-export const deleteContact = async (id: number): Promise<boolean> => {
-  const { error } = await supabase.from("contact_cms").delete().eq("id", id);
+export const deleteShoppingContact = async (id: number): Promise<boolean> => {
+  const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };

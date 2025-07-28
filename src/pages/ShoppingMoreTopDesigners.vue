@@ -6,7 +6,7 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping top designers</a-typography-text>
+    <a-typography-text>Shopping more top designers - 572 x 572 px</a-typography-text>
     <br />
     <br />
     <a-form-item
@@ -92,13 +92,14 @@ import {
   getShoppingMoreTopDesigners,
   getShoppingMoreTopDesignersById,
   insertShoppingMoreTopDesigners,
+  storageMoreTopDesign,
   updateShoppingMoreTopDesigners,
   type IShoppingMoreTopDesigners
 } from "../services/MoreTopDesignersService";
 import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
-export interface ShoppingTopDesigners {
+export interface ShoppingMoreTopDesigners {
   id: number | null;
   key: number;
   title: string;
@@ -132,7 +133,7 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const dynamicValidateForm = reactive<{ designers: ShoppingTopDesigners[] }>({
+const dynamicValidateForm = reactive<{ designers: ShoppingMoreTopDesigners[] }>({
   designers: [],
 });
 
@@ -165,7 +166,7 @@ const customUpload = ({ indexRow }: any) => {
       // isLoadingAvatar.value = true;
       // Generate unique file path
       const fileName = file.name.replace(/\s+/g, "_");
-      const filePath = `${auth.user?.id}/${Date.now()}-${fileName}`;
+      const filePath = `${storageMoreTopDesign}/${Date.now()}-${fileName}`;
       const { data, error: uploadError } = await supabase.storage
         .from("shopping-storage") // Replace with your bucket name
         .upload(filePath, file, {
@@ -220,7 +221,7 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const removeBanner = (item: ShoppingTopDesigners) => {
+const removeBanner = (item: ShoppingMoreTopDesigners) => {
   if (item.id) {
     showConfirm(item);
   } else {
@@ -231,7 +232,7 @@ const removeBanner = (item: ShoppingTopDesigners) => {
   }
 };
 
-const showConfirm = (item: ShoppingTopDesigners) => {
+const showConfirm = (item: ShoppingMoreTopDesigners) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -369,7 +370,7 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${auth.user?.id}/${fileName}`;
+            const filePath = `${storageMoreTopDesign}/${fileName}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);
@@ -427,7 +428,7 @@ const fetchAllData = async () => {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, auth.user.id);
+          const tempImg = await getImageUrl(img.fileName, storageMoreTopDesign);
           imagesList.push({
             uid: img.id,
             name: img.fileName,
@@ -442,7 +443,7 @@ const fetchAllData = async () => {
         key: new Date(`${i.created_at}`).getTime(),
         title: i.title,
         fileList: imagesList,
-      } as ShoppingTopDesigners;
+      } as ShoppingMoreTopDesigners;
       dynamicValidateForm.designers.push(pre);
     }
   }

@@ -1,40 +1,16 @@
 <template>
   <a-layout-footer class="custom-footer">
     <div class="footer-content">
-      <div class="footer-section">
-        <h3>Customer Service</h3>
+      <div
+        class="footer-section"
+        v-for="(group, title) in groupedContacts"
+        :key="title"
+      >
+        <h3>{{ title }}</h3>
         <a-flex vertical align="flex-start">
-          <a-button type="link">Contact Us</a-button>
-          <a-button type="link">Shipping</a-button>
-          <a-button type="link">Returns</a-button>
-          <a-button type="link">FAQ</a-button>
-          <a-button type="link">Give us feedback</a-button>
-        </a-flex>
-      </div>
-
-      <div class="footer-section">
-        <h3>Shop With Us</h3>
-        <a-flex vertical align="flex-start">
-          <a-button type="link">Certified</a-button>
-          <a-button type="link">Personal Shopping</a-button>
-          <a-button type="link">Gift Cards</a-button>
-        </a-flex>
-      </div>
-      <div class="footer-section">
-        <h3>About Us</h3>
-        <a-flex vertical align="flex-start">
-          <a-button type="link">About</a-button>
-          <a-button type="link">Locations</a-button>
-          <a-button type="link">Influencer Program</a-button>
-        </a-flex>
-      </div>
-
-      <div class="footer-section">
-        <h3>Legal</h3>
-        <a-flex vertical align="flex-start">
-          <a-button type="link">Privacy Policy</a-button>
-          <a-button type="link">Terms of use</a-button>
-          <a-button type="link">Cookie Policy</a-button>
+          <div v-for="contact in group" :key="contact.id">
+            <a-button :href="`https://${contact.link}`" type="link">{{ contact.subtitle }}</a-button>
+          </div>
         </a-flex>
       </div>
 
@@ -54,16 +30,44 @@
       </div>
     </div>
 
-    <div class="footer-bottom">©2023 My Company. All rights reserved.</div>
+    <div class="footer-bottom">©2025 Everything L11. All rights reserved.</div>
   </a-layout-footer>
 </template>
 
 <script setup lang="ts">
-import { FacebookFilled, InstagramFilled, TwitterCircleFilled } from "@ant-design/icons-vue";
-const onSubscribe = (value: string) => {
-  console.log("Subscribed:", value);
-  // Add your subscription logic here
-};
+import {
+  FacebookFilled,
+  InstagramFilled,
+  TwitterCircleFilled,
+} from "@ant-design/icons-vue";
+import { onMounted, reactive, ref } from "vue";
+import { getShoppingContactsPublic } from "../../services/ContactService";
+import type { ShoppingContact } from "../ShoppingContact.vue";
+
+const dynamicValidateForm = reactive<{ contacts: ShoppingContact[] }>({
+  contacts: [],
+});
+const groupedContacts = ref<Record<string, ShoppingContact[]>>({});
+
+onMounted(async () => {
+  const contacts = await getShoppingContactsPublic();
+  dynamicValidateForm.contacts = contacts.map((i) => ({
+    id: i.id,
+    key: new Date(`${i.created_at}`).getTime(),
+    title: i.title,
+    subtitle: i.subtitle,
+    link: i.link,
+  }));
+  // Manually update the grouped ref
+  groupedContacts.value = dynamicValidateForm.contacts.reduce((grouped, item) => {
+    const { title } = item;
+    if (!grouped[title]) {
+      grouped[title] = [];
+    }
+    grouped[title].push(item);
+    return grouped;
+  }, {} as Record<string, ShoppingContact[]>);
+});
 </script>
 
 <style scoped>

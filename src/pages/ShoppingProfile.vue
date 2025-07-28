@@ -85,10 +85,11 @@ import { message } from "ant-design-vue";
 import { onMounted, reactive, ref, toRaw } from "vue";
 import { supabase } from "../lib/supabase";
 import {
-getProfileById,
-insertProfileById,
-updateProfileById,
-type IProfile,
+  getProfileById,
+  insertProfileById,
+  storageProfile,
+  updateProfileById,
+  type IProfile,
 } from "../services/ProfileService";
 import { useAuthStore } from "../stores/auth";
 
@@ -157,9 +158,9 @@ const customUpload = async ({ file, onSuccess, onError }: any) => {
   try {
     isLoadingAvatar.value = true;
     // Generate unique file path
-    const filePath = `${auth.user?.id}/${Date.now()}-${file.name}`;
+    const filePath = `${storageProfile}/${Date.now()}-${file.name}`;
     const { data, error: uploadError } = await supabase.storage
-      .from("portfolio-cms") // Replace with your bucket name
+      .from("shopping-storage") // Replace with your bucket name
       .upload(filePath, file, {
         cacheControl: "3600", // Cache for 1 hour
         upsert: false, // Prevent overwriting
@@ -172,13 +173,13 @@ const customUpload = async ({ file, onSuccess, onError }: any) => {
 
     // Get public URL for the uploaded image
     const { data: urlData } = supabase.storage
-      .from("portfolio-cms")
+      .from("shopping-storage")
       .getPublicUrl(filePath);
 
     formState.avatar = urlData.publicUrl;
     onSuccess(data); // Notify Ant Design upload success
     const { avatar, ...rest } = formState;
-    await saveAvatar({ ...rest, profile_url: urlData.publicUrl, });
+    await saveAvatar({ ...rest, profile_url: urlData.publicUrl });
   } catch (err: any) {
     message.error(`Upload failed: ${err.message}`);
     onError(err); // Notify Ant Design upload failure
@@ -246,7 +247,10 @@ const saveProfile = async (profile: Partial<IProfile>) => {
 onMounted(async () => {
   if (auth.user) {
     const profile = await getProfileById(auth.user.id);
-    formState.avatar = profile.profile_url;
+    if (!profile) {
+      await onFinish();
+    }
+    formState.avatar = (profile as IProfile).profile_url;
     Object.assign(formState, profile);
   }
 });

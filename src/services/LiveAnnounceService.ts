@@ -10,22 +10,21 @@ export interface IShoppingLiveAnnounce {
   created_at?: string;
 }
 
-const table = "shopping_live_announce"
-export const storageLiveAnnounce = "storage-live-announce"
+const table = "shopping_live_announce";
+export const storageLiveAnnounce = "storage-live-announce";
 
 export const insertShoppingLiveAnnounce = async (
   props: IShoppingLiveAnnounce[]
 ): Promise<IShoppingLiveAnnounce[]> => {
-  const { data, error } = await supabase
-    .from(table)
-    .insert(props)
-    .select();
+  const { data, error } = await supabase.from(table).insert(props).select();
 
   if (error) throw error.message;
   return data;
 };
 
-export const updateShoppingLiveAnnounce = async (prop: IShoppingLiveAnnounce) => {
+export const updateShoppingLiveAnnounce = async (
+  prop: IShoppingLiveAnnounce
+) => {
   const { data, error } = await supabase
     .from(table)
     .update(prop)
@@ -49,6 +48,18 @@ export const getShoppingLiveAnnounce = async (
   return data;
 };
 
+export const getShoppingLiveAnnouncePublic = async (): Promise<
+  IShoppingLiveAnnounce[]
+> => {
+  const { data, error } = await supabase
+    .from(table)
+    .select("*")
+    .order("created_at", { ascending: true })
+    .select();
+  if (error) throw error.message;
+  return data;
+};
+
 export const getShoppingLiveAnnounceById = async (
   id: number
 ): Promise<IShoppingLiveAnnounce> => {
@@ -61,7 +72,9 @@ export const getShoppingLiveAnnounceById = async (
   return data;
 };
 
-export const deleteShoppingLiveAnnounce = async (id: number): Promise<boolean> => {
+export const deleteShoppingLiveAnnounce = async (
+  id: number
+): Promise<boolean> => {
   const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error.message;
   return true;

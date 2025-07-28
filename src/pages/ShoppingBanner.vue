@@ -6,7 +6,7 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping banner</a-typography-text>
+    <a-typography-text>Shopping banner - 2560 x 1200 px</a-typography-text>
     <br />
     <br />
     <a-form-item
@@ -414,7 +414,7 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${storageBanner}/${fileName}`;
+            const filePath = `${file.name}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);

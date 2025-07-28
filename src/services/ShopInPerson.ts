@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 
-export interface IShoppingMoreTopDesigners {
+export interface IShoppingShopInPerson {
   id?: number;
   title: string;
   images?: Array<any>;
@@ -8,23 +8,23 @@ export interface IShoppingMoreTopDesigners {
   created_at?: string;
 }
 
-const tableName = "shopping_more_top_designers";
-export const storageMoreTopDesign = "storage-more-design";
+const table = "shopping_shop_in_person";
+export const storageShopInPerson = "storage-shop-in-person";
 
-export const insertShoppingMoreTopDesigners = async (
-  props: IShoppingMoreTopDesigners[]
-): Promise<IShoppingMoreTopDesigners[]> => {
-  const { data, error } = await supabase.from(tableName).insert(props).select();
+export const insertShoppingShopInPerson = async (
+  props: IShoppingShopInPerson[]
+): Promise<IShoppingShopInPerson[]> => {
+  const { data, error } = await supabase.from(table).insert(props).select();
 
   if (error) throw error.message;
   return data;
 };
 
-export const updateShoppingMoreTopDesigners = async (
-  prop: IShoppingMoreTopDesigners
+export const updateShoppingShopInPerson = async (
+  prop: IShoppingShopInPerson
 ) => {
   const { data, error } = await supabase
-    .from(tableName)
+    .from(table)
     .update(prop)
     .eq("id", prop.id)
     .select();
@@ -33,11 +33,11 @@ export const updateShoppingMoreTopDesigners = async (
   return data;
 };
 
-export const getShoppingMoreTopDesigners = async (
+export const getShoppingShopInPerson = async (
   user_id: string
-): Promise<IShoppingMoreTopDesigners[]> => {
+): Promise<IShoppingShopInPerson[]> => {
   const { data, error } = await supabase
-    .from(tableName)
+    .from(table)
     .select("*")
     .order("created_at", { ascending: true })
     .eq("user_id", user_id) // Replace with the actual user ID
@@ -46,11 +46,11 @@ export const getShoppingMoreTopDesigners = async (
   return data;
 };
 
-export const getShoppingMoreTopDesignersPublic = async (): Promise<
-  IShoppingMoreTopDesigners[]
+export const getShoppingShopInPersonPublic = async (): Promise<
+  IShoppingShopInPerson[]
 > => {
   const { data, error } = await supabase
-    .from(tableName)
+    .from(table)
     .select("*")
     .order("created_at", { ascending: true })
     .select();
@@ -58,11 +58,11 @@ export const getShoppingMoreTopDesignersPublic = async (): Promise<
   return data;
 };
 
-export const getShoppingMoreTopDesignersById = async (
+export const getShoppingShopInPersonById = async (
   id: number
-): Promise<IShoppingMoreTopDesigners> => {
+): Promise<IShoppingShopInPerson> => {
   const { data, error } = await supabase
-    .from(tableName)
+    .from(table)
     .select("*")
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();
@@ -70,10 +70,10 @@ export const getShoppingMoreTopDesignersById = async (
   return data;
 };
 
-export const deleteShoppingMoreTopDesigner = async (
+export const deleteShoppingShopInPerson = async (
   id: number
 ): Promise<boolean> => {
-  const { error } = await supabase.from(tableName).delete().eq("id", id);
+  const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw error.message;
   return true;
 };

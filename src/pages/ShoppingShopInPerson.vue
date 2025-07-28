@@ -6,80 +6,40 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Work experience</a-typography-text>
+    <a-typography-text>Shopping in person - 572 x 715 px</a-typography-text>
     <br />
     <br />
     <a-form-item
-      v-for="(experience, index) in dynamicValidateForm.experiences"
-      :key="experience.key"
+      v-for="(shop, index) in dynamicValidateForm.shops"
+      :key="shop.key"
       v-bind="formItemLayout"
     >
       <a-form-item
         style="margin-bottom: -16px"
-        :name="['experiences', index, 'dateRange']"
-        :rules="[
-          { required: true, message: 'Link is required', trigger: 'change' },
-        ]"
+        :name="['shops', index, 'title']"
+        :rules="[{ required: true, message: 'Title is required', trigger: 'change' }]"
       >
-        <MinusCircleOutlined
-          style="margin-right: 12px"
-          v-if="dynamicValidateForm.experiences.length > 1"
-          class="dynamic-delete-button"
-          @click="removeDomain(experience)"
-        />
-        <a-range-picker v-model:value="experience.dateRange" />
+        <a-flex>
+          <MinusCircleOutlined
+            style="margin-right: 12px"
+            v-if="dynamicValidateForm.shops.length > 1"
+            class="dynamic-delete-button"
+            @click="removeBanner(shop)"
+          />
+          <a-input
+            name="shop.alias"
+            v-model:value="shop.title"
+            placeholder="Title"
+            style="width: 100%; margin-right: 8px"
+          />
+        </a-flex>
       </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['experiences', index, 'alias']"
-        :rules="[
-          { required: true, message: 'Alias is required', trigger: 'change' },
-        ]"
-      >
-        <a-input
-          name="experience.alias"
-          v-model:value="experience.alias"
-          placeholder="Alias"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['experiences', index, 'link']"
-        :rules="[
-          { required: true, message: 'Link is required', trigger: 'change' },
-        ]"
-      >
-        <a-input
-          name="experience.link"
-          v-model:value="experience.link"
-          placeholder="Link"
-          style="width: 100%; margin-right: 8px"
-        />
-      </a-form-item>
-      <a-form-item
-        style="margin-bottom: -16px"
-        :name="['experiences', index, 'description']"
-        :rules="[
-          {
-            required: true,
-            message: 'Description is required',
-            trigger: 'change',
-          },
-        ]"
-      >
-        <a-textarea
-          v-model:value="experience.description"
-          placeholder="Description"
-          :auto-size="{ minRows: 3, maxRows: 5 }"
-        />
-      </a-form-item>
-      <a-form-item :name="['experiences', index, 'fileList']">
+      <a-form-item :name="['shops', index, 'fileList']">
         <a-upload
-          v-model:file-list="experience.fileList"
+          v-model:file-list="shop.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
-          :remove="handleRemove(Number(experience.id), index)"
+          :remove="handleRemove(Number(shop.id), index)"
           :custom-request="customUpload({ indexRow: index })"
           list-type="picture-card"
         >
@@ -99,7 +59,7 @@
       </a-form-item>
     </a-form-item>
     <a-form-item v-bind="formItemLayoutWithOutLabel">
-      <a-button type="dashed" style="width: 60%" @click="addExperience">
+      <a-button type="dashed" style="width: 60%" @click="addBanner">
         <PlusOutlined />
         Add field
       </a-button>
@@ -125,27 +85,16 @@ import {
   PlusOutlined,
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
-import dayjs from "dayjs";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
-import {
-  deleteWorkExperience,
-  getImageUrl,
-  getWorkExperiences,
-  getWorkExperiencesById,
-  insertWorkExperiences,
-  updateWorkExperiences,
-  type IWorkExperiences,
-} from "../services/WorkService";
+import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
+import { deleteShoppingShopInPerson, getShoppingShopInPerson, getShoppingShopInPersonById, insertShoppingShopInPerson, storageShopInPerson, updateShoppingShopInPerson, type IShoppingShopInPerson } from "../services/ShopInPerson";
 
-export interface WorkExperience {
+export interface ShoppingShopInPerson {
   id: number | null;
   key: number;
-  dateRange: any;
-  link: string;
-  alias: string;
-  description: string;
+  title: string;
   fileList: any[];
 }
 
@@ -168,14 +117,16 @@ const formItemLayout = {
     sm: { span: 20 },
   },
 };
+
 const formItemLayoutWithOutLabel = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
     sm: { span: 20, offset: 4 },
   },
 };
-const dynamicValidateForm = reactive<{ experiences: WorkExperience[] }>({
-  experiences: [],
+
+const dynamicValidateForm = reactive<{ shops: ShoppingShopInPerson[] }>({
+  shops: [],
 });
 
 function getBase64(file: File) {
@@ -207,9 +158,9 @@ const customUpload = ({ indexRow }: any) => {
       // isLoadingAvatar.value = true;
       // Generate unique file path
       const fileName = file.name.replace(/\s+/g, "_");
-      const filePath = `${auth.user?.id}/${Date.now()}-${fileName}`;
+      const filePath = `${storageShopInPerson}/${Date.now()}-${fileName}`;
       const { data, error: uploadError } = await supabase.storage
-        .from("portfolio-cms") // Replace with your bucket name
+        .from("shopping-storage") // Replace with your bucket name
         .upload(filePath, file, {
           cacheControl: "3600", // Cache for 1 hour
           upsert: false, // Prevent overwriting
@@ -229,35 +180,29 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const workExperience = dynamicValidateForm.experiences[indexRow];
-      if (workExperience.id) {
-        const getByUserId = await getWorkExperiencesById(workExperience.id);
+      const shoppingInPerson = dynamicValidateForm.shops[indexRow];
+      if (shoppingInPerson.id) {
+        const getByUserId = await getShoppingShopInPersonById(shoppingInPerson.id);
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
             : metadata;
         const rest = {
-          id: workExperience.id,
-          start_date: workExperience.dateRange[0],
-          end_date: workExperience.dateRange[1],
-          link: workExperience.link,
-          description: workExperience.description,
+          id: shoppingInPerson.id,
+          title: shoppingInPerson.title,
           images: oldImages,
           user_id: auth.user?.id,
-        } as IWorkExperiences;
+        } as IShoppingShopInPerson;
 
-        updateWorkExperiences(rest)
+        updateShoppingShopInPerson(rest)
           .then()
           .catch((e) => errors(e))
           .finally(() => {
             isLoading.value = false;
           });
-        // const { data: publicUrl } = supabase.storage
-        //   .from("portfolio-cms")
-        //   .getPublicUrl(filePath);
 
         onSuccess();
-        return false
+        return false;
       }
       // Notify Ant Design upload success
       // await saveAvatar({ profile_url: urlData.publicUrl });
@@ -268,7 +213,18 @@ const customUpload = ({ indexRow }: any) => {
   };
 };
 
-const showConfirm = (item: WorkExperience) => {
+const removeBanner = (item: ShoppingShopInPerson) => {
+  if (item.id) {
+    showConfirm(item);
+  } else {
+    const index = dynamicValidateForm.shops.indexOf(item);
+    if (index !== -1) {
+      dynamicValidateForm.shops.splice(index, 1);
+    }
+  }
+};
+
+const showConfirm = (item: ShoppingShopInPerson) => {
   modal.confirm({
     title: "Delete",
     icon: h(ExclamationCircleOutlined),
@@ -279,11 +235,11 @@ const showConfirm = (item: WorkExperience) => {
     ),
     onOk() {
       if (item.id) {
-        deleteWorkExperience(item.id)
+        deleteShoppingShopInPerson(item.id)
           .then(() => {
-            const index = dynamicValidateForm.experiences.indexOf(item);
+            const index = dynamicValidateForm.shops.indexOf(item);
             if (index !== -1) {
-              dynamicValidateForm.experiences.splice(index, 1);
+              dynamicValidateForm.shops.splice(index, 1);
             }
             deleted();
           })
@@ -298,37 +254,28 @@ const showConfirm = (item: WorkExperience) => {
   });
 };
 
+// submit form
 const submitForm = () => {
   if (formRef.value) {
     formRef.value
       .validate()
       .then(() => {
         isLoading.value = true;
-        const plainData = toRaw(dynamicValidateForm.experiences).map((exp) => {
-          const rawRange = toRaw(exp.dateRange);
-          return {
-            ...exp,
-            dateRange: rawRange.map((d: any) => d?.format("YYYY-MM-DD")),
-          };
-        });
+        const plainData = toRaw(dynamicValidateForm.shops);
         const plainDataMap = plainData.map(
           (i) =>
             ({
               id: i.id,
-              start_date: i.dateRange[0],
-              end_date: i.dateRange[1],
-              link: i.link,
-              alias: i.alias,
-              description: i.description,
-              images: {},
+              title: i.title,
+              images: [],
               user_id: auth.user?.id,
-            } as IWorkExperiences)
+            } as IShoppingShopInPerson)
         );
         const insertPlainData = plainDataMap.filter((i) => !i.id);
         const updatePlainData = plainDataMap.filter((i) => i.id);
         if (insertPlainData.length > 0) {
           try {
-            insertWorkExperiences(
+            insertShoppingShopInPerson(
               insertPlainData.map(({ id, ...rest }) => ({ ...rest }))
             )
               .then(() => success())
@@ -342,7 +289,7 @@ const submitForm = () => {
         if (updatePlainData.length > 0) {
           try {
             updatePlainData.forEach(({ images, ...u }) => {
-              updateWorkExperiences(u)
+              updateShoppingShopInPerson(u)
                 .then()
                 .catch((e) => errors(e))
                 .finally();
@@ -375,24 +322,10 @@ const handleCancel = () => {
   previewTitle.value = "";
 };
 
-const removeDomain = (item: WorkExperience) => {
-  if (item.id) {
-    showConfirm(item);
-  } else {
-    const index = dynamicValidateForm.experiences.indexOf(item);
-    if (index !== -1) {
-      dynamicValidateForm.experiences.splice(index, 1);
-    }
-  }
-};
-
-const addExperience = () => {
-  dynamicValidateForm.experiences.push({
+const addBanner = () => {
+  dynamicValidateForm.shops.push({
     id: null,
-    dateRange: "",
-    link: "",
-    alias: "",
-    description: "",
+    title: "",
     key: Date.now(),
     fileList: [],
   });
@@ -429,19 +362,19 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${auth.user?.id}/${fileName}`;
+            const filePath = `${storageShopInPerson}/${fileName}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);
               return;
             }
             // Wait for Supabase deletion
-            await deleteImage("portfolio-cms", filePath);
-            const getByUserId = await getWorkExperiencesById(id);
+            await deleteImage("shopping-storage", filePath);
+            const getByUserId = await getShoppingShopInPersonById(id);
             const oldImages = getByUserId.images?.filter(
               (i) => i.fileName !== fileName
             );
-            updateWorkExperiences({ ...getByUserId, images: oldImages })
+            updateShoppingShopInPerson({ ...getByUserId, images: oldImages })
               .then()
               .catch((e) => errors(e))
               .finally(() => {
@@ -482,12 +415,12 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const workExperiences = await getWorkExperiences(auth.user.id);
-    for (const i of workExperiences) {
+    const shoppingInPerson = await getShoppingShopInPerson(auth.user.id);
+    for (const i of shoppingInPerson) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, auth.user.id);
+          const tempImg = await getImageUrl(img.fileName, storageShopInPerson);
           imagesList.push({
             uid: img.id,
             name: img.fileName,
@@ -500,25 +433,21 @@ const fetchAllData = async () => {
       const pre = {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
-        dateRange: [dayjs(i.start_date), dayjs(i.end_date)],
-        link: i.link,
-        alias: i.alias,
-        description: i.description,
+        title: i.title,
         fileList: imagesList,
-      } as WorkExperience;
-      dynamicValidateForm.experiences.push(pre);
+      } as ShoppingShopInPerson;
+      dynamicValidateForm.shops.push(pre);
     }
   }
-}
+};
 
 watch(refreshKey, () => {
-  dynamicValidateForm.experiences = [];
+  dynamicValidateForm.shops = [];
   fetchAllData();
 });
 
-
 onMounted(async () => {
-  await fetchAllData()
+  await fetchAllData();
 });
 </script>
 <style scoped>

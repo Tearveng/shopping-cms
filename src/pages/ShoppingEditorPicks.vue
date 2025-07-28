@@ -6,7 +6,7 @@
     v-bind="formItemLayoutWithOutLabel"
     style="width: 100%; padding: 20px"
   >
-    <a-typography-text>Shopping editor picks</a-typography-text>
+    <a-typography-text>Shopping editor picks - 350 x 350 px</a-typography-text>
     <br />
     <br />
     <a-form-item

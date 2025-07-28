@@ -128,10 +128,7 @@
 
 <script setup lang="ts">
 import { Motion } from "@motionone/vue";
-import { useHead } from "@vueuse/head";
-import { computed, onMounted, ref } from "vue";
-import { getSubdomainBySubdomain } from "../../services/SubdomainService";
-import Shopping from "./ShoppingEditorPicks.vue";
+import { computed, ref } from "vue";
 import ShoppingBanner from "./ShoppingBanner.vue";
 import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
 import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
@@ -152,5 +149,4 @@ const subdomain = computed(() => {
   return parts.length > 2 ? parts[0] : ""; // Returns "sub" or empty string
 });
 
-onMounted(async () => {});
 </script>

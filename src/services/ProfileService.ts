@@ -8,13 +8,18 @@ export interface IProfile {
   website: string;
 }
 
-export const getProfileById = async (user_id: string): Promise<IProfile> => {
+const table = "shopping-profile";
+export const storageProfile = "storage-profile";
+
+export const getProfileById = async (
+  user_id: string
+): Promise<IProfile | boolean> => {
   const { data, error } = await supabase
-    .from("profile_cms")
+    .from(table)
     .select("*")
     .eq("user_id", user_id) // Replace with the actual user ID
     .maybeSingle();
-  if (error) throw error.message;
+  if (error) return false;
   return data;
 };
 
@@ -22,7 +27,7 @@ export const insertProfileById = async (
   props: Partial<IProfile>
 ): Promise<IProfile> => {
   const { data, error } = await supabase
-    .from("profile_cms")
+    .from(table)
     .insert([props])
     .select()
     .single();
@@ -35,7 +40,7 @@ export const updateProfileById = async (
   profile: Partial<IProfile>
 ): Promise<IProfile> => {
   const { data, error } = await supabase
-    .from("profile_cms")
+    .from(table)
     .update(profile)
     .eq("user_id", user_id)
     .select()
@@ -48,7 +53,7 @@ export const updateProfileById = async (
 export const uploadFile = async (file: any) => {
   const filePath = `public/${file.name}`; // Path in the bucket
   const { data, error } = await supabase.storage
-    .from("portfolio-cms") // Replace with your bucket name
+    .from(table) // Replace with your bucket name
     .upload(filePath, file, {
       cacheControl: "3600", // Cache duration in seconds
       upsert: false, // Set to true to overwrite existing files

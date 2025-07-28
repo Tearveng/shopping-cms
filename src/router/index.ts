@@ -1,23 +1,21 @@
 import type { RouteRecordRaw, Router } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
 import MainLayout from "../layouts/MainLayout.vue";
-import About from "../pages/About.vue";
 import Login from "../pages/auth/Login.vue";
-import Contact from "../pages/Contact.vue";
-import Education from "../pages/Education.vue";
 import Home from "../pages/Home.vue";
-import Language from "../pages/Language.vue";
 import NotFound from "../pages/NotFound.vue";
-import Profile from "../pages/Profile.vue";
 import HomePageVue from "../pages/publish/HomePage.vue";
 import Setting from "../pages/Setting.vue";
 import ShoppingBanner from "../pages/ShoppingBanner.vue";
 import ShoppingEditorPicks from "../pages/ShoppingEditorPicks.vue";
 import ShoppingFeatureCollections from "../pages/ShoppingFeatureCollections.vue";
 import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
-import Work from "../pages/Work.vue";
 import { useAuthStore } from "../stores/auth";
 import ShoppingLiveAnnounce from "../pages/ShoppingLiveAnnounce.vue";
+import ShoppingMoreTopDesigners from "../pages/ShoppingMoreTopDesigners.vue";
+import ShoppingContact from "../pages/ShoppingContact.vue";
+import ShoppingProfile from "../pages/ShoppingProfile.vue";
+import ShoppingShopInPerson from "../pages/ShoppingShopInPerson.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -68,21 +66,10 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true,
         },
       },
-      // {
-      //   path: "dashboard",
-      //   name: "Dashboard",
-      //   component: Dashboard,
-      //   meta: {
-      //     title: "Dashboard",
-      //     icon: "dashboard",
-      //     breadcrumb: ["Dashboard"],
-      //     requiresAuth: true,
-      //   },
-      // },
       {
         path: "profile",
         name: "Profile",
-        component: Profile,
+        component: ShoppingProfile,
         meta: {
           title: "Profile",
           icon: "profile",
@@ -124,6 +111,17 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "more_top_design",
+        name: "More top design",
+        component: ShoppingMoreTopDesigners,
+        meta: {
+          title: "More top design",
+          icon: "more_top_design",
+          breadcrumb: ["More top design"],
+          requiresAuth: true,
+        },
+      },
+      {
         path: "editor_pick",
         name: "Editor pick",
         component: ShoppingEditorPicks,
@@ -146,57 +144,24 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "work",
-        name: "Work",
-        component: Work,
+        path: "shop_in_person",
+        name: "Shop in person",
+        component: ShoppingShopInPerson,
         meta: {
-          title: "Work",
-          icon: "work",
-          breadcrumb: ["Work"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "education",
-        name: "Education",
-        component: Education,
-        meta: {
-          title: "Education",
-          icon: "education",
-          breadcrumb: ["Education"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "language",
-        name: "Language",
-        component: Language,
-        meta: {
-          title: "Language",
-          icon: "language",
-          breadcrumb: ["Language"],
+          title: "Shop in person",
+          icon: "shop_in_person",
+          breadcrumb: ["Shop in person"],
           requiresAuth: true,
         },
       },
       {
         path: "contact",
         name: "Contact",
-        component: Contact,
+        component: ShoppingContact,
         meta: {
           title: "Contact",
           icon: "About",
           breadcrumb: ["Contact"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "about",
-        name: "About",
-        component: About,
-        meta: {
-          title: "About",
-          icon: "About",
-          breadcrumb: ["About"],
           requiresAuth: true,
         },
       },
@@ -339,4 +304,3 @@ export default router;
 // Export additional utilities
 export { routes };
 export type { RouteRecordRaw };
-
