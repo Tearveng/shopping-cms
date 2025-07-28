@@ -96,7 +96,7 @@ import {
   updateShoppingTopDesigners,
   type IShoppingTopDesigners
 } from "../services/TopDesignersService";
-import { getImageUrl } from "../services/WorkService";
+import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
 
 export interface ShoppingTopDesigners {

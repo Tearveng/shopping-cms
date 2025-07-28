@@ -113,12 +113,8 @@
 
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
-import { getShoppingBannersPublic, storageBanner } from "../../services/BannerService";
-import { getImageUrl } from "../../services/WorkService";
+import { getImageUrl, getShoppingBannersPublic, storageBanner } from "../../services/BannerService";
 import type { ShoppingBanner } from "../ShoppingBanner.vue";
-const props = defineProps({
-  user_id: String,
-});
 
 const dynamicValidateForm = reactive<{ banners: ShoppingBanner[] }>({
   banners: [],

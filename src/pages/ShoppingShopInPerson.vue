@@ -87,7 +87,7 @@ import {
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
-import { getImageUrl } from "../services/WorkService";
+import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
 import { deleteShoppingShopInPerson, getShoppingShopInPerson, getShoppingShopInPersonById, insertShoppingShopInPerson, storageShopInPerson, updateShoppingShopInPerson, type IShoppingShopInPerson } from "../services/ShopInPerson";
 

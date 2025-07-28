@@ -132,7 +132,7 @@ import {
   updateShoppingBanner,
   type IShoppingBanner,
 } from "../services/BannerService";
-import { getImageUrl } from "../services/WorkService";
+import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
 
 export interface ShoppingBanner {

@@ -152,7 +152,7 @@ import {
   updateShoppingEditorPicks,
   type IShoppingEditorPicks
 } from "../services/EditorPickService";
-import { getImageUrl } from "../services/WorkService";
+import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
 
 export interface ShoppingEditorPick {

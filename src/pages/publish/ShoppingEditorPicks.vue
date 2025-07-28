@@ -198,7 +198,6 @@ const config = {
 } as any;
 
 const carouselRef = ref<any>(null);
-const currentPage = ref(0);
 const productCategories = ref<ShoppingEditorPick[]>([
   // {
   //   id: 102,

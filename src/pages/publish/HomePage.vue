@@ -10,7 +10,7 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, delay: 0.2 }"
         >
-          <ShoppingHeader />
+          <ShoppingHead />
         </Motion>
       </a-flex>
 
@@ -128,25 +128,18 @@
 
 <script setup lang="ts">
 import { Motion } from "@motionone/vue";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import ShoppingBanner from "./ShoppingBanner.vue";
-import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
-import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
-import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
-import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
-import ShoppingInPerson from "./ShoppingInPerson.vue";
-import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
-import ShoppingHeader from "./ShoppingHeader.vue";
+import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
+import ShoppingFooter from "./ShoppingFooter.vue";
+import ShoppingInPerson from "./ShoppingInPerson.vue";
+import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
+import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
+import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
+import ShoppingHead from "./ShoppingHead.vue";
 
-const user_id = ref<string>("");
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
-
-const subdomain = computed(() => {
-  const hostname = window.location.hostname; // e.g., "sub.example.com"
-  const parts = hostname.split(".");
-  return parts.length > 2 ? parts[0] : ""; // Returns "sub" or empty string
-});
 
 </script>

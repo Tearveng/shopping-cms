@@ -68,15 +68,15 @@
   </div>
 </template>
 
-  <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+<script setup lang="ts">
 import {
-  HomeOutlined,
-  AppstoreOutlined,
-  InfoCircleOutlined,
-  ContactsOutlined,
-  MenuOutlined,
+    AppstoreOutlined,
+    ContactsOutlined,
+    HomeOutlined,
+    InfoCircleOutlined,
+    MenuOutlined,
 } from "@ant-design/icons-vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const current = ref("home");
 const isMobile = ref(false);
@@ -86,7 +86,7 @@ const checkScreenSize = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-const handleMenuClick = (e) => {
+const handleMenuClick = (e: any) => {
   current.value = e.key;
   if (isMobile.value) {
     visible.value = false;

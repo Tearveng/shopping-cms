@@ -77,10 +77,6 @@ import {
 } from "../../services/TopDesignersService";
 import type { ShoppingTopDesigners } from "../ShoppingTopDesigners.vue";
 
-const props = defineProps({
-  user_id: String,
-});
-
 const dynamicValidateForm = reactive<{ topDesign: ShoppingTopDesigners[] }>({
   topDesign: [],
 });

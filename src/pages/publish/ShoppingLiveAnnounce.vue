@@ -76,10 +76,6 @@ import {
   storageLiveAnnounce,
 } from "../../services/LiveAnnounceService";
 
-const props = defineProps({
-  user_id: String,
-});
-
 const dynamicValidateForm = reactive<{ liveAnnonce: ShoppingLiveAnnounce[] }>({
   liveAnnonce: [],
 });

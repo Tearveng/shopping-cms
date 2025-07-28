@@ -81,10 +81,6 @@ import {
   storageFeatureCollection,
 } from "../../services/FeatureCollectionService";
 
-const props = defineProps({
-  user_id: String,
-});
-
 const dynamicValidateForm = reactive<{
   featureCollection: ShoppingFeatureCollection[];
 }>({

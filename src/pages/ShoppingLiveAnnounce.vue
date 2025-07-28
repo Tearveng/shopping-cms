@@ -126,6 +126,7 @@ import {
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
+import { getImageUrl } from "../services/BannerService";
 import {
   deleteShoppingLiveAnnounce,
   getShoppingLiveAnnounce,
@@ -135,7 +136,6 @@ import {
   updateShoppingLiveAnnounce,
   type IShoppingLiveAnnounce
 } from "../services/LiveAnnounceService";
-import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
 
 export interface ShoppingLiveAnnounce {
