@@ -72,6 +72,7 @@
       </a-form-item>
       <a-form-item :name="['banners', index, 'fileList']">
         <a-upload
+          :disabled="!banner.id"
           v-model:file-list="banner.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
@@ -147,7 +148,6 @@ export interface ShoppingBanner {
 const auth = useAuthStore();
 const refreshKey = ref(0);
 const formRef = ref<FormInstance>();
-// const fileList = ref<UploadProps['fileList']>([])
 const isLoading = ref(false);
 const previewVisible = ref(false);
 const previewImage = ref("");
@@ -414,7 +414,7 @@ const handleRemove = (id: number, _: number) => {
           try {
             // Extract file path (e.g., from file.path or parse file.url)
             const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${file.name}`;
+            const filePath = `${storageBanner}/${file.name}`;
             if (!filePath) {
               message.error("Invalid file path");
               resolve(false);

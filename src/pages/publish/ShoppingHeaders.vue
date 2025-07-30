@@ -68,7 +68,7 @@
   </div>
 </template>
 
-  <script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import {
   HomeOutlined,
@@ -86,7 +86,7 @@ const checkScreenSize = () => {
   isMobile.value = window.innerWidth < 768;
 };
 
-const handleMenuClick = (e) => {
+const handleMenuClick = (e: any) => {
   current.value = e.key;
   if (isMobile.value) {
     visible.value = false;

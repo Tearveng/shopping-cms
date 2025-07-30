@@ -26,25 +26,6 @@
           >{{ topDesign.title }}</a-typography
         >
       </a-col>
-
-
-      <a-col :span="6" :xs="12" :sm="6">
-        <a-image
-          src="https://images.ctfassets.net/tkr0x069m1it/2CC23GoBtZra4GrqOLB2xe/c501e3991169c0af70b341e4dad58198/Image2.jpg?w=3200"
-          :width="'100%'"
-          :height="'auto'"
-          :preview="false"
-        />
-        <a-typography
-          style="
-            line-height: 1.7em;
-            padding-top: 0.5rem;
-            font-size: 1rem;
-            font-weight: 200;
-          "
-          >Hermes</a-typography
-        >
-      </a-col>
     </a-row>
   </a-flex>
 </template>
@@ -76,10 +57,6 @@ import {
   storageTopDesign,
 } from "../../services/TopDesignersService";
 import type { ShoppingTopDesigners } from "../ShoppingTopDesigners.vue";
-
-const props = defineProps({
-  user_id: String,
-});
 
 const dynamicValidateForm = reactive<{ topDesign: ShoppingTopDesigners[] }>({
   topDesign: [],

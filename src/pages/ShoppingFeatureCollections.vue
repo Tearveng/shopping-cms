@@ -74,6 +74,7 @@
       </a-form-item>
       <a-form-item :name="['banners', index, 'fileList']">
         <a-upload
+          :disabled="!banner.id"
           v-model:file-list="banner.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"

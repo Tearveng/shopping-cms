@@ -92,6 +92,7 @@
       </a-form-item>
       <a-form-item :name="['editors', index, 'fileList']">
         <a-upload
+          :disabled="!editor.id"
           v-model:file-list="editor.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"

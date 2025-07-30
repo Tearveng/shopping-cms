@@ -36,6 +36,7 @@
       </a-form-item>
       <a-form-item :name="['designers', index, 'fileList']">
         <a-upload
+          :disabled="!designer.id"
           v-model:file-list="designer.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"

@@ -155,7 +155,6 @@ import {
   FundProjectionScreenOutlined,
   SettingOutlined,
   UserOutlined,
-  ShoppingOutlined,
   ContactsOutlined,
   ShopOutlined,
 } from "@ant-design/icons-vue";

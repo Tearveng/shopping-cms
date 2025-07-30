@@ -72,9 +72,10 @@
           style="width: 100%; margin-right: 8px"
         />
       </a-form-item>
-     
+
       <a-form-item :name="['announce', index, 'fileList']">
         <a-upload
+          :disabled="!announce.id"
           v-model:file-list="announce.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"

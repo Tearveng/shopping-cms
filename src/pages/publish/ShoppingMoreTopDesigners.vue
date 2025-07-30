@@ -62,10 +62,6 @@ import {
   storageMoreTopDesign,
 } from "../../services/MoreTopDesignersService";
 
-const props = defineProps({
-  user_id: String,
-});
-
 const dynamicValidateForm = reactive<{
   moreTopDesigns: ShoppingMoreTopDesigners[];
 }>({

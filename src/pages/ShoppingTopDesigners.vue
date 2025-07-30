@@ -17,7 +17,9 @@
       <a-form-item
         style="margin-bottom: -16px"
         :name="['designers', index, 'title']"
-        :rules="[{ required: true, message: 'Title is required', trigger: 'change' }]"
+        :rules="[
+          { required: true, message: 'Title is required', trigger: 'change' },
+        ]"
       >
         <a-flex>
           <MinusCircleOutlined
@@ -36,6 +38,7 @@
       </a-form-item>
       <a-form-item :name="['designers', index, 'fileList']">
         <a-upload
+          :disabled="!designer.id"
           v-model:file-list="designer.fileList"
           @preview="handlePreview"
           :before-upload="beforeUpload"
@@ -84,7 +87,7 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons-vue";
-import { message, Modal, type FormInstance } from "ant-design-vue";
+import { Form, message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import {
@@ -94,7 +97,7 @@ import {
   insertShoppingTopDesigners,
   storageTopDesign,
   updateShoppingTopDesigners,
-  type IShoppingTopDesigners
+  type IShoppingTopDesigners,
 } from "../services/TopDesignersService";
 import { getImageUrl } from "../services/WorkService";
 import { useAuthStore } from "../stores/auth";
@@ -190,7 +193,9 @@ const customUpload = ({ indexRow }: any) => {
 
       const shoppingTopDesign = dynamicValidateForm.designers[indexRow];
       if (shoppingTopDesign.id) {
-        const getByUserId = await getShoppingTopDesignersById(shoppingTopDesign.id);
+        const getByUserId = await getShoppingTopDesignersById(
+          shoppingTopDesign.id
+        );
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]

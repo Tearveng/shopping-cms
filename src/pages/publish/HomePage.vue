@@ -10,7 +10,7 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, delay: 0.2 }"
         >
-          <ShoppingHeader />
+          <ShoppingHeaders />
         </Motion>
       </a-flex>
 
@@ -19,7 +19,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 0.4 }"
         >
           <ShoppingBanner />
         </Motion>
@@ -30,7 +30,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 0.6 }"
         >
           <ShoppingTopDesigners />
         </Motion>
@@ -41,7 +41,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 0.8 }"
         >
           <ShoppingFeatureCollections />
         </Motion>
@@ -52,7 +52,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 1 }"
         >
           <ShoppingMoreTopDesigners />
         </Motion>
@@ -63,7 +63,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 1.2 }"
         >
           <ShoppingEditorPicks />
         </Motion>
@@ -74,7 +74,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 1.4 }"
         >
           <ShoppingLiveAnnounce />
         </Motion>
@@ -85,7 +85,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay:1.6 }"
         >
           <ShoppingInPerson />
         </Motion>
@@ -99,7 +99,7 @@
         <Motion
           :initial="{ opacity: 0, x: -100 }"
           :animate="{ opacity: 1, x: 0 }"
-          :transition="{ duration: 0.8, delay: 0.2 }"
+          :transition="{ duration: 0.8, delay: 2 }"
         >
           <ShoppingFooter />
         </Motion>
@@ -128,7 +128,8 @@
 
 <script setup lang="ts">
 import { Motion } from "@motionone/vue";
-import { computed, ref } from "vue";
+import { ref } from "vue";
+import ShoppingHeaders from "./ShoppingHeaders.vue";
 import ShoppingBanner from "./ShoppingBanner.vue";
 import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
 import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
@@ -137,16 +138,7 @@ import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
 import ShoppingInPerson from "./ShoppingInPerson.vue";
 import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
-import ShoppingHeader from "./ShoppingHeader.vue";
 
-const user_id = ref<string>("");
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
-
-const subdomain = computed(() => {
-  const hostname = window.location.hostname; // e.g., "sub.example.com"
-  const parts = hostname.split(".");
-  return parts.length > 2 ? parts[0] : ""; // Returns "sub" or empty string
-});
-
 </script>
