@@ -1,6 +1,6 @@
 <template>
   <a-flex style="justify-content: center">
-    <a-layout style="width: 100%; max-width: 1024px">
+    <a-layout style="width: 100%; max-width: 1440px">
       <a-layout-sider
         v-model:collapsed="collapsed"
         collapsible
@@ -37,6 +37,20 @@
               <UserOutlined />
             </template>
             Profile
+          </a-menu-item>
+
+          <a-menu-item key="category" @click="$router.push('/admin/category')">
+            <template #icon>
+             <UnorderedListOutlined />
+            </template>
+            Category
+          </a-menu-item>
+
+          <a-menu-item key="items" @click="$router.push('/admin/items')">
+            <template #icon>
+             <FallOutlined />
+            </template>
+            All item
           </a-menu-item>
 
           <a-menu-item key="banner" @click="$router.push('/admin/banner')">
@@ -136,7 +150,7 @@
           style="
             overflow-y: hidden;
             overflow: auto;
-            max-height: calc(100vh - 60px);
+            max-height: calc(100vh - 120px);
           "
         >
           <router-view />
@@ -154,8 +168,11 @@ import {
   FireOutlined,
   FundOutlined,
   FundProjectionScreenOutlined,
+  ShopOutlined,
   SettingOutlined,
   UserOutlined,
+  UnorderedListOutlined,
+  FallOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -182,6 +199,8 @@ const activeMenu = computed(() => {
   if (path === "/admin/products/categories") return "categories";
   if (path === "/admin/reports") return "reports";
   if (path === "/admin/settings") return "settings";
+  if (path === "/admin/category") return "category";
+  if (path === "/admin/items") return "items";
   if (path === "/admin/banner") return "banner";
   if (path === "/admin/top_design") return "top_design";
   if (path === "/admin/feature_collection") return "feature_collection";
@@ -216,6 +235,10 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Shopping Contact" });
   } else if (path === "/admin/settings") {
     crumbs.push({ name: "Settings" });
+  } else if (path === "/admin/category") {
+    crumbs.push({ name: "Category" });
+  } else if (path === "/admin/items") {
+    crumbs.push({ name: "Items" });
   } else if (path === "/admin/banner") {
     crumbs.push({ name: "Banner" });
   } else if (path === "/admin/top_design") {
@@ -242,8 +265,11 @@ const onOpenChange = (keys: any) => {
 const headerStyle: CSSProperties = {
   textAlign: "center",
   color: "#fff",
-  maxHeight: "48px",
+  height: "90px",
   backgroundColor: "#fff",
+  justifyContent:"center",
+  display: "flex",
+  flexDirection: 'column'
 };
 </script>
 
