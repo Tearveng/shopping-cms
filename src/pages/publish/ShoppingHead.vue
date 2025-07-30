@@ -69,14 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
 import {
-  AppstoreOutlined,
-  ContactsOutlined,
-  HomeOutlined,
-  InfoCircleOutlined,
-  MenuOutlined,
+    AppstoreOutlined,
+    ContactsOutlined,
+    HomeOutlined,
+    InfoCircleOutlined,
+    MenuOutlined,
 } from "@ant-design/icons-vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const current = ref("home");
 const isMobile = ref(false);

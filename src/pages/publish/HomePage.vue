@@ -10,7 +10,11 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, delay: 0.2 }"
         >
+<<<<<<< HEAD
           <ShoppingHeaders />
+=======
+          <ShoppingHead />
+>>>>>>> 3cf5bb91a3c49f1d3c9c76c3a3031b0009e33306
         </Motion>
       </a-flex>
 
@@ -129,16 +133,17 @@
 <script setup lang="ts">
 import { Motion } from "@motionone/vue";
 import { ref } from "vue";
-import ShoppingHeaders from "./ShoppingHeaders.vue";
 import ShoppingBanner from "./ShoppingBanner.vue";
-import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
-import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
-import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
-import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
-import ShoppingInPerson from "./ShoppingInPerson.vue";
-import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
+import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
+import ShoppingFooter from "./ShoppingFooter.vue";
+import ShoppingInPerson from "./ShoppingInPerson.vue";
+import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
+import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
+import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
+import ShoppingHead from "./ShoppingHead.vue";
 
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
+
 </script>

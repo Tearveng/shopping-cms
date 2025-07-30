@@ -149,14 +149,13 @@
 <script setup lang="ts">
 import {
   ClearOutlined,
+  ContactsOutlined,
   DotChartOutlined,
   FireOutlined,
   FundOutlined,
   FundProjectionScreenOutlined,
   SettingOutlined,
   UserOutlined,
-  ContactsOutlined,
-  ShopOutlined,
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";

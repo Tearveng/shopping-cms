@@ -135,7 +135,7 @@ import {
   updateShoppingFeatureCollections,
   type IShoppingFeatureCollections,
 } from "../services/FeatureCollectionService";
-import { getImageUrl } from "../services/WorkService";
+import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
 
 export interface ShoppingFeatureCollection {
