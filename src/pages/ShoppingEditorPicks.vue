@@ -169,7 +169,6 @@ export interface ShoppingEditorPick {
 const auth = useAuthStore();
 const refreshKey = ref(0);
 const formRef = ref<FormInstance>();
-// const fileList = ref<UploadProps['fileList']>([])
 const isLoading = ref(false);
 const previewVisible = ref(false);
 const previewImage = ref("");

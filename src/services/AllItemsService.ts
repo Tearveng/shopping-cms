@@ -13,7 +13,7 @@ export interface IShoppingAllItems {
 }
 
 const tableName = "shopping_all_items";
-export const storageEditorPick = "storage-all-items";
+export const storageAllItems = "storage-all-items";
 
 export const insertShoppingAllItems = async (
   props: IShoppingAllItems[]
@@ -41,7 +41,7 @@ export const getShoppingAllItems = async (
   const { data, error } = await supabase
     .from(tableName)
     .select("*")
-    .order("created_at", { ascending: true })
+    .order("created_at", { ascending: false })
     .eq("user_id", user_id) // Replace with the actual user ID
     .select();
   if (error) throw error.message;
