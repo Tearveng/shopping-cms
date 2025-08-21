@@ -18,6 +18,8 @@ import ShoppingProfile from "../pages/ShoppingProfile.vue";
 import ShoppingShopInPerson from "../pages/ShoppingShopInPerson.vue";
 import ShoppingCategory from "../pages/ShoppingCategory.vue";
 import ShoppingItems from "../pages/ShoppingItems.vue";
+import ShoppingNewArrivals from "../pages/publish/new-arrivals/ShoppingNewArrivals.vue";
+import HomePageContent from "../pages/publish/HomePageContent.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -37,11 +39,28 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     name: "HomePage",
     component: HomePageVue,
-    meta: {
-      title: "HomePage",
-      icon: "home",
-      breadcrumb: ["HomePage"],
-    },
+    children: [
+      {
+        path: "",
+        name: "HomeContent",
+        component: HomePageContent,
+        meta: {
+          title: "HomeContent",
+          icon: "homeContent",
+          breadcrumb: ["HomeContent"],
+        },
+      },
+      {
+        path: "/new-arrivals",
+        name: "New Arrivals",
+        component: ShoppingNewArrivals,
+        meta: {
+          title: "New Arrivals",
+          icon: "new arrivals",
+          breadcrumb: ["New Arrivals"],
+        },
+      },
+    ],
   },
   {
     path: "/login",

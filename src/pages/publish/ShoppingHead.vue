@@ -4,7 +4,7 @@
     <a-flex v-if="!isMobile" vertical>
       <a-flex align="center" gap="10" style="padding-top: 1rem">
         <a class="logo-link">
-          <a-typography class="logo-image">Everything L11</a-typography>
+          <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
         </a>
       </a-flex>
       <a-menu
@@ -14,8 +14,8 @@
         :selectedKeys="[current]"
         @click="handleMenuClick"
       >
-        <a-menu-item key="home"> New arrivals </a-menu-item>
-        <a-menu-item key="products"> Designers </a-menu-item>
+        <a-menu-item key="home" @click="$router.push('/new-arrivals')"> New arrivals </a-menu-item>
+        <a-menu-item key="products" @click="$router.push('/designers')"> Designers </a-menu-item>
         <a-menu-item key="about"> Bags </a-menu-item>
         <a-menu-item key="contact"> Accessories </a-menu-item>
         <a-menu-item key="shoes"> Shoes </a-menu-item>
@@ -31,7 +31,7 @@
           <menu-outlined style="font-size: 18px" />
         </a-button>
         <a class="logo-link">
-          <a-typography class="logo-image">Everything L11</a-typography>
+          <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
         </a>
       </a-flex>
       <a-drawer
@@ -208,7 +208,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 575px) {
+@media (max-width: 768px) {
   .logo-link {
     width: 11.7rem;
   }

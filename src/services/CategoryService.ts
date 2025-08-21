@@ -4,8 +4,17 @@ export interface IShoppingCategory {
   id?: number;
   title: string;
   images?: Array<any>;
+  amount: number;
   user_id: string;
+  parent_category: string;
   created_at?: string;
+}
+
+export interface IShoppingCategoryCount {
+  id: number;
+  title: string;
+  parent_category: string;
+  shopping_all_items: Array<{ id: number }>;
 }
 
 const table = "shopping_category";
@@ -44,12 +53,27 @@ export const getShoppingCategory = async (
   return data;
 };
 
-export const getShoppingCategoryPublic = async (): Promise<IShoppingCategory[]> => {
+export const getShoppingCategoryPublic = async (): Promise<
+  IShoppingCategory[]
+> => {
   const { data, error } = await supabase
     .from(table)
     .select("*")
     .order("created_at", { ascending: true })
     .select();
+  if (error) throw error.message;
+  return data;
+};
+
+export const getCountsCategory = async (): Promise<
+  IShoppingCategoryCount[]
+> => {
+  const { data, error } = await supabase.from(table).select(`
+    id,
+    title,
+    parent_category,
+    shopping_all_items (id)
+  `);
   if (error) throw error.message;
   return data;
 };

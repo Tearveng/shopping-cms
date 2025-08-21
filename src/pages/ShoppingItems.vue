@@ -12,11 +12,7 @@
     <a-table :columns="columns" :data-source="dataSource" size="small" bordered>
       <template #bodyCell="{ column, text, record }">
         <template
-          v-if="
-            ['title', 'subtitle', 'condition', 'price'].includes(
-              column.dataIndex
-            )
-          "
+          v-if="['title', 'subtitle', 'condition'].includes(column.dataIndex)"
         >
           <div>
             <a-input
@@ -29,18 +25,47 @@
             </template>
           </div>
         </template>
+        <template v-else-if="column.dataIndex === 'price'">
+          <div>
+            <a-input
+              v-if="editableData[record.key]"
+              v-model:value="editableData[record.key][column.dataIndex]"
+              style="margin: -5px 0"
+            />
+            <template v-else> $ {{ text }} </template>
+          </div>
+        </template>
+        <template v-else-if="column.dataIndex === 'category_id'">
+          <div>
+            <a-select
+              :ref="select"
+              :value="text"
+              style="width: 120px"
+              @change="
+                handleChangeSelect({
+                  key: record.key,
+                  value: $event,
+                  extra: { id: record.key },
+                })
+              "
+            >
+              <a-select-option
+                v-for="category in options"
+                :key="category.key"
+                :value="category.id.toString()"
+                >{{ category.title }}</a-select-option
+              >
+            </a-select>
+          </div>
+        </template>
         <template v-else-if="column.dataIndex === 'fileList'">
-          <div
-            :style="{
-              '--margin-left': -record.fileList.length * 50 + 'px',
-            }"
-          >
+          <div>
             <a-upload
               ref="uploadRef"
               v-model:file-list="record.fileList"
               :before-upload="beforeUpload"
-              :remove="handleRemove(Number(1), index)"
-              :custom-request="customUpload({ indexRow: index })"
+              :remove="handleRemove(record.id)"
+              :custom-request="customUpload({ row: record })"
               list-type="picture-card"
               @preview="handlePreview"
             >
@@ -75,13 +100,14 @@
             <span v-else>
               <a-flex>
                 <a @click="edit(record.key)">Edit</a>
-                <a @click="edit(record.key)">Delete</a>
+                <a @click="deleteRecord(record.id, record.key)">Delete</a>
               </a-flex>
             </span>
           </div>
         </template>
       </template>
     </a-table>
+    <contextHolder />
   </div>
 </template>
 <script lang="ts" setup>
@@ -90,6 +116,7 @@ import { onMounted, reactive, ref, watch } from "vue";
 import type { UnwrapRef } from "vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import {
+  deleteShoppingAllItems,
   getShoppingAllItems,
   getShoppingAllItemsById,
   insertShoppingAllItems,
@@ -98,16 +125,18 @@ import {
   type IShoppingAllItems,
 } from "../services/AllItemsService";
 import { useAuthStore } from "../stores/auth";
-import { getImageUrl, storageBanner } from "../services/BannerService";
-import { message } from "ant-design-vue";
+import { getImageUrl } from "../services/BannerService";
+import { message, Modal } from "ant-design-vue";
 import { supabase } from "../lib/supabase";
+import { getShoppingCategoryPublic } from "../services/CategoryService";
+import type { SelectProps } from "ant-design-vue/es/vc-select";
 
 const columns = [
   {
     title: "Title",
     dataIndex: "title",
     // sorter: (a: DataItem, b: DataItem) => a.title.length - b.title.length,
-    width: "25%",
+    width: "15%",
   },
   {
     title: "Subtitle",
@@ -117,22 +146,27 @@ const columns = [
   {
     title: "Images",
     dataIndex: "fileList",
-    width: "20%",
+    width: "18%",
+  },
+  {
+    title: "Category",
+    dataIndex: "category_id",
+    width: "10%",
   },
   {
     title: "Condition",
     dataIndex: "condition",
-    width: "15%",
+    width: "12%",
   },
   {
     title: "Price",
     dataIndex: "price",
-    width: "10%",
+    width: "8%",
   },
   {
     title: "Operation",
     dataIndex: "operation",
-    width: "20%",
+    width: "30%",
   },
 ];
 
@@ -143,32 +177,23 @@ interface DataItem {
   subtitle: string;
   fileList: any[];
   condition: string;
-  category: string;
+  category_id: string;
   price: number;
 }
 
 const data: DataItem[] = reactive([]);
 const refreshKey = ref(0);
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     id:i,
-//     key: i.toString(),
-//     title: `Edrward ${i}`,
-//     subtitle: "",
-//     fileList: ['asdasd', 'asdasd'],
-//     condition: "London Park no.",
-//     price: 32,
-//   });
-// }
-
 const auth = useAuthStore();
 const dataSource = ref(data);
 const previewVisible = ref(false);
 const previewImage = ref("");
 const previewTitle = ref("");
 const uploadedFiles = ref([]);
+const select = ref();
+const options = ref<SelectProps["options"]>([]);
 const uploadRef = ref(null);
 const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
+const [modal, contextHolder] = Modal.useModal();
 
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
@@ -178,6 +203,11 @@ function getBase64(file: File) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+// Category select change
+const handleChangeSelect = (param: any) => {
+  saveCategory(param.value, param.extra.id);
+};
 
 // Validate file before upload
 const beforeUpload = (file: any) => {
@@ -203,8 +233,8 @@ const handlePreview = async (file: any) => {
     file.name || file.url.substring(file.url.lastIndexOf("/") + 1);
 };
 
-const customUpload = ({ indexRow }: any) => {
-   return async ({ file, onSuccess, onError }: any) => {
+const customUpload = ({ row }: any) => {
+  return async ({ file, onSuccess, onError }: any) => {
     try {
       // isLoadingAvatar.value = true;
       // Generate unique file path
@@ -231,7 +261,7 @@ const customUpload = ({ indexRow }: any) => {
         },
       ];
 
-      const shoppingEditorPick = dataSource.value[indexRow];
+      const shoppingEditorPick = row;
       if (shoppingEditorPick.id) {
         const getByUserId = await getShoppingAllItemsById(
           shoppingEditorPick.id
@@ -246,7 +276,7 @@ const customUpload = ({ indexRow }: any) => {
           subtitle: shoppingEditorPick.subtitle,
           condition: shoppingEditorPick.condition,
           price: shoppingEditorPick.price,
-          category: shoppingEditorPick.category,
+          category_id: shoppingEditorPick.category_id,
           images: oldImages,
           user_id: auth.user?.id,
         } as IShoppingAllItems;
@@ -275,8 +305,61 @@ const handleCancel = () => {
   previewTitle.value = "";
 };
 
-const handleRemove = (id: number, _: number) => {
-  return async (file: any) => {};
+const deleteImage = async (bucketName: string, filePath: string) => {
+  const { data, error } = await supabase.storage
+    .from(bucketName)
+    .remove([filePath]);
+
+  if (error) {
+    throw new Error(`Error deleting image: ${error.message}`);
+  }
+  return data;
+};
+
+const handleRemove = (id: number) => {
+  return async (file: any) => {
+    return new Promise((resolve) => {
+      modal.confirm({
+        title: "Are you sure you want to delete this image?",
+        content: `Image: ${file.name}`,
+        async onOk() {
+          try {
+            // Extract file path (e.g., from file.path or parse file.url)
+            const fileName = file.name.replace(/\s+/g, "_");
+            const filePath = `${storageAllItems}/${fileName}`;
+            if (!filePath) {
+              message.error("Invalid file path");
+              resolve(false);
+              return;
+            }
+            // Wait for Supabase deletion
+            await deleteImage("shopping-storage", filePath);
+            const getByUserId = await getShoppingAllItemsById(id);
+            const oldImages = getByUserId.images?.filter(
+              (i) => i.fileName !== fileName
+            );
+            updateShoppingAllItems({
+              ...getByUserId,
+              images: oldImages,
+            })
+              .then()
+              .catch((e) => errors(e))
+              .finally();
+            deleted();
+            resolve(true); // Allow removal from preview
+          } catch (err: any) {
+            message.error(`Failed to remove image: ${err.message}`);
+            resolve(false); // Prevent removal from preview
+          }
+        },
+        onCancel() {
+          console.log("Cancel");
+          resolve(false); // Return false if user cancels
+        },
+        class: "test",
+      });
+    });
+  };
 };
 
 const success = () => {
@@ -291,17 +374,31 @@ const errors = (msg: string) => {
   message.error(msg, 5);
 };
 
+const deleted = () => {
+  message.success("Deleted successfully", 5);
+};
+
 const edit = (key: string) => {
   editableData[key] = cloneDeep(
     dataSource.value.filter((item) => key === item.key)[0]
   );
 };
+
+const deleteRecord = (id: number, key: string) => {
+  deleteShoppingAllItems(id)
+    .then(() => {
+      dataSource.value = dataSource.value.filter((item) => item.key !== key);
+      deleted();
+    })
+    .catch()
+    .finally();
+};
+
 const save = (key: string) => {
   Object.assign(
     dataSource.value.filter((item) => key === item.key)[0],
     editableData[key]
   );
-  console.log("editableData[key]", editableData[key].price);
   const plainData = editableData[key];
   if (auth.user) {
     const newData = {
@@ -311,13 +408,41 @@ const save = (key: string) => {
       condition: plainData.condition,
       price: plainData.price,
       user_id: auth.user.id,
-      category: "shopping_channel",
     } as IShoppingAllItems;
     try {
       updateShoppingAllItems(newData)
         .then(() => {
           update();
           delete editableData[key];
+        })
+        .catch((e) => errors(e))
+        .finally();
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+};
+
+const saveCategory = (k: string, keyId: string) => {
+  const { fileList, key, ...rest } = dataSource.value.filter(
+    (item) => keyId === item.key
+  )[0];
+  if (auth.user) {
+    const newData = {
+      ...rest,
+      user_id: auth.user.id,
+      category_id: k,
+    } as IShoppingAllItems;
+    try {
+      updateShoppingAllItems(newData)
+        .then(() => {
+          update();
+          Object.assign(
+            dataSource.value.filter((item) => keyId === item.key)[0],
+            {
+              category_id: k,
+            }
+          );
         })
         .catch((e) => errors(e))
         .finally();
@@ -336,7 +461,7 @@ const handleAdd = () => {
       price: 0,
       images: [],
       user_id: auth.user.id,
-      category: "shopping_channel",
+      category_id: null as any,
     } as IShoppingAllItems;
     try {
       insertShoppingAllItems([newData])
@@ -348,10 +473,10 @@ const handleAdd = () => {
             title: e.title,
             subtitle: e.subtitle,
             condition: e.condition,
+            category_id: null as any,
             price: e.price,
             fileList: [],
           } as DataItem;
-          console.log(e);
           dataSource.value.unshift(pre);
           success();
         })
@@ -374,7 +499,7 @@ const fetchAllData = async () => {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, storageBanner);
+          const tempImg = await getImageUrl(img.fileName, storageAllItems);
           imagesList.push({
             uid: img.id,
             name: img.fileName,
@@ -390,10 +515,26 @@ const fetchAllData = async () => {
         title: i.title,
         subtitle: i.subtitle,
         condition: i.condition,
+        category_id: `${i.category_id ?? ""}`,
         price: i.price,
         fileList: imagesList,
       } as DataItem;
       data.push(pre);
+      // dynamicValidateForm.editors.push(pre);
+    }
+  }
+};
+
+const fetchAllCategories = async () => {
+  if (auth.user) {
+    const categories = await getShoppingCategoryPublic();
+    for (const i of categories) {
+      const pre = {
+        id: `${i.id}`,
+        key: `${i.id}`,
+        title: i.title,
+      };
+      options.value?.push(pre);
       // dynamicValidateForm.editors.push(pre);
     }
   }
@@ -405,6 +546,7 @@ watch(refreshKey, () => {
 
 onMounted(async () => {
   await fetchAllData();
+  await fetchAllCategories();
 });
 
 watch(uploadedFiles, (newVal) => {
@@ -421,14 +563,17 @@ watch(uploadedFiles, (newVal) => {
 .editable-row-operations a {
   margin-right: 8px;
 }
+:deep(.ant-upload-list-item-container) {
+  max-width: 50px;
+}
 /* Override Ant Design's default picture card size */
 :deep(.ant-upload.ant-upload-select-picture-card),
 :deep(.ant-upload-list-picture-card .ant-upload-list-item) {
-  margin-left: var(--margin-left);
   width: 50px !important; /* Your custom width */
   height: 50px !important; /* Your custom height */
   font-size: 10px;
 }
+
 :deep(.ant-upload-list) {
   max-height: 50px;
 }
