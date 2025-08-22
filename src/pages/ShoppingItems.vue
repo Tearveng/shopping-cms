@@ -58,6 +58,29 @@
             </a-select>
           </div>
         </template>
+        <template v-else-if="column.dataIndex === 'category_group'">
+          <div>
+            <a-select
+              :ref="select"
+              :value="record.parent_key"
+              style="width: 120px"
+              @change="
+                handleChangeSelectGroup({
+                  key: record.key,
+                  value: $event,
+                  extra: { id: record.key },
+                })
+              "
+            >
+              <a-select-option
+                v-for="group in optionsGroup"
+                :key="group.key"
+                :value="group.parent_category"
+                >{{ group.parent_category }}</a-select-option
+              >
+            </a-select>
+          </div>
+        </template>
         <template v-else-if="column.dataIndex === 'fileList'">
           <div>
             <a-upload
@@ -131,6 +154,7 @@ import { supabase } from "../lib/supabase";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
 
+
 const columns = [
   {
     title: "Title",
@@ -141,7 +165,7 @@ const columns = [
   {
     title: "Subtitle",
     dataIndex: "subtitle",
-    width: "25%",
+    width: "20%",
   },
   {
     title: "Images",
@@ -154,9 +178,14 @@ const columns = [
     width: "10%",
   },
   {
+    title: "Group",
+    dataIndex: "category_group",
+    width: "10%",
+  },
+  {
     title: "Condition",
     dataIndex: "condition",
-    width: "12%",
+    width: "10%",
   },
   {
     title: "Price",
@@ -166,7 +195,7 @@ const columns = [
   {
     title: "Operation",
     dataIndex: "operation",
-    width: "30%",
+    width: "15%",
   },
 ];
 
@@ -191,6 +220,7 @@ const previewTitle = ref("");
 const uploadedFiles = ref([]);
 const select = ref();
 const options = ref<SelectProps["options"]>([]);
+const optionsGroup = ref<SelectProps["options"]>([]);
 const uploadRef = ref(null);
 const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 const [modal, contextHolder] = Modal.useModal();
@@ -207,6 +237,11 @@ function getBase64(file: File) {
 // Category select change
 const handleChangeSelect = (param: any) => {
   saveCategory(param.value, param.extra.id);
+};
+
+//
+const handleChangeSelectGroup = (param: any) => {
+  saveCategoryGroup(param.value, param.extra.id);
 };
 
 // Validate file before upload
@@ -277,6 +312,7 @@ const customUpload = ({ row }: any) => {
           condition: shoppingEditorPick.condition,
           price: shoppingEditorPick.price,
           category_id: shoppingEditorPick.category_id,
+          parent_key: shoppingEditorPick.parent_key,
           images: oldImages,
           user_id: auth.user?.id,
         } as IShoppingAllItems;
@@ -452,6 +488,36 @@ const saveCategory = (k: string, keyId: string) => {
   }
 };
 
+const saveCategoryGroup = (k: string, keyId: string) => {
+  const { fileList, key, ...rest } = dataSource.value.filter(
+    (item) => keyId === item.key
+  )[0];
+  if (auth.user) {
+    const newData = {
+      ...rest,
+      user_id: auth.user.id,
+      parent_key: k,
+    } as IShoppingAllItems;
+    try {
+      updateShoppingAllItems(newData)
+        .then(() => {
+          update();
+          Object.assign(
+            dataSource.value.filter((item) => keyId === item.key)[0],
+            {
+              parent_key: k,
+            }
+          );
+        })
+        .catch((e) => errors(e))
+        .finally();
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+};
+
+
 const handleAdd = () => {
   if (auth.user) {
     const newData = {
@@ -462,6 +528,7 @@ const handleAdd = () => {
       images: [],
       user_id: auth.user.id,
       category_id: null as any,
+      parent_key: null as any
     } as IShoppingAllItems;
     try {
       insertShoppingAllItems([newData])
@@ -474,6 +541,7 @@ const handleAdd = () => {
             subtitle: e.subtitle,
             condition: e.condition,
             category_id: null as any,
+            parent_key: null as any,
             price: e.price,
             fileList: [],
           } as DataItem;
@@ -516,6 +584,7 @@ const fetchAllData = async () => {
         subtitle: i.subtitle,
         condition: i.condition,
         category_id: `${i.category_id ?? ""}`,
+        parent_key: `${i.parent_key ?? ""}`,
         price: i.price,
         fileList: imagesList,
       } as DataItem;
@@ -533,8 +602,16 @@ const fetchAllCategories = async () => {
         id: `${i.id}`,
         key: `${i.id}`,
         title: i.title,
+        parent_category: i.parent_category,
       };
       options.value?.push(pre);
+      if (
+        !optionsGroup.value?.some(
+          (c) => c.parent_category === i.parent_category
+        )
+      ) {
+        optionsGroup.value?.push(pre);
+      }
       // dynamicValidateForm.editors.push(pre);
     }
   }
@@ -552,7 +629,7 @@ onMounted(async () => {
 watch(uploadedFiles, (newVal) => {
   console.log("newVal");
   if (uploadRef.value) {
-    uploadRef.value.$el.style.setProperty(
+    (uploadRef.value as any).style.setProperty(
       "--item-margin",
       newVal.length >= 1 ? "-50px" : "0px"
     );

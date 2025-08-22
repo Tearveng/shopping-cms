@@ -6,6 +6,7 @@ export interface IShoppingAllItems {
   subtitle: string;
   condition: string;
   category_id: string;
+  parent_key: string;
   price: number;
   images?: Array<any>;
   user_id: string;

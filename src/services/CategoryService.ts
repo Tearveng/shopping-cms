@@ -4,7 +4,6 @@ export interface IShoppingCategory {
   id?: number;
   title: string;
   images?: Array<any>;
-  amount: number;
   user_id: string;
   parent_category: string;
   created_at?: string;

@@ -15,7 +15,7 @@
       v-bind="formItemLayout"
     >
       <a-form-item
-        style="margin-bottom: -32px"
+        style="margin-bottom: -12px"
         :name="['designers', index, 'title']"
         :rules="[
           { required: true, message: 'Title is required', trigger: 'change' },
@@ -36,30 +36,26 @@
           />
         </a-flex>
       </a-form-item>
-      <!-- <a-form-item :name="['designers', index, 'fileList']">
-        <a-upload
-          :disabled="true"
-          v-model:file-list="designer.fileList"
-          @preview="handlePreview"
-          :before-upload="beforeUpload"
-          :remove="handleRemove(Number(designer.id), index)"
-          :custom-request="customUpload({ indexRow: index })"
-          list-type="picture-card"
-        >
-          <div>
-            <PlusOutlined />
-            <div style="margin-top: 8px">Upload</div>
-          </div>
-        </a-upload>
-        <a-modal
-          :open="previewVisible"
-          :title="previewTitle"
-          :footer="null"
-          @cancel="handleCancel"
-        >
-          <img alt="example" style="width: 100%" :src="previewImage" />
-        </a-modal>
-      </a-form-item> -->
+      <a-form-item
+        style="margin-bottom: -32px"
+        :name="['designers', index, 'category']"
+        :rules="[
+          {
+            required: true,
+            message: 'Category is required',
+            trigger: 'change',
+          },
+        ]"
+      >
+        <a-flex>
+          <a-input
+            name="designer.alias"
+            v-model:value="designer.category"
+            placeholder="Category"
+            style="width: 100%; margin-right: 8px"
+          />
+        </a-flex>
+      </a-form-item>
     </a-form-item>
     <a-form-item v-bind="formItemLayoutWithOutLabel">
       <a-button type="dashed" style="width: 60%" @click="addBanner">
@@ -92,12 +88,21 @@ import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
 import { supabase } from "../lib/supabase";
 import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
-import { deleteShoppingCategory, getShoppingCategory, getShoppingCategoryById, insertShoppingCategory, storageCategory, updateShoppingCategory, type IShoppingCategory } from "../services/CategoryService";
+import {
+  deleteShoppingCategory,
+  getShoppingCategory,
+  getShoppingCategoryById,
+  insertShoppingCategory,
+  storageCategory,
+  updateShoppingCategory,
+  type IShoppingCategory,
+} from "../services/CategoryService";
 
 export interface ShoppingTopDesigners {
   id: number | null;
   key: number;
   title: string;
+  category: string;
   fileList: any[];
 }
 
@@ -185,9 +190,7 @@ const customUpload = ({ indexRow }: any) => {
 
       const shoppingTopDesign = dynamicValidateForm.designers[indexRow];
       if (shoppingTopDesign.id) {
-        const getByUserId = await getShoppingCategoryById(
-          shoppingTopDesign.id
-        );
+        const getByUserId = await getShoppingCategoryById(shoppingTopDesign.id);
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
             ? [...getByUserId.images, ...metadata]
@@ -272,6 +275,7 @@ const submitForm = () => {
             ({
               id: i.id,
               title: i.title,
+              parent_category: i.category,
               images: [],
               user_id: auth.user?.id,
             } as IShoppingCategory)
@@ -331,6 +335,7 @@ const addBanner = () => {
   dynamicValidateForm.designers.push({
     id: null,
     title: "",
+    category: "",
     key: Date.now(),
     fileList: [],
   });
@@ -439,6 +444,7 @@ const fetchAllData = async () => {
         id: i.id,
         key: new Date(`${i.created_at}`).getTime(),
         title: i.title,
+        category: i.parent_category,
         fileList: imagesList,
       } as ShoppingTopDesigners;
       dynamicValidateForm.designers.push(pre);
