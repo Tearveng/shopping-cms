@@ -20,10 +20,10 @@
           >
           <a-typography-text
             style="font-size: 0.9rem; line-height: 1.7em; font-weight: 200"
-            >4,524 items</a-typography-text
+            >{{ filterCount > 0 ? filterCount : totalItem }} items</a-typography-text
           >
         </a-flex>
-        <ShoppingFilterDesigners />
+        <ShoppingFilterDesigners @option-change="handleOptionChange" />
       </a-flex>
 
       <!-- sort by header -->
@@ -42,15 +42,29 @@
           </a-select>
         </a-flex>
         <br />
-        <ShoppingAllItems />
+        <ShoppingAllItems :filter="currentFilter" @filter-count="handleFilterCount" />
       </a-flex>
     </a-flex>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from "vue";
 import ShoppingFilterDesigners from "./filters/ShoppingFilterDesigners.vue";
 import ShoppingAllItems from "./items/ShoppingAllItems.vue";
+
+const currentFilter = ref();
+const filterCount = ref();
+const totalItem = ref()
+
+const handleOptionChange = (filter: any) => {
+  currentFilter.value = filter;
+  filterCount.value = Object.values(filter).flat().reduce((sum: any, item: any) => sum + (item.amount || 0),0);
+};
+
+const handleFilterCount = (count: number) => {
+  totalItem.value = count;
+};
 </script>
 
 <style scoped>

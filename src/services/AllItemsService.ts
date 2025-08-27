@@ -13,6 +13,12 @@ export interface IShoppingAllItems {
   created_at?: string;
 }
 
+export interface IShoppingAllItemsPayload {
+  parent_key: string[];
+  category_ids: number[];
+  limit: number;
+}
+
 const tableName = "shopping_all_items";
 export const storageAllItems = "storage-all-items";
 
@@ -49,14 +55,21 @@ export const getShoppingAllItems = async (
   return data;
 };
 
-export const getShoppingAllItemsPublic = async (): Promise<
-  IShoppingAllItems[]
-> => {
-  const { data, error } = await supabase
+export const getShoppingAllItemsPublic = async (
+  props?: IShoppingAllItemsPayload
+): Promise<IShoppingAllItems[]> => {
+  let query = supabase
     .from(tableName)
     .select("*")
-    .order("created_at", { ascending: true })
-    .select();
+    .order("created_at", { ascending: false });
+  if (props?.parent_key && props?.parent_key.length > 0) {
+    query = query.in("parent_key", props.parent_key);
+  }
+  if (props?.category_ids && props?.category_ids.length > 0) {
+    query = query.in("category_id", props.category_ids);
+  }
+  query = query.limit(props?.limit ?? 20);
+  const { data, error } = await query;
   if (error) throw error.message;
   return data;
 };

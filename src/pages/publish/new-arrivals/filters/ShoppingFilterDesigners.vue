@@ -104,6 +104,7 @@ interface ShoppingParentKey {
   [k: string]: ShoppingCategory[];
 }
 
+const emit = defineEmits(["option-change"]);
 const parentCategories = reactive<ShoppingParentKey>({});
 const parentActive = reactive<{ [k: string]: string }>({});
 
@@ -111,13 +112,22 @@ const toggleChecked = (key: string, checked: boolean, id: number) => {
   // Find the category index
   const categoryIndex = parentCategories[key]?.findIndex((i) => i.id === id);
   if (categoryIndex === -1 || !parentCategories[key]) {
-    console.warn('Category not found');
+    console.warn("Category not found");
     return;
   }
   // Update the property directly - Vue will handle reactivity
   parentCategories[key][categoryIndex].check = !checked;
+  const filteredData = Object.keys(parentCategories).reduce(
+    (acc: any, category) => {
+      acc[category] = parentCategories[category].filter(
+        (item) => item.check === true
+      );
+      return acc;
+    },
+    {}
+  );
+  emit("option-change", filteredData);
 };
-
 
 onMounted(async () => {
   const categories = await getCountsCategory();
@@ -127,7 +137,8 @@ onMounted(async () => {
       key: `${i.id}`,
       title: i.title,
       check: false,
-      amount: i.shopping_all_items.length,
+      amount: i.shopping_all_items.filter((s) => s.parent_key === i.parent_category)
+        .length,
     } as ShoppingCategory;
     let key = parentCategories[i.parent_category];
     if (key) {

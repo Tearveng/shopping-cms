@@ -136,7 +136,6 @@
 <script lang="ts" setup>
 import { cloneDeep } from "lodash-es";
 import { onMounted, reactive, ref, watch } from "vue";
-import type { UnwrapRef } from "vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import {
   deleteShoppingAllItems,
@@ -153,7 +152,6 @@ import { message, Modal } from "ant-design-vue";
 import { supabase } from "../lib/supabase";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
-
 
 const columns = [
   {
@@ -222,7 +220,8 @@ const select = ref();
 const options = ref<SelectProps["options"]>([]);
 const optionsGroup = ref<SelectProps["options"]>([]);
 const uploadRef = ref(null);
-const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
+// const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
+const editableData: any = reactive({});
 const [modal, contextHolder] = Modal.useModal();
 
 function getBase64(file: File) {
@@ -517,7 +516,6 @@ const saveCategoryGroup = (k: string, keyId: string) => {
   }
 };
 
-
 const handleAdd = () => {
   if (auth.user) {
     const newData = {
@@ -528,7 +526,7 @@ const handleAdd = () => {
       images: [],
       user_id: auth.user.id,
       category_id: null as any,
-      parent_key: null as any
+      parent_key: null as any,
     } as IShoppingAllItems;
     try {
       insertShoppingAllItems([newData])

@@ -13,7 +13,7 @@ export interface IShoppingCategoryCount {
   id: number;
   title: string;
   parent_category: string;
-  shopping_all_items: Array<{ id: number }>;
+  shopping_all_items: Array<{ id: number; parent_key: string }>;
 }
 
 const table = "shopping_category";
@@ -71,7 +71,7 @@ export const getCountsCategory = async (): Promise<
     id,
     title,
     parent_category,
-    shopping_all_items (id)
+    shopping_all_items (id, parent_key)
   `);
   if (error) throw error.message;
   return data;
