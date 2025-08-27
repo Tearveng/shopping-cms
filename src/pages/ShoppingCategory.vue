@@ -85,13 +85,11 @@ import {
 } from "@ant-design/icons-vue";
 import { message, Modal, type FormInstance } from "ant-design-vue";
 import { h, onMounted, reactive, ref, toRaw, watch } from "vue";
-import { supabase } from "../lib/supabase";
 import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
 import {
   deleteShoppingCategory,
   getShoppingCategory,
-  getShoppingCategoryById,
   insertShoppingCategory,
   storageCategory,
   updateShoppingCategory,
@@ -111,9 +109,6 @@ const refreshKey = ref(0);
 const formRef = ref<FormInstance>();
 // const fileList = ref<UploadProps['fileList']>([])
 const isLoading = ref(false);
-const previewVisible = ref(false);
-const previewImage = ref("");
-const previewTitle = ref("");
 const [modal, contextHolder] = Modal.useModal();
 const formItemLayout = {
   labelCol: {
@@ -136,90 +131,6 @@ const formItemLayoutWithOutLabel = {
 const dynamicValidateForm = reactive<{ designers: ShoppingTopDesigners[] }>({
   designers: [],
 });
-
-function getBase64(file: File) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
-
-// Validate file before upload
-const beforeUpload = (file: any) => {
-  const isImage = file.type.startsWith("image/");
-  const isLt5M = file.size / 1024 / 1024 < 5; // Limit to 5MB
-  if (!isImage) {
-    message.error("You can only upload image files!");
-    return false;
-  }
-  if (!isLt5M) {
-    message.error("Image must be smaller than 5MB!");
-  }
-  return isImage && isLt5M; // Allow upload if valid
-};
-
-const customUpload = ({ indexRow }: any) => {
-  return async ({ file, onSuccess, onError }: any) => {
-    try {
-      // isLoadingAvatar.value = true;
-      // Generate unique file path
-      const fileName = file.name.replace(/\s+/g, "_");
-      const filePath = `${storageCategory}/${Date.now()}-${fileName}`;
-      const { data, error: uploadError } = await supabase.storage
-        .from("shopping-storage") // Replace with your bucket name
-        .upload(filePath, file, {
-          cacheControl: "3600", // Cache for 1 hour
-          upsert: false, // Prevent overwriting
-          contentType: file.type, // Set MIME type (e.g., image/jpeg)
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-      // Store metadata in the database
-      const metadata = [
-        {
-          id: data.id,
-          fileName: filePath.split("/")[1],
-          status: "default",
-          uploadedAt: new Date().toISOString(),
-        },
-      ];
-
-      const shoppingTopDesign = dynamicValidateForm.designers[indexRow];
-      if (shoppingTopDesign.id) {
-        const getByUserId = await getShoppingCategoryById(shoppingTopDesign.id);
-        const oldImages =
-          getByUserId.images && getByUserId.images.length > 0
-            ? [...getByUserId.images, ...metadata]
-            : metadata;
-        const rest = {
-          id: shoppingTopDesign.id,
-          title: shoppingTopDesign.title,
-          images: oldImages,
-          user_id: auth.user?.id,
-        } as IShoppingCategory;
-
-        updateShoppingCategory(rest)
-          .then()
-          .catch((e) => errors(e))
-          .finally(() => {
-            isLoading.value = false;
-          });
-
-        onSuccess();
-        return false;
-      }
-      // Notify Ant Design upload success
-      // await saveAvatar({ profile_url: urlData.publicUrl });
-    } catch (err: any) {
-      message.error(`Upload failed: ${err.message}`);
-      onError(err); // Notify Ant Design upload failure
-    }
-  };
-};
 
 const removeBanner = (item: ShoppingTopDesigners) => {
   if (item.id) {
@@ -326,11 +237,6 @@ const resetForm = () => {
   }
 };
 
-const handleCancel = () => {
-  previewVisible.value = false;
-  previewTitle.value = "";
-};
-
 const addBanner = () => {
   dynamicValidateForm.designers.push({
     id: null,
@@ -339,72 +245,6 @@ const addBanner = () => {
     key: Date.now(),
     fileList: [],
   });
-};
-
-const handlePreview = async (file: any) => {
-  if (!file.url && !file.preview) {
-    file.preview = (await getBase64(file.originFileObj)) as string;
-  }
-  previewImage.value = file.url || file.preview;
-  previewVisible.value = true;
-  previewTitle.value =
-    file.name || file.url.substring(file.url.lastIndexOf("/") + 1);
-};
-
-const deleteImage = async (bucketName: string, filePath: string) => {
-  const { data, error } = await supabase.storage
-    .from(bucketName)
-    .remove([filePath]);
-
-  if (error) {
-    throw new Error(`Error deleting image: ${error.message}`);
-  }
-  return data;
-};
-
-const handleRemove = (id: number, _: number) => {
-  return async (file: any) => {
-    return new Promise((resolve) => {
-      modal.confirm({
-        title: "Are you sure you want to delete this image?",
-        content: `Image: ${file.name}`,
-        async onOk() {
-          try {
-            // Extract file path (e.g., from file.path or parse file.url)
-            const fileName = file.name.replace(/\s+/g, "_");
-            const filePath = `${storageCategory}/${fileName}`;
-            if (!filePath) {
-              message.error("Invalid file path");
-              resolve(false);
-              return;
-            }
-            // Wait for Supabase deletion
-            await deleteImage("shopping-storage", filePath);
-            const getByUserId = await getShoppingCategoryById(id);
-            const oldImages = getByUserId.images?.filter(
-              (i) => i.fileName !== fileName
-            );
-            updateShoppingCategory({ ...getByUserId, images: oldImages })
-              .then()
-              .catch((e) => errors(e))
-              .finally(() => {
-                isLoading.value = false;
-              });
-            deleted();
-            resolve(true); // Allow removal from preview
-          } catch (err: any) {
-            message.error(`Failed to remove image: ${err.message}`);
-            resolve(false); // Prevent removal from preview
-          }
-        },
-        onCancel() {
-          console.log("Cancel");
-          resolve(false); // Return false if user cancels
-        },
-        class: "test",
-      });
-    });
-  };
 };
 
 const success = () => {

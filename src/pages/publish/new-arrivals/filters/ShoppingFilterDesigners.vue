@@ -76,7 +76,7 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive } from "vue";
 import { getCountsCategory } from "../../../../services/CategoryService";
 
 const activeCategories = reactive({

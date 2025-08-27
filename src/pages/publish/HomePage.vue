@@ -41,14 +41,6 @@
 <script setup lang="ts">
 import { Motion } from "@motionone/vue";
 import { ref } from "vue";
-import ShoppingBanner from "./ShoppingBanner.vue";
-import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
-import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
-import ShoppingFooter from "./ShoppingFooter.vue";
-import ShoppingInPerson from "./ShoppingInPerson.vue";
-import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
-import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
-import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
 import ShoppingHead from "./ShoppingHead.vue";
 
 const found = ref<boolean>(true);
