@@ -63,7 +63,7 @@ export const getShoppingAllItemsPublic = async (
     .select("*")
     .order("created_at", { ascending: false });
   if (props?.parent_key && props?.parent_key.length > 0) {
-    query = query.in("parent_key", props.parent_key);
+    query = query.in("parent_key", [props.parent_key[0]]);
   }
   if (props?.category_ids && props?.category_ids.length > 0) {
     query = query.in("category_id", props.category_ids);

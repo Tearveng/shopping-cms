@@ -4,7 +4,9 @@
     <a-flex v-if="!isMobile" vertical>
       <a-flex align="center" gap="10" style="padding-top: 1rem">
         <a class="logo-link">
-          <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
+          <a-typography class="logo-image" @click="$router.push('/')"
+            >Everything L11</a-typography
+          >
         </a>
       </a-flex>
       <a-menu
@@ -14,13 +16,27 @@
         :selectedKeys="[current]"
         @click="handleMenuClick"
       >
-        <a-menu-item key="home" @click="$router.push('/new-arrivals')"> New arrivals </a-menu-item>
-        <a-menu-item key="products" @click="$router.push('/designers')"> Designers </a-menu-item>
-        <a-menu-item key="about"> Bags </a-menu-item>
-        <a-menu-item key="contact"> Accessories </a-menu-item>
-        <a-menu-item key="shoes"> Shoes </a-menu-item>
-        <a-menu-item key="jewelry"> Jewelry </a-menu-item>
-        <a-menu-item key="watch"> Watches </a-menu-item>
+        <a-menu-item key="home" @click="$router.push('/new-arrivals')">
+          New arrivals
+        </a-menu-item>
+        <a-menu-item key="products" @click="$router.push('/designers')">
+          Designers
+        </a-menu-item>
+        <a-menu-item key="bags" @click="$router.push('/bags')">
+          Bags
+        </a-menu-item>
+        <a-menu-item key="accessories" @click="$router.push('/accessories')">
+          Accessories
+        </a-menu-item>
+        <a-menu-item key="shoes" @click="$router.push('/shoes')">
+          Shoes
+        </a-menu-item>
+        <a-menu-item key="jewelry" @click="$router.push('/jewelry')">
+          Jewelry
+        </a-menu-item>
+        <a-menu-item key="watches" @click="$router.push('/watches')">
+          Watches
+        </a-menu-item>
       </a-menu>
     </a-flex>
 
@@ -31,7 +47,9 @@
           <menu-outlined style="font-size: 18px" />
         </a-button>
         <a class="logo-link">
-          <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
+          <a-typography class="logo-image" @click="$router.push('/')"
+            >Everything L11</a-typography
+          >
         </a>
       </a-flex>
       <a-drawer
@@ -70,14 +88,17 @@
 
 <script setup lang="ts">
 import {
-    AppstoreOutlined,
-    ContactsOutlined,
-    HomeOutlined,
-    InfoCircleOutlined,
-    MenuOutlined,
+  AppstoreOutlined,
+  ContactsOutlined,
+  HomeOutlined,
+  InfoCircleOutlined,
+  MenuOutlined,
 } from "@ant-design/icons-vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
+
+const route = useRoute();
 const current = ref("home");
 const isMobile = ref(false);
 const visible = ref(false);
@@ -103,6 +124,7 @@ const onClose = () => {
 
 // Set up event listeners for window resize
 onMounted(() => {
+  current.value = route.params.parent_key as string;
   checkScreenSize();
   window.addEventListener("resize", checkScreenSize);
 });

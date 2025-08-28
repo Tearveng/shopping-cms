@@ -1,12 +1,16 @@
 <template>
-  <div v-for="(value, key) in parentCategories" :key="key">
+  <div v-for="(value, key) in getCategoriesEntries()" :key="key">
     <a-collapse
       v-model:activeKey="activeCategories[key.toString().toLowerCase()]"
       ghost
       style="max-width: 250px"
       class="custom-collapse"
     >
-      <a-collapse-panel key="1" :header="key" style="padding: 0; margin: 0">
+      <a-collapse-panel
+        key="1"
+        :header="headerLabel(key)"
+        style="padding: 0; margin: 0"
+      >
         <a-flex
           class="container"
           vertical
@@ -76,17 +80,29 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { getCountsCategory } from "../../../../services/CategoryService";
+import { useRoute } from "vue-router";
 
-const activeCategories = reactive({
-  designers: ["1"],
-  bags: ["0"],
-  accessories: ["0"],
-  shoes: ["0"],
-  jewelry: ["0"],
-  watches: ["0"],
-}) as any;
+
+const getActiveCategory = () => {
+  const key = route.params.parent_key;
+  if (key === "new-arrivals") {
+    return {
+      designers: ["1"],
+      bags: ["0"],
+      accessories: ["0"],
+      shoes: ["0"],
+      jewelry: ["0"],
+      watches: ["0"],
+    };
+  }
+
+  return { [`${route.params.parent_key}`]: ["1"] };
+};
+
+
+const activeCategories = ref({}) as any
 
 interface ShoppingCategory {
   id: number;
@@ -104,9 +120,26 @@ interface ShoppingParentKey {
   [k: string]: ShoppingCategory[];
 }
 
+const route = useRoute();
+
 const emit = defineEmits(["option-change"]);
 const parentCategories = reactive<ShoppingParentKey>({});
-const parentActive = reactive<{ [k: string]: string }>({});
+
+const headerLabel = (key: any) => {
+  return key[0].toUpperCase() + key.slice(1);
+};
+
+const getCategoriesEntries = () => {
+  const key = route.params.parent_key;
+  if (key === "new-arrivals") {
+    return parentCategories;
+  }
+
+  return {
+    [`${route.params.parent_key}`]:
+      parentCategories[`${route.params.parent_key}`],
+  };
+};
 
 const toggleChecked = (key: string, checked: boolean, id: number) => {
   // Find the category index
@@ -116,7 +149,16 @@ const toggleChecked = (key: string, checked: boolean, id: number) => {
     return;
   }
   // Update the property directly - Vue will handle reactivity
-  parentCategories[key][categoryIndex].check = !checked;
+  Object.keys(parentCategories).map((k) => {
+    if (k === key) {
+      parentCategories[key][categoryIndex].check = !checked;
+    } else {
+      parentCategories[k].map((_, index) => {
+        parentCategories[k][index].check = false;
+      });
+    }
+  });
+
   const filteredData = Object.keys(parentCategories).reduce(
     (acc: any, category) => {
       acc[category] = parentCategories[category].filter(
@@ -131,22 +173,24 @@ const toggleChecked = (key: string, checked: boolean, id: number) => {
 
 onMounted(async () => {
   const categories = await getCountsCategory();
-  for (const [index, i] of categories.entries()) {
+  for (const [_, i] of categories.entries()) {
     const pre = {
       id: i.id,
       key: `${i.id}`,
       title: i.title,
       check: false,
-      amount: i.shopping_all_items.filter((s) => s.parent_key === i.parent_category)
-        .length,
+      amount: i.shopping_all_items.filter(
+        (s) => s.parent_key === i.parent_category
+      ).length,
     } as ShoppingCategory;
     let key = parentCategories[i.parent_category];
     if (key) {
       key.push(pre);
     } else {
       parentCategories[i.parent_category] = [pre];
-      parentActive[i.parent_category] = index === 0 ? "1" : "0";
     }
   }
+
+  activeCategories.value = getActiveCategory()
 });
 </script>

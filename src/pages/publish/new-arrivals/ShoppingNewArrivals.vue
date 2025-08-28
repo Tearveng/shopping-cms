@@ -1,7 +1,9 @@
 <template>
   <div class="arrivals-container">
     <a-flex class="title-category">
-      <a-typography-text class="title-text">New Arrivals</a-typography-text>
+      <a-typography-text class="title-text">{{
+        parent_key.toString().toUpperCase().replace("-", " ")
+      }}</a-typography-text>
     </a-flex>
 
     <a-flex style="width: 100%">
@@ -20,7 +22,10 @@
           >
           <a-typography-text
             style="font-size: 0.9rem; line-height: 1.7em; font-weight: 200"
-            >{{ filterCount > 0 ? filterCount : totalItem }} items</a-typography-text
+            >{{
+              filterCount > 0 ? filterCount : totalItem
+            }}
+            items</a-typography-text
           >
         </a-flex>
         <ShoppingFilterDesigners @option-change="handleOptionChange" />
@@ -42,29 +47,48 @@
           </a-select>
         </a-flex>
         <br />
-        <ShoppingAllItems :filter="currentFilter" @filter-count="handleFilterCount" />
+        <ShoppingAllItems
+          :filter="currentFilter"
+          @filter-count="handleFilterCount"
+        />
       </a-flex>
     </a-flex>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import ShoppingFilterDesigners from "./filters/ShoppingFilterDesigners.vue";
 import ShoppingAllItems from "./items/ShoppingAllItems.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+// Access route parameters
+const parent_key = ref(route.params.parent_key);
 
 const currentFilter = ref();
 const filterCount = ref();
-const totalItem = ref()
+const totalItem = ref();
 
 const handleOptionChange = (filter: any) => {
   currentFilter.value = filter;
-  filterCount.value = Object.values(filter).flat().reduce((sum: any, item: any) => sum + (item.amount || 0),0);
+  filterCount.value = Object.values(filter)
+    .flat()
+    .reduce((sum: any, item: any) => sum + (item.amount || 0), 0);
 };
 
 const handleFilterCount = (count: number) => {
   totalItem.value = count;
 };
+
+watch(
+  () => route.params,
+  async (newParams) => {
+    parent_key.value = newParams.parent_key;
+  },
+  { immediate: true }
+); // Run immediately on component mount);
 </script>
 
 <style scoped>
