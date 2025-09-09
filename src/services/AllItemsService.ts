@@ -1,5 +1,13 @@
 import { supabase } from "../lib/supabase";
 
+export interface ShoppingItemCategory {
+  id: number;
+  created_at: string;
+  images: Object[];
+  parent_category: string;
+  title: string;
+  user_id: string;
+}
 export interface IShoppingAllItems {
   id?: number;
   title: string;
@@ -11,6 +19,7 @@ export interface IShoppingAllItems {
   images?: Array<any>;
   user_id: string;
   created_at?: string;
+  category: ShoppingItemCategory;
 }
 
 export interface IShoppingAllItemsPayload {
@@ -79,7 +88,12 @@ export const getShoppingAllItemsById = async (
 ): Promise<IShoppingAllItems> => {
   const { data, error } = await supabase
     .from(tableName)
-    .select("*")
+    .select(
+      `
+      *,
+      category:category_id (*)
+    `
+    )
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();
   if (error) throw error.message;

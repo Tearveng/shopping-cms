@@ -1,5 +1,10 @@
 <template>
-  <a-flex v-if="loading" class="loading" style="justify-content: center; align-items: center;"><a-spin /></a-flex >
+  <a-flex
+    v-if="loading"
+    class="loading"
+    style="justify-content: center; align-items: center"
+    ><a-spin
+  /></a-flex>
 
   <div v-else-if="error" class="error">{{ error }}</div>
 
@@ -14,7 +19,11 @@
       v-for="item in allItems.items"
       :key="item.key"
     >
-      <a-flex vertical style="align-items: center; justify-content: center">
+      <div
+        vertical
+        style="align-items: center; justify-content: center; cursor: pointer; display: flex; flex-direction: column;"
+        @click="$router.push(`/p/${item.title.replace(' ', '-')}-${item.id}`)"
+      >
         <a-image
           style="max-width: 271px"
           :src="item.fileList[0]?.thumbUrl"
@@ -54,7 +63,7 @@
           style="font-size: 1rem; font-weight: 500; line-height: 1.7em"
           >${{ item.price }}</a-typography
         >
-      </a-flex>
+      </div>
     </a-col>
   </a-row>
 </template>
@@ -80,6 +89,7 @@ export interface ShoppingAllItems {
   id: number | null;
   key: number;
   title: string;
+  parent_key: string;
   subtitle: string;
   condition: string;
   price: number;
@@ -183,6 +193,6 @@ const fetchData = async () => {
 
 onMounted(async () => {
   await fetchData();
-  emit('filter-count', allItems.items.length)
+  emit("filter-count", allItems.items.length);
 });
 </script>
