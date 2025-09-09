@@ -527,6 +527,7 @@ const handleAdd = () => {
       user_id: auth.user.id,
       category_id: null as any,
       parent_key: null as any,
+      category: null as any
     } as IShoppingAllItems;
     try {
       insertShoppingAllItems([newData])
