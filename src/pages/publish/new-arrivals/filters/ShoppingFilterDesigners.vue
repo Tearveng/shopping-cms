@@ -80,10 +80,9 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { getCountsCategory } from "../../../../services/CategoryService";
 import { useRoute } from "vue-router";
-
 
 const getActiveCategory = () => {
   const key = route.params.parent_key;
@@ -101,8 +100,7 @@ const getActiveCategory = () => {
   return { [`${route.params.parent_key}`]: ["1"] };
 };
 
-
-const activeCategories = ref({}) as any
+const activeCategories = ref({}) as any;
 
 interface ShoppingCategory {
   id: number;
@@ -123,7 +121,16 @@ interface ShoppingParentKey {
 const route = useRoute();
 
 const emit = defineEmits(["option-change"]);
+const categoriesRef = ref<Array<string>>([]);
 const parentCategories = reactive<ShoppingParentKey>({});
+
+const props = defineProps({
+  parent_key: {
+    type: String,
+    require: true,
+    default: [],
+  },
+});
 
 const headerLabel = (key: any) => {
   return key[0].toUpperCase() + key.slice(1);
@@ -171,7 +178,27 @@ const toggleChecked = (key: string, checked: boolean, id: number) => {
   emit("option-change", filteredData);
 };
 
-onMounted(async () => {
+const resetAllChecks = (obj: ShoppingParentKey) => {
+  const categories = ['watches', 'bags', 'designers'];
+  categories.forEach(category => {
+    if (obj[category] && Array.isArray(obj[category])) {
+      obj[category].forEach(item => {
+        item.check = false;
+      });
+    }
+  });
+}
+
+watch(
+  () => props.parent_key,
+  () => {
+    resetAllChecks(parentCategories)
+    // console.log("categoriesRef", categoriesRef.value)
+    // console.log("parentCategories", JSON.stringify(parentCategories, null, 2))
+  }
+);
+
+const handleOnMount = async () => {
   const categories = await getCountsCategory();
   for (const [_, i] of categories.entries()) {
     const pre = {
@@ -187,10 +214,13 @@ onMounted(async () => {
     if (key) {
       key.push(pre);
     } else {
+      categoriesRef.value.push(i.parent_category)
       parentCategories[i.parent_category] = [pre];
     }
   }
 
-  activeCategories.value = getActiveCategory()
-});
+  activeCategories.value = getActiveCategory();
+};
+
+onMounted(async () => handleOnMount());
 </script>

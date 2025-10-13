@@ -38,6 +38,7 @@
         <template v-else-if="column.dataIndex === 'category_id'">
           <div>
             <a-select
+              :disabled="!record.parent_key"
               :ref="select"
               :value="text"
               style="width: 120px"
@@ -50,7 +51,9 @@
               "
             >
               <a-select-option
-                v-for="category in options"
+                v-for="category in options?.filter(
+                  (o) => o.parent_category === record.parent_key
+                )"
                 :key="category.key"
                 :value="category.id.toString()"
                 >{{ category.title }}</a-select-option
@@ -369,12 +372,12 @@ const handleRemove = (id: number) => {
             }
             // Wait for Supabase deletion
             await deleteImage("shopping-storage", filePath);
-            const getByUserId = await getShoppingAllItemsById(id);
-            const oldImages = getByUserId.images?.filter(
+            const { category, ...rest } = await getShoppingAllItemsById(id);
+            const oldImages = rest.images?.filter(
               (i) => i.fileName !== fileName
             );
             updateShoppingAllItems({
-              ...getByUserId,
+              ...rest,
               images: oldImages,
             })
               .then()
@@ -527,7 +530,6 @@ const handleAdd = () => {
       user_id: auth.user.id,
       category_id: null as any,
       parent_key: null as any,
-      category: null as any
     } as IShoppingAllItems;
     try {
       insertShoppingAllItems([newData])

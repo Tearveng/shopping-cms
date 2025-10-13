@@ -28,7 +28,7 @@
             items</a-typography-text
           >
         </a-flex>
-        <ShoppingFilterDesigners @option-change="handleOptionChange" />
+        <ShoppingFilterDesigners @option-change="handleOptionChange" :parent_key="parent_key" />
       </a-flex>
 
       <!-- sort by header -->
@@ -49,6 +49,7 @@
         <br />
         <ShoppingAllItems
           :filter="currentFilter"
+          :parent_key="parent_key"
           @filter-count="handleFilterCount"
         />
       </a-flex>
@@ -65,7 +66,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 // Access route parameters
-const parent_key = ref(route.params.parent_key);
+const parent_key = ref(route.params.parent_key as string);
 
 const currentFilter = ref();
 const filterCount = ref();
@@ -85,7 +86,8 @@ const handleFilterCount = (count: number) => {
 watch(
   () => route.params,
   async (newParams) => {
-    parent_key.value = newParams.parent_key;
+    parent_key.value = newParams.parent_key as string;
+    filterCount.value = undefined
   },
   { immediate: true }
 ); // Run immediately on component mount);

@@ -64,21 +64,82 @@
           :selectedKeys="[current]"
           @click="handleMenuClick"
         >
-          <a-menu-item key="home">
-            <template #icon><home-outlined /></template>
-            Home
+          <a-menu-item key="home" @click="$router.push('/new-arrivals')">
+             <template #icon>
+              <img
+                src="/shopping-arrival.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            New arrivals
           </a-menu-item>
-          <a-menu-item key="products">
-            <template #icon><appstore-outlined /></template>
-            Products
+          <a-menu-item key="products" @click="$router.push('/designers')">
+            <template #icon>
+              <img
+                src="/shopping-design.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Designers
           </a-menu-item>
-          <a-menu-item key="about">
-            <template #icon><info-circle-outlined /></template>
-            About
+          <a-menu-item key="bags" @click="$router.push('/bags')">
+            <template #icon>
+              <img
+                src="/shopping-bag.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Bags
           </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon><contacts-outlined /></template>
-            Contact
+          <a-menu-item key="accessories" @click="$router.push('/accessories')">
+             <template #icon>
+              <img
+                src="/shopping-accessories.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Accessories
+          </a-menu-item>
+          <a-menu-item key="shoes" @click="$router.push('/shoes')">
+             <template #icon>
+              <img
+                src="/shopping-shoes.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Shoes
+          </a-menu-item>
+          <a-menu-item key="jewelry" @click="$router.push('/jewelry')">
+             <template #icon>
+              <img
+                src="/shopping-jewelry.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Jewelry
+          </a-menu-item>
+          <a-menu-item key="watches" @click="$router.push('/watches')">
+             <template #icon>
+              <img
+                src="/shopping-watches.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Watches
           </a-menu-item>
         </a-menu>
       </a-drawer>
@@ -87,16 +148,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-  AppstoreOutlined,
-  ContactsOutlined,
-  HomeOutlined,
-  InfoCircleOutlined,
-  MenuOutlined,
-} from "@ant-design/icons-vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-
 
 const route = useRoute();
 const current = ref("home");

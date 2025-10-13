@@ -7,205 +7,104 @@
       background-color: #fff;
     "
   >
-    <a-breadcrumb style="justify-content: flex-start">
+    <a-breadcrumb style="justify-content: flex-start; font-size: smaller">
       <a-breadcrumb-item
         ><a href="" style="text-decoration: underline">{{
-          itemDetail?.parent_key
+          `${itemDetail?.parent_key
+            .charAt(0)
+            .toUpperCase()}${itemDetail?.parent_key.substring(1)}`
         }}</a></a-breadcrumb-item
       >
       <a-breadcrumb-item>{{ itemDetail?.title }}</a-breadcrumb-item>
+      <a-breadcrumb-item>{{ itemDetail?.subtitle }}</a-breadcrumb-item>
     </a-breadcrumb>
     <br />
-    <a-row v-if="itemDetail" :gutter="[24, 24]">
-      <a-col :span="12">
-        <div
-          vertical
-          style="
-            position: relative;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-          "
-        >
-          <a-image
-            style="width: 596px"
-            :src="itemDetail?.fileList[0]?.thumbUrl"
-            :height="'auto'"
-            :preview="false"
-          />
-          <div class="carousel__wrapper">
-            <Carousel v-bind="config" ref="carouselRef">
-              <Slide v-for="item in itemDetail.fileList" :key="item.key">
-                <a-flex
-                  vertical
-                  style="
-                    max-width: 190px;
-                    align-items: center;
-                    justify-content: center;
-                  "
-                >
-                  <a-image
-                    :src="item.thumbUrl"
-                    style="max-width: 105px"
-                    :width="'100%'"
-                    :height="'auto'"
-                    :preview="false"
-                  />
-                </a-flex>
-              </Slide>
+    <div v-if="itemDetail" class="container-detail">
+      <ShoppingCarousel :itemDetail="itemDetail" />
+      <br />
 
-              <template #addons>
-                <CarouselNavigation>
-                  <a-flex
-                    justify="center"
-                    align="center"
-                    v-if="carouselRef"
-style="background-color: red; position: absolute; top: 50px;"
-                    ><a-button
-                      @click="
-                        () => {
-                          carouselRef.slideTo(
-                            carouselRef.visibleRange.min -
-                              1 -
-                              (carouselRef.visibleRange.max -
-                                carouselRef.visibleRange.min),
-                            false
-                          );
-                          carouselRef.updateSlideSize();
-                        }
-                      "
-                      type="link"
-                      style="color: #000; left: 0; position: absolute;"
-                    >
-                      <template #icon><LeftOutlined /></template>
-                    </a-button>
-                    <a-typography
-                      style="
-                        font-size: 0.8rem;
-                        font-weight: 500;
-                        line-height: 1.7em;
-                      "
-                      >Showing {{ carouselRef.visibleRange.min + 1 }}-{{
-                        carouselRef.visibleRange.max + 1
-                      }}
-                      of {{ itemDetail.fileList.length }} items</a-typography
-                    >
-                    <a-button
-                      @click="
-                        () => {
-                          if (
-                            carouselRef.visibleRange.max ===
-                            (itemDetail?.fileList.length ?? 0) - 1
-                          )
-                            return;
-                          carouselRef.slideTo(
-                            carouselRef.visibleRange.min +
-                              1 +
-                              (carouselRef.visibleRange.max -
-                                carouselRef.visibleRange.min),
-                            false
-                          );
-                          carouselRef.updateSlideSize();
-                        }
-                      "
-                      type="link"
-                      style="color: #000"
-                    >
-                      <template #icon><RightOutlined /></template> </a-button
-                  ></a-flex>
-                </CarouselNavigation>
-              </template>
-            </Carousel>
-          </div>
-        </div>
-      </a-col>
-      <a-col :span="6">
-        <div
-          vertical
+      <div class="detail-left">
+        <a-typography class="detail-title">{{
+          itemDetail?.category.title
+        }}</a-typography>
+        <a-typography
           style="
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
+            font-size: 1.125rem;
+            font-weight: 200;
+            line-height: 1.7em;
+            text-align: start;
           "
+          >{{ itemDetail?.subtitle }}</a-typography
         >
-          <a-image
-            style="max-width: 271px"
-            :src="itemDetail?.fileList[0]?.thumbUrl"
-            :height="'auto'"
-            :preview="false"
-          />
+
+        <a-flex vertical gap="6" style="padding: 16px 0">
+          <a-button
+            type="primary"
+            style="
+              min-width: 13.4rem;
+              min-height: 2.8rem;
+              border-radius: 0;
+              border: 1px solid #000;
+              background-color: #fff;
+              color: #000;
+              font-weight: 400;
+              font-size: 0.9rem;
+              letter-spacing: 0.1rem;
+            "
+            >Add To Cart</a-button
+          >
+          <a-button
+            type="primary"
+            style="
+              min-width: 13.4rem;
+              min-height: 2.8rem;
+              border-radius: 0;
+              background-color: #000;
+              color: #fff;
+              font-weight: 400;
+              font-size: 0.9rem;
+              letter-spacing: 0.1rem;
+            "
+            >Buy Now</a-button
+          >
+        </a-flex>
+
+        <div>
+          <a-collapse v-model:activeKey="activeKey" ghost style="margin: 0">
+            <a-collapse-panel key="1" header="Details">
+              <p>{{ text }}</p>
+            </a-collapse-panel>
+            <a-collapse-panel key="2" header="Size">
+              <p style="font-size: 0.9rem">{{ text }}</p>
+            </a-collapse-panel>
+            <a-collapse-panel key="3" header="Description">
+              <p style="font-size: 0.9rem">{{ text }}</p>
+            </a-collapse-panel>
+          </a-collapse>
         </div>
-      </a-col>
-    </a-row>
-    <div v-else>loading ...</div>
+      </div>
+      <br />
+    </div>
+    <div v-else>loading...</div>
   </a-layout>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
-import { Carousel, Slide } from "vue3-carousel";
+import ShoppingCarousel from "./ShoppingCarousel.vue";
 import {
   getShoppingAllItemsById,
   storageAllItems,
 } from "../../../../services/AllItemsService";
 import { getLastNumber } from "../../../../util/util";
-import type { ShoppingAllItems } from "../items/ShoppingAllItems.vue";
 import { getImageUrl } from "../../../../services/BannerService";
+import type { ShoppingItemDetail } from "../../../../types/ShoppingItemDetail";
 
+const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
 const route = useRoute();
+const activeKey = ref(["1"]);
 
-export interface ShoppingItemDetail extends ShoppingAllItems {
-  category: {
-    id: number;
-    created_at: string;
-    images: Object[];
-    parent_category: string;
-    title: string;
-    user_id: string;
-  };
-}
-
-const config = {
-  height: 130,
-  itemsToShow: 5,
-  gap: 5,
-  snapAlign: "center",
-
-  // 'breakpointMode' determines how the carousel breakpoints are calculated
-  // Acceptable values: 'viewport' (default) | 'carousel'
-  // 'viewport' - breakpoints are based on the viewport width
-  // 'carousel' - breakpoints are based on the carousel width
-  breakpointMode: "carousel",
-
-  // Breakpoints are mobile-first
-  // Any settings not specified will fall back to the carousel's default settings
-  breakpoints: {
-    300: {
-      itemsToShow: 5,
-      snapAlign: "start",
-    },
-    575: {
-      itemsToShow: 5,
-      snapAlign: "start",
-    },
-    768: {
-      itemsToShow: 4,
-      snapAlign: "start",
-    },
-    992: {
-      itemsToShow: 5,
-      snapAlign: "start",
-    },
-  },
-} as any;
-
-const carouselRef = ref<any>(null);
 const itemDetail = ref<ShoppingItemDetail>();
 
 onMounted(async () => {
@@ -227,7 +126,7 @@ onMounted(async () => {
         }
       }
       itemDetail.value = {
-        category: item.category,
+        category: item.category!,
         id: item.id!,
         parent_key: item.parent_key,
         key: new Date(`${item.created_at}`).getTime(),
@@ -254,5 +153,44 @@ onMounted(async () => {
   max-width: 1216px;
   padding: 2px;
 }
-</style>
+:deep(.ant-collapse-item) {
+  border-bottom: 1px solid #d3d3d3;
+}
+:deep(.ant-collapse-item .ant-collapse-header) {
+  padding-left: 0;
+  letter-spacing: 0.1rem;
+  padding-right: 0;
+}
+:deep(.ant-collapse-header .ant-collapse-header-text) {
+  font-weight: 600;
+}
+.detail-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  line-height: 1.4em;
+  text-transform: uppercase;
+  text-align: start;
+}
+.container-detail {
+  display: flex;
+}
+.detail-left {
+  width: 100%;
+  padding-left: 10rem;
+}
 
+@media (max-width: 768px) {
+  .detail-title {
+    font-size: 0.9rem;
+  }
+  .container-detail {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+  .detail-left {
+    padding-left: 0;
+  }
+}
+</style>

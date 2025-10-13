@@ -75,20 +75,6 @@
         <ShoppingInPerson />
       </Motion>
     </a-flex>
-
-    <a-flex
-      vertical
-      gap="55"
-      style="width: 100%; align-items: center; background-color: #000"
-    >
-      <Motion
-        :initial="{ opacity: 0, x: -100 }"
-        :animate="{ opacity: 1, x: 0 }"
-        :transition="{ duration: 0.8, delay: 2 }"
-      >
-        <ShoppingFooter />
-      </Motion>
-    </a-flex>
 </template>
 
 <script lang="ts" setup>
@@ -98,7 +84,6 @@ import ShoppingFeatureCollections from './ShoppingFeatureCollections.vue';
 import ShoppingLiveAnnounce from './ShoppingLiveAnnounce.vue';
 import ShoppingMoreTopDesigners from './ShoppingMoreTopDesigners.vue';
 import ShoppingTopDesigners from './ShoppingTopDesigners.vue';
-import ShoppingFooter from './ShoppingFooter.vue';
 import ShoppingInPerson from './ShoppingInPerson.vue';
 
 

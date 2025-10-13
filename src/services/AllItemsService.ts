@@ -19,7 +19,7 @@ export interface IShoppingAllItems {
   images?: Array<any>;
   user_id: string;
   created_at?: string;
-  category: ShoppingItemCategory;
+  category?: ShoppingItemCategory;
 }
 
 export interface IShoppingAllItemsPayload {

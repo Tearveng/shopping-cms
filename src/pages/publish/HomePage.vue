@@ -15,6 +15,19 @@
           </Motion>
         </a-flex>
         <router-view />
+        <a-flex
+          vertical
+          gap="55"
+          style="width: 100%; align-items: center; background-color: #000"
+        >
+          <Motion
+            :initial="{ opacity: 0, x: -100 }"
+            :animate="{ opacity: 1, x: 0 }"
+            :transition="{ duration: 0.8, delay: 2 }"
+          >
+            <ShoppingFooter />
+          </Motion>
+        </a-flex>
       </a-layout>
     </a-flex>
     <div v-if="!found && !isLoading">
@@ -42,6 +55,7 @@
 import { Motion } from "@motionone/vue";
 import { ref } from "vue";
 import ShoppingHead from "./ShoppingHead.vue";
+import ShoppingFooter from "./ShoppingFooter.vue";
 
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);

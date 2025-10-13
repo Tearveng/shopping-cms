@@ -8,6 +8,8 @@
 
   <div v-else-if="error" class="error">{{ error }}</div>
 
+  <div v-else-if="allItems.items.length < 1" class="empty-data">No data</div>
+
   <a-row v-else :gutter="[24, 24]">
     <a-col
       :span="6"
@@ -21,7 +23,13 @@
     >
       <div
         vertical
-        style="align-items: center; justify-content: center; cursor: pointer; display: flex; flex-direction: column;"
+        style="
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+        "
         @click="$router.push(`/p/${item.title.replace(' ', '-')}-${item.id}`)"
       >
         <a-image
@@ -66,6 +74,9 @@
       </div>
     </a-col>
   </a-row>
+  <br />
+  <br />
+  <br />
 </template>
 
 <style scoped>
@@ -74,6 +85,11 @@
   max-width: 271px;
   height: 100%;
   object-fit: cover;
+}
+.empty-data {
+  display: flex;
+  justify-content: center;
+  min-height: 750px;
 }
 </style>
 
@@ -84,17 +100,7 @@ import {
   storageAllItems,
 } from "../../../../services/AllItemsService";
 import { getImageUrl } from "../../../../services/BannerService";
-
-export interface ShoppingAllItems {
-  id: number | null;
-  key: number;
-  title: string;
-  parent_key: string;
-  subtitle: string;
-  condition: string;
-  price: number;
-  fileList: any[];
-}
+import type { ShoppingAllItems } from "../../../../types/ShoppingAllItems";
 
 const emit = defineEmits(["filter-count"]);
 const category_ids_ref = ref<any[]>([]);
@@ -109,6 +115,11 @@ const props = defineProps({
     require: true,
     default: () => ({}),
   },
+  parent_key: {
+    type: String,
+    require: true,
+    default: [],
+  },
 });
 
 // Watch for filter changes to trigger re-render
@@ -121,6 +132,13 @@ watch(
       (i) => props.filter[i].length > 0
     );
     // The computed property will automatically update
+  }
+);
+
+watch(
+  () => props.parent_key,
+  () => {
+    parent_key_ref.value = [props.parent_key];
   }
 );
 
@@ -143,6 +161,25 @@ function processNestedArray(array: any[]): void {
   }
 }
 
+function categoryIds() {
+  if(parent_key_ref.value.includes("new-arrivals")) {
+    return []
+  }
+  return [...new Set(category_ids_ref.value)];
+}
+
+function checkParentKey() {
+  if (
+    parent_key_ref.value.includes("new-arrivals") ||
+    (parent_key_ref.value.length < 1 && props.parent_key === "new-arrivals")
+  ) {
+    return [];
+  } else if (parent_key_ref.value.length < 1) {
+    return [props.parent_key];
+  }
+  return parent_key_ref.value;
+}
+
 const allItems = reactive<{ items: ShoppingAllItems[] }>({ items: [] });
 
 const fetchData = async () => {
@@ -150,9 +187,9 @@ const fetchData = async () => {
   error.value = null;
   allItems.items = [];
   await getShoppingAllItemsPublic({
-    category_ids: [...new Set(category_ids_ref.value)],
-    parent_key: parent_key_ref.value,
-    limit: 10,
+    category_ids: categoryIds(),
+    parent_key: checkParentKey(),
+    limit: 50,
   })
     .then(async (editorPicks) => {
       for (const i of editorPicks) {
@@ -183,6 +220,7 @@ const fetchData = async () => {
         } as ShoppingAllItems;
         allItems.items.push(pre);
       }
+      emit("filter-count", editorPicks.length);
     })
     .catch(
       (err) =>
@@ -193,6 +231,5 @@ const fetchData = async () => {
 
 onMounted(async () => {
   await fetchData();
-  emit("filter-count", allItems.items.length);
 });
 </script>
