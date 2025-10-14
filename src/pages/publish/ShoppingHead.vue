@@ -44,7 +44,7 @@
     <div v-else class="mobile-menu">
       <a-flex align="center" gap="10">
         <a-button type="text" @click="showDrawer" style="padding: 0">
-          <menu-outlined style="font-size: 18px" />
+          <MenuOutlined style="margin-bottom: 7px;" />
         </a-button>
         <a class="logo-link">
           <a-typography class="logo-image" @click="$router.push('/')"
@@ -149,6 +149,9 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import {
+  MenuOutlined,
+} from "@ant-design/icons-vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

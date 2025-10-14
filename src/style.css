@@ -1,9 +1,17 @@
 /* Load Inter font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:Regular:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Khmer:Regular:wght@400&display=swap');
 
 /* Apply Inter font globally */
 :root, body, .ant {
   font-family: "Inter:Regular", sans-serif !important;
+}
+
+/* Or for specific Khmer text elements */
+.khmer-text {
+  font-family: "Khmer", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Ensure AntD components inherit the font */

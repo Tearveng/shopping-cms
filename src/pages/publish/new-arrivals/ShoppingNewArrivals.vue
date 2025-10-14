@@ -28,12 +28,23 @@
             items</a-typography-text
           >
         </a-flex>
-        <ShoppingFilterDesigners @option-change="handleOptionChange" :parent_key="parent_key" />
+        <ShoppingFilterDesigners
+          @option-change="handleOptionChange"
+          :parent_key="parent_key"
+          :isMobile="isMobile"
+        />
       </a-flex>
 
       <!-- sort by header -->
       <a-flex class="items-category" vertical>
-        <a-flex style="align-items: center; justify-content: flex-end">
+        <a-flex
+          v-if="!isMobile"
+          style="
+            align-items: center;
+            justify-content: flex-end;
+            cursor: pointer;
+          "
+        >
           <a-typography-text
             style="font-size: 15px; font-weight: 200; padding-right: 8px"
             >Sort by</a-typography-text
@@ -46,6 +57,33 @@
             <a-select-option value="a">Recently Marked Down</a-select-option>
           </a-select>
         </a-flex>
+        <a-flex
+          v-else
+          style="
+            align-items: center;
+            cursor: pointer;
+            justify-content: flex-end;
+          "
+        >
+          <a-button
+            @click="showFilter"
+            type="ghost"
+            :icon="h(visible ? FilterFilled : FilterOutlined)"
+            >Filter</a-button
+          >
+        </a-flex>
+        <div
+          :style="{
+            visibility: visible && isMobile ? 'visible' : 'hidden',
+            height: visible && isMobile ? 'auto' : 0,
+          }"
+        >
+          <ShoppingFilterDesigners
+            @option-change="handleOptionChange"
+            :parent_key="parent_key"
+            :isMobile="isMobile"
+          />
+        </div>
         <br />
         <ShoppingAllItems
           :filter="currentFilter"
@@ -58,19 +96,30 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { h, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { FilterOutlined, FilterFilled } from "@ant-design/icons-vue";
 import ShoppingFilterDesigners from "./filters/ShoppingFilterDesigners.vue";
 import ShoppingAllItems from "./items/ShoppingAllItems.vue";
 import { useRoute } from "vue-router";
+import { resetAllChecks } from "../../../util/util";
 
 const route = useRoute();
 
 // Access route parameters
 const parent_key = ref(route.params.parent_key as string);
-
 const currentFilter = ref();
 const filterCount = ref();
 const totalItem = ref();
+const isMobile = ref(false);
+const visible = ref(false);
+
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+const showFilter = () => {
+  visible.value = !visible.value;
+};
 
 const handleOptionChange = (filter: any) => {
   currentFilter.value = filter;
@@ -87,10 +136,18 @@ watch(
   () => route.params,
   async (newParams) => {
     parent_key.value = newParams.parent_key as string;
-    filterCount.value = undefined
+    filterCount.value = undefined;
   },
   { immediate: true }
 ); // Run immediately on component mount);
+onMounted(() => {
+  checkScreenSize();
+  window.addEventListener("resize", checkScreenSize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", checkScreenSize);
+});
 </script>
 
 <style scoped>

@@ -20,14 +20,17 @@
     </a-breadcrumb>
     <br />
     <div v-if="itemDetail" class="container-detail">
-      <ShoppingCarousel :itemDetail="itemDetail" />
+      <div class="detail-left">
+        <ShoppingCarousel :itemDetail="itemDetail" />
+      </div>
       <br />
 
-      <div class="detail-left">
+      <div class="detail-right">
         <a-typography class="detail-title">{{
           itemDetail?.category.title
         }}</a-typography>
         <a-typography
+        class="khmer-text"
           style="
             font-size: 1.125rem;
             font-weight: 200;
@@ -175,12 +178,18 @@ onMounted(async () => {
 .container-detail {
   display: flex;
 }
-.detail-left {
+.detail-right {
   width: 100%;
   padding-left: 10rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
+  .detail-right {
+    padding-left: 2rem;
+  }
+}
+
+@media (max-width: 820px) {
   .detail-title {
     font-size: 0.9rem;
   }
@@ -189,7 +198,7 @@ onMounted(async () => {
     flex-direction: column;
     padding: 0;
   }
-  .detail-left {
+  .detail-right {
     padding-left: 0;
   }
 }

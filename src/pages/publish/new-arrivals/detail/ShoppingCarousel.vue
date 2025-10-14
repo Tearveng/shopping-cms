@@ -59,7 +59,7 @@ const galleryConfig = {
 const thumbnailsConfig = {
   breakpoints: {
     300: {
-      itemsToShow: 4,
+      itemsToShow: 3,
       height: 110,
       snapAlign: "center",
       gap: 2,
@@ -67,13 +67,13 @@ const thumbnailsConfig = {
     400: {
       itemsToShow: 4,
       height: 110,
-      snapAlign: "start",
+      snapAlign: "center",
       gap: 4,
     },
     500: {
       itemsToShow: 6,
       height: 110,
-      snapAlign: "center",
+      snapAlign: "start",
     },
   },
 } as any;

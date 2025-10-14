@@ -3,7 +3,7 @@
     <a-collapse
       v-model:activeKey="activeCategories[key.toString().toLowerCase()]"
       ghost
-      style="max-width: 250px"
+      style="width: 100%"
       class="custom-collapse"
     >
       <a-collapse-panel
@@ -83,6 +83,10 @@
 import { onMounted, reactive, ref, watch } from "vue";
 import { getCountsCategory } from "../../../../services/CategoryService";
 import { useRoute } from "vue-router";
+import type {
+  ShoppingCategory,
+  ShoppingParentKey,
+} from "../../../../types/ShoppingCategory";
 
 const getActiveCategory = () => {
   const key = route.params.parent_key;
@@ -102,22 +106,6 @@ const getActiveCategory = () => {
 
 const activeCategories = ref({}) as any;
 
-interface ShoppingCategory {
-  id: number;
-  key: string;
-  title: string;
-  amount: number;
-  check: boolean;
-  parent_category: string;
-  images: [];
-  user_id: string;
-  created_at: string;
-}
-
-interface ShoppingParentKey {
-  [k: string]: ShoppingCategory[];
-}
-
 const route = useRoute();
 
 const emit = defineEmits(["option-change"]);
@@ -129,6 +117,10 @@ const props = defineProps({
     type: String,
     require: true,
     default: [],
+  },
+  isMobile: {
+    type: Boolean,
+    required: true,
   },
 });
 
@@ -166,6 +158,10 @@ const toggleChecked = (key: string, checked: boolean, id: number) => {
     }
   });
 
+  omitFilterData()
+};
+
+const omitFilterData = () => {
   const filteredData = Object.keys(parentCategories).reduce(
     (acc: any, category) => {
       acc[category] = parentCategories[category].filter(
@@ -179,22 +175,35 @@ const toggleChecked = (key: string, checked: boolean, id: number) => {
 };
 
 const resetAllChecks = (obj: ShoppingParentKey) => {
-  const categories = ['watches', 'bags', 'designers'];
-  categories.forEach(category => {
+  const categories = [
+    "watches",
+    "bags",
+    "designers",
+    "accessories",
+    "shoes",
+    "jewelry",
+  ];
+  categories.forEach((category) => {
     if (obj[category] && Array.isArray(obj[category])) {
-      obj[category].forEach(item => {
+      obj[category].forEach((item) => {
         item.check = false;
       });
     }
   });
-}
+};
 
 watch(
   () => props.parent_key,
   () => {
     resetAllChecks(parentCategories)
-    // console.log("categoriesRef", categoriesRef.value)
-    // console.log("parentCategories", JSON.stringify(parentCategories, null, 2))
+  }
+);
+
+watch(
+  () => props.isMobile,
+  () => {
+    resetAllChecks(parentCategories);
+    omitFilterData()
   }
 );
 
@@ -214,7 +223,7 @@ const handleOnMount = async () => {
     if (key) {
       key.push(pre);
     } else {
-      categoriesRef.value.push(i.parent_category)
+      categoriesRef.value.push(i.parent_category);
       parentCategories[i.parent_category] = [pre];
     }
   }
