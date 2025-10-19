@@ -21,6 +21,7 @@
             />
             <a-typography
               style="
+                text-align: center;
                 font-size: 1rem;
                 font-weight: 600;
                 letter-spacing: 0.25em;
@@ -152,10 +153,9 @@
 </style>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
+import { onMounted, ref } from "vue";
 import { Carousel, Slide } from "vue3-carousel";
-import { onMounted } from "vue";
 import { getImageUrl } from "../../services/BannerService";
 import {
   getShoppingEditorPicksPublic,

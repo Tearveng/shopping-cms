@@ -7,15 +7,10 @@
           <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
         </a>
       </a-flex>
-      <a-menu
-        mode="horizontal"
-        :overflowedIndicator="null"
-        class="desktop-menu"
-        :selectedKeys="[current]"
-        @click="handleMenuClick"
-      >
+      <a-menu mode="horizontal" :overflowedIndicator="null" class="desktop-menu" :selectedKeys="[current]"
+        @click="handleMenuClick">
         <a-menu-item key="home" @click="$router.push('/new-arrivals')"> New arrivals </a-menu-item>
-        <a-menu-item key="products" @click="$router.push('/designers')"> Designers </a-menu-item>
+        <a-menu-item key="products"> Designers </a-menu-item>
         <a-menu-item key="about"> Bags </a-menu-item>
         <a-menu-item key="contact"> Accessories </a-menu-item>
         <a-menu-item key="shoes"> Shoes </a-menu-item>
@@ -34,34 +29,39 @@
           <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
         </a>
       </a-flex>
-      <a-drawer
-        title="Menu"
-        placement="left"
-        :closable="true"
-        :visible="visible"
-        @close="onClose"
-      >
-        <a-menu
-          mode="vertical"
-          :selectedKeys="[current]"
-          @click="handleMenuClick"
-        >
+      <a-drawer title="Menu" placement="left" :closable="true" :visible="visible" @close="onClose">
+        <a-menu mode="vertical" :selectedKeys="[current]" @click="handleMenuClick">
           <a-menu-item key="home">
-            <template #icon><home-outlined /></template>
-            Home
+            <template #icon>-</template>
+            New arrivals
           </a-menu-item>
           <a-menu-item key="products">
-            <template #icon><appstore-outlined /></template>
-            Products
+            <template #icon>-
+            </template>
+            Designers
           </a-menu-item>
           <a-menu-item key="about">
-            <template #icon><info-circle-outlined /></template>
-            About
+            <template #icon>-
+            </template>
+            Bags
           </a-menu-item>
           <a-menu-item key="contact">
-            <template #icon><contacts-outlined /></template>
-            Contact
+            <template #icon>-</template>
+            Accessories
           </a-menu-item>
+          <a-menu-item key="contact">
+            <template #icon>-</template>
+            Shoes
+          </a-menu-item>
+          <a-menu-item key="contact">
+            <template #icon>-</template>
+            Jewelry
+          </a-menu-item>
+          <a-menu-item key="contact">
+            <template #icon>-</template>
+            Watches
+          </a-menu-item>
+
         </a-menu>
       </a-drawer>
     </div>
@@ -70,11 +70,7 @@
 
 <script setup lang="ts">
 import {
-    AppstoreOutlined,
-    ContactsOutlined,
-    HomeOutlined,
-    InfoCircleOutlined,
-    MenuOutlined,
+  MenuOutlined
 } from "@ant-design/icons-vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
@@ -198,9 +194,11 @@ onBeforeUnmount(() => {
   .desktop-menu {
     display: none;
   }
+
   .logo-link {
     width: 14.7rem;
   }
+
   .logo-image {
     max-width: calc(100% - 2rem);
     height: 50%;
@@ -212,6 +210,7 @@ onBeforeUnmount(() => {
   .logo-link {
     width: 11.7rem;
   }
+
   .logo-image {
     max-width: calc(100% - 2rem);
     font-size: 1.2rem;
