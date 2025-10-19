@@ -1,5 +1,16 @@
 <template>
-  <a-row :gutter="[24, 24]">
+  <a-flex
+    v-if="loading"
+    class="loading"
+    style="justify-content: center; align-items: center"
+    ><a-spin
+  /></a-flex>
+
+  <div v-else-if="error" class="error">{{ error }}</div>
+
+  <div v-else-if="allItems.items.length < 1" class="empty-data">No data</div>
+
+  <a-row v-else :gutter="[24, 24]">
     <a-col
       :span="6"
       :xs="12"
@@ -10,7 +21,17 @@
       v-for="item in allItems.items"
       :key="item.key"
     >
-      <a-flex vertical style="align-items: center; justify-content: center">
+      <div
+        vertical
+        style="
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+        "
+        @click="$router.push(`/p/${item.title.replace(' ', '-')}-${item.id}`)"
+      >
         <a-image
           style="max-width: 271px"
           :src="item.fileList[0]?.thumbUrl"
@@ -50,9 +71,12 @@
           style="font-size: 1rem; font-weight: 500; line-height: 1.7em"
           >${{ item.price }}</a-typography
         >
-      </a-flex>
+      </div>
     </a-col>
   </a-row>
+  <br />
+  <br />
+  <br />
 </template>
 
 <style scoped>
@@ -62,53 +86,150 @@
   height: 100%;
   object-fit: cover;
 }
+.empty-data {
+  display: flex;
+  justify-content: center;
+  min-height: 750px;
+}
 </style>
 
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref, watch, type PropType } from "vue";
 import {
   getShoppingAllItemsPublic,
   storageAllItems,
 } from "../../../../services/AllItemsService";
 import { getImageUrl } from "../../../../services/BannerService";
+import type { ShoppingAllItems } from "../../../../types/ShoppingAllItems";
 
-export interface ShoppingAllItems {
-  id: number | null;
-  key: number;
-  title: string;
-  subtitle: string;
-  condition: string;
-  price: number;
-  fileList: any[];
+const emit = defineEmits(["filter-count"]);
+const category_ids_ref = ref<any[]>([]);
+const parent_key_ref = ref<any[]>([]);
+
+const loading = ref(false);
+const error = ref<string | null>(null);
+
+const props = defineProps({
+  filter: {
+    type: Object as PropType<{ [k: string]: string }>,
+    require: true,
+    default: () => ({}),
+  },
+  parent_key: {
+    type: String,
+    require: true,
+    default: [],
+  },
+});
+
+// Watch for filter changes to trigger re-render
+watch(
+  () => props.filter,
+  () => {
+    category_ids_ref.value = [];
+    processNestedArray(Object.values(props.filter).filter((i) => i.length > 0));
+    parent_key_ref.value = Object.keys(props.filter).filter(
+      (i) => props.filter[i].length > 0
+    );
+    // The computed property will automatically update
+  }
+);
+
+watch(
+  () => props.parent_key,
+  () => {
+    parent_key_ref.value = [props.parent_key];
+  }
+);
+
+watch(
+  [category_ids_ref, parent_key_ref],
+  async () => {
+    return await fetchData();
+  },
+  { deep: true }
+);
+
+function processNestedArray(array: any[]): void {
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i];
+    if (Array.isArray(element)) {
+      processNestedArray(element); // Recursive call for nested arrays
+    } else {
+      category_ids_ref.value.push(element.id);
+    }
+  }
+}
+
+function categoryIds() {
+  if(parent_key_ref.value.includes("new-arrivals")) {
+    return []
+  }
+  return [...new Set(category_ids_ref.value)];
+}
+
+function checkParentKey() {
+  if (
+    parent_key_ref.value.includes("new-arrivals") ||
+    (parent_key_ref.value.length < 1 && props.parent_key === "new-arrivals")
+  ) {
+    return [];
+  } else if (parent_key_ref.value.length < 1) {
+    return [props.parent_key];
+  }
+  return parent_key_ref.value;
 }
 
 const allItems = reactive<{ items: ShoppingAllItems[] }>({ items: [] });
-onMounted(async () => {
-  const editorPicks = await getShoppingAllItemsPublic();
-  for (const i of editorPicks) {
-    const imagesList = [];
-    if (i.images && i.images.length > 0) {
-      for (const img of i.images) {
-        const tempImg = await getImageUrl(img.fileName, `${storageAllItems}`);
-        imagesList.push({
-          uid: img.id,
-          name: img.fileName,
-          status: "done",
-          url: tempImg,
-          thumbUrl: tempImg,
-        });
+
+const fetchData = async () => {
+  loading.value = true;
+  error.value = null;
+  allItems.items = [];
+  await getShoppingAllItemsPublic({
+    category_ids: categoryIds(),
+    parent_key: checkParentKey(),
+    limit: 50,
+  })
+    .then(async (editorPicks) => {
+      for (const i of editorPicks) {
+        const imagesList = [];
+        if (i.images && i.images.length > 0) {
+          for (const img of i.images) {
+            const tempImg = await getImageUrl(
+              img.fileName,
+              `${storageAllItems}`
+            );
+            imagesList.push({
+              uid: img.id,
+              name: img.fileName,
+              status: "done",
+              url: tempImg,
+              thumbUrl: tempImg,
+            });
+          }
+        }
+        const pre = {
+          id: i.id,
+          key: new Date(`${i.created_at}`).getTime(),
+          title: i.title,
+          subtitle: i.subtitle,
+          condition: i.condition,
+          price: i.price,
+          fileList: imagesList,
+        } as ShoppingAllItems;
+        allItems.items.push(pre);
       }
-    }
-    const pre = {
-      id: i.id,
-      key: new Date(`${i.created_at}`).getTime(),
-      title: i.title,
-      subtitle: i.subtitle,
-      condition: i.condition,
-      price: i.price,
-      fileList: imagesList,
-    } as ShoppingAllItems;
-    allItems.items.push(pre);
-  }
+      emit("filter-count", editorPicks.length);
+    })
+    .catch(
+      (err) =>
+        (error.value = err instanceof Error ? err.message : "An error occurred")
+    )
+    .finally(() => (loading.value = false));
+};
+
+onMounted(async () => {
+  await fetchData();
 });
 </script>

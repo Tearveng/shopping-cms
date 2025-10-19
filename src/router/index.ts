@@ -5,21 +5,22 @@ import Login from "../pages/auth/Login.vue";
 import Home from "../pages/Home.vue";
 import NotFound from "../pages/NotFound.vue";
 import HomePageVue from "../pages/publish/HomePage.vue";
+import HomePageContent from "../pages/publish/HomePageContent.vue";
+import ShoppingItemDetail from "../pages/publish/new-arrivals/detail/ShoppingItemDetail.vue";
+import ShoppingNewArrivals from "../pages/publish/new-arrivals/ShoppingNewArrivals.vue";
 import Setting from "../pages/Setting.vue";
 import ShoppingBanner from "../pages/ShoppingBanner.vue";
+import ShoppingCategory from "../pages/ShoppingCategory.vue";
+import ShoppingContact from "../pages/ShoppingContact.vue";
 import ShoppingEditorPicks from "../pages/ShoppingEditorPicks.vue";
 import ShoppingFeatureCollections from "../pages/ShoppingFeatureCollections.vue";
-import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
-import { useAuthStore } from "../stores/auth";
+import ShoppingItems from "../pages/ShoppingItems.vue";
 import ShoppingLiveAnnounce from "../pages/ShoppingLiveAnnounce.vue";
 import ShoppingMoreTopDesigners from "../pages/ShoppingMoreTopDesigners.vue";
-import ShoppingContact from "../pages/ShoppingContact.vue";
 import ShoppingProfile from "../pages/ShoppingProfile.vue";
 import ShoppingShopInPerson from "../pages/ShoppingShopInPerson.vue";
-import ShoppingCategory from "../pages/ShoppingCategory.vue";
-import ShoppingItems from "../pages/ShoppingItems.vue";
-import ShoppingNewArrivals from "../pages/publish/new-arrivals/ShoppingNewArrivals.vue";
-import HomePageContent from "../pages/publish/HomePageContent.vue";
+import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
+import { useAuthStore } from "../stores/auth";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -51,13 +52,23 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "/new-arrivals",
+        path: "/:parent_key",
         name: "New Arrivals",
         component: ShoppingNewArrivals,
         meta: {
           title: "New Arrivals",
           icon: "new arrivals",
           breadcrumb: ["New Arrivals"],
+        },
+      },
+      {
+        path: "p/:item_id",
+        name: "Item detail",
+        component: ShoppingItemDetail,
+        meta: {
+          title: "Item detail",
+          icon: "item detail",
+          breadcrumb: ["Item detail"],
         },
       },
     ],
@@ -347,3 +358,4 @@ export default router;
 // Export additional utilities
 export { routes };
 export type { RouteRecordRaw };
+

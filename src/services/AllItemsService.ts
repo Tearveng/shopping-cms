@@ -1,15 +1,31 @@
 import { supabase } from "../lib/supabase";
 
+export interface ShoppingItemCategory {
+  id: number;
+  created_at: string;
+  images: Object[];
+  parent_category: string;
+  title: string;
+  user_id: string;
+}
 export interface IShoppingAllItems {
   id?: number;
   title: string;
   subtitle: string;
   condition: string;
   category_id: string;
+  parent_key: string;
   price: number;
   images?: Array<any>;
   user_id: string;
   created_at?: string;
+  category?: ShoppingItemCategory;
+}
+
+export interface IShoppingAllItemsPayload {
+  parent_key: string[];
+  category_ids: number[];
+  limit: number;
 }
 
 const tableName = "shopping_all_items";
@@ -48,14 +64,21 @@ export const getShoppingAllItems = async (
   return data;
 };
 
-export const getShoppingAllItemsPublic = async (): Promise<
-  IShoppingAllItems[]
-> => {
-  const { data, error } = await supabase
+export const getShoppingAllItemsPublic = async (
+  props?: IShoppingAllItemsPayload
+): Promise<IShoppingAllItems[]> => {
+  let query = supabase
     .from(tableName)
     .select("*")
-    .order("created_at", { ascending: true })
-    .select();
+    .order("created_at", { ascending: false });
+  if (props?.parent_key && props?.parent_key.length > 0) {
+    query = query.in("parent_key", [props.parent_key[0]]);
+  }
+  if (props?.category_ids && props?.category_ids.length > 0) {
+    query = query.in("category_id", props.category_ids);
+  }
+  query = query.limit(props?.limit ?? 20);
+  const { data, error } = await query;
   if (error) throw error.message;
   return data;
 };
@@ -65,7 +88,12 @@ export const getShoppingAllItemsById = async (
 ): Promise<IShoppingAllItems> => {
   const { data, error } = await supabase
     .from(tableName)
-    .select("*")
+    .select(
+      `
+      *,
+      category:category_id (*)
+    `
+    )
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();
   if (error) throw error.message;

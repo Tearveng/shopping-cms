@@ -27,6 +27,7 @@
                 letter-spacing: 0.25em;
                 line-height: 1.4em;
                 text-transform: uppercase;
+                text-align: center;
               "
               >{{ product.title }}</a-typography
             >
@@ -37,7 +38,7 @@
                 line-height: 1.7em;
                 text-align: center;
               "
-              >{{ product.subtitle }}</a-typography
+              >{{ checkSubtitle(product.subtitle) }}</a-typography
             >
             <a-typography
               style="
@@ -199,6 +200,14 @@ const config = {
 
 const carouselRef = ref<any>(null);
 const productCategories = ref<ShoppingEditorPick[]>([]);
+
+const checkSubtitle = (subtitle: string) => {
+  if(subtitle.length > 20) {
+    return `${subtitle.substring(0,20)} ...`
+  }
+
+  return subtitle
+}
 
 // const handleAfterChange = (current) => {
 //   currentPage.value = current;

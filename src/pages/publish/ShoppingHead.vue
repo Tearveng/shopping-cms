@@ -4,18 +4,39 @@
     <a-flex v-if="!isMobile" vertical>
       <a-flex align="center" gap="10" style="padding-top: 1rem">
         <a class="logo-link">
-          <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
+          <a-typography class="logo-image" @click="$router.push('/')"
+            >Everything L11</a-typography
+          >
         </a>
       </a-flex>
-      <a-menu mode="horizontal" :overflowedIndicator="null" class="desktop-menu" :selectedKeys="[current]"
-        @click="handleMenuClick">
-        <a-menu-item key="home" @click="$router.push('/new-arrivals')"> New arrivals </a-menu-item>
-        <a-menu-item key="products"> Designers </a-menu-item>
-        <a-menu-item key="about"> Bags </a-menu-item>
-        <a-menu-item key="contact"> Accessories </a-menu-item>
-        <a-menu-item key="shoes"> Shoes </a-menu-item>
-        <a-menu-item key="jewelry"> Jewelry </a-menu-item>
-        <a-menu-item key="watch"> Watches </a-menu-item>
+      <a-menu
+        mode="horizontal"
+        :overflowedIndicator="null"
+        class="desktop-menu"
+        :selectedKeys="[current]"
+        @click="handleMenuClick"
+      >
+        <a-menu-item key="home" @click="$router.push('/new-arrivals')">
+          New arrivals
+        </a-menu-item>
+        <a-menu-item key="products" @click="$router.push('/designers')">
+          Designers
+        </a-menu-item>
+        <a-menu-item key="bags" @click="$router.push('/bags')">
+          Bags
+        </a-menu-item>
+        <a-menu-item key="accessories" @click="$router.push('/accessories')">
+          Accessories
+        </a-menu-item>
+        <a-menu-item key="shoes" @click="$router.push('/shoes')">
+          Shoes
+        </a-menu-item>
+        <a-menu-item key="jewelry" @click="$router.push('/jewelry')">
+          Jewelry
+        </a-menu-item>
+        <a-menu-item key="watches" @click="$router.push('/watches')">
+          Watches
+        </a-menu-item>
       </a-menu>
     </a-flex>
 
@@ -23,31 +44,102 @@
     <div v-else class="mobile-menu">
       <a-flex align="center" gap="10">
         <a-button type="text" @click="showDrawer" style="padding: 0">
-          <menu-outlined style="font-size: 18px" />
+          <MenuOutlined style="margin-bottom: 7px;" />
         </a-button>
         <a class="logo-link">
-          <a-typography class="logo-image" @click="$router.push('/')">Everything L11</a-typography>
+          <a-typography class="logo-image" @click="$router.push('/')"
+            >Everything L11</a-typography
+          >
         </a>
       </a-flex>
-      <a-drawer title="Menu" placement="left" :closable="true" :visible="visible" @close="onClose">
-        <a-menu mode="vertical" :selectedKeys="[current]" @click="handleMenuClick">
-          <a-menu-item key="home">
-            <template #icon>-</template>
+      <a-drawer
+        title="Menu"
+        placement="left"
+        :closable="true"
+        :visible="visible"
+        @close="onClose"
+      >
+        <a-menu
+          mode="vertical"
+          :selectedKeys="[current]"
+          @click="handleMenuClick"
+        >
+          <a-menu-item key="home" @click="$router.push('/new-arrivals')">
+             <template #icon>
+              <img
+                src="/shopping-arrival.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
             New arrivals
           </a-menu-item>
-          <a-menu-item key="products">
-            <template #icon>-
+          <a-menu-item key="products" @click="$router.push('/designers')">
+            <template #icon>
+              <img
+                src="/shopping-design.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
             </template>
             Designers
           </a-menu-item>
-          <a-menu-item key="about">
-            <template #icon>-
+          <a-menu-item key="bags" @click="$router.push('/bags')">
+            <template #icon>
+              <img
+                src="/shopping-bag.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
             </template>
             Bags
           </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
+          <a-menu-item key="accessories" @click="$router.push('/accessories')">
+             <template #icon>
+              <img
+                src="/shopping-accessories.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
             Accessories
+          </a-menu-item>
+          <a-menu-item key="shoes" @click="$router.push('/shoes')">
+             <template #icon>
+              <img
+                src="/shopping-shoes.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Shoes
+          </a-menu-item>
+          <a-menu-item key="jewelry" @click="$router.push('/jewelry')">
+             <template #icon>
+              <img
+                src="/shopping-jewelry.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Jewelry
+          </a-menu-item>
+          <a-menu-item key="watches" @click="$router.push('/watches')">
+             <template #icon>
+              <img
+                src="/shopping-watches.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            Watches
           </a-menu-item>
           <a-menu-item key="contact">
             <template #icon>-</template>
@@ -69,11 +161,13 @@
 </template>
 
 <script setup lang="ts">
-import {
-  MenuOutlined
-} from "@ant-design/icons-vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import {
+  MenuOutlined,
+} from "@ant-design/icons-vue";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const current = ref("home");
 const isMobile = ref(false);
 const visible = ref(false);
@@ -99,6 +193,7 @@ const onClose = () => {
 
 // Set up event listeners for window resize
 onMounted(() => {
+  current.value = route.params.parent_key as string;
   checkScreenSize();
   window.addEventListener("resize", checkScreenSize);
 });
