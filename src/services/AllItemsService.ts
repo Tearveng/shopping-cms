@@ -13,6 +13,8 @@ export interface IShoppingAllItems {
   title: string;
   subtitle: string;
   condition: string;
+  size: string;
+  details: string;
   category_id: string;
   parent_key: string;
   price: number;

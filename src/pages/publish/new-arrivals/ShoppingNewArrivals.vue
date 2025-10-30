@@ -101,7 +101,6 @@ import { FilterOutlined, FilterFilled } from "@ant-design/icons-vue";
 import ShoppingFilterDesigners from "./filters/ShoppingFilterDesigners.vue";
 import ShoppingAllItems from "./items/ShoppingAllItems.vue";
 import { useRoute } from "vue-router";
-import { resetAllChecks } from "../../../util/util";
 
 const route = useRoute();
 

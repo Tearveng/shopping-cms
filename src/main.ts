@@ -3,21 +3,25 @@ import Antd from "ant-design-vue";
 import "ant-design-vue/dist/reset.css";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import App from "./App.vue";
 import { supabase } from "./lib/supabase";
 import router from "./router";
 import { useAuthStore } from "./stores/auth";
 import "vue3-carousel/carousel.css";
 import "./style.css";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const app = createApp(App);
 const pinia = createPinia();
-const head = createHead()
+const head = createHead();
 
 app.use(Antd);
-app.use(head)
+app.use(head);
 app.use(pinia);
 app.use(router);
+app.component("QuillEditor", QuillEditor);
 
 const authStore = useAuthStore();
 // await authStore.fetchUser();

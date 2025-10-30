@@ -1,35 +1,17 @@
 <template>
   <a-flex style="justify-content: center">
-    <a-layout style="width: 100%; max-width: 1440px">
-      <a-layout-sider
-        v-model:collapsed="collapsed"
-        collapsible
-        theme="light"
-        width="250"
-      >
-        <a-menu
-          mode="inline"
-          :selectedKeys="[activeMenu]"
-          :openKeys="openKeys"
-          @openChange="onOpenChange"
-          style="height: 100%; border-right: 0; text-align: start"
-        >
-          <div
-            style="
+    <a-layout style="width: 100%; max-width: 1920px">
+      <a-layout-sider v-model:collapsed="collapsed" collapsible theme="light" width="250">
+        <a-menu mode="inline" :selectedKeys="[activeMenu]" :openKeys="openKeys" @openChange="onOpenChange"
+          style="height: 100%; border-right: 0; text-align: start">
+          <div style="
               display: flex;
               justify-content: center;
               align-items: center;
               margin-top: 10px;
-            "
-          >
-            <img
-              width="70"
-              height="70"
-              src="https://img.icons8.com/clouds/500/bag-front-view.png"
-              alt="bag-front-view"
-              style="cursor: pointer"
-              @click="$router.push('/admin')"
-            />
+            ">
+            <img width="70" height="70" src="https://img.icons8.com/clouds/500/bag-front-view.png" alt="bag-front-view"
+              style="cursor: pointer" @click="$router.push('/admin')" />
           </div>
 
           <a-menu-item key="profile" @click="$router.push('/admin/profile')">
@@ -41,14 +23,14 @@
 
           <a-menu-item key="category" @click="$router.push('/admin/category')">
             <template #icon>
-             <UnorderedListOutlined />
+              <UnorderedListOutlined />
             </template>
             Category
           </a-menu-item>
 
           <a-menu-item key="items" @click="$router.push('/admin/items')">
             <template #icon>
-             <FallOutlined />
+              <FallOutlined />
             </template>
             All item
           </a-menu-item>
@@ -60,60 +42,42 @@
             Banner
           </a-menu-item>
 
-          <a-menu-item
-            key="top_design"
-            @click="$router.push('/admin/top_design')"
-          >
+          <a-menu-item key="top_design" @click="$router.push('/admin/top_design')">
             <template #icon>
               <ClearOutlined />
             </template>
             Top design
           </a-menu-item>
 
-          <a-menu-item
-            key="feature_collection"
-            @click="$router.push('/admin/feature_collection')"
-          >
+          <a-menu-item key="feature_collection" @click="$router.push('/admin/feature_collection')">
             <template #icon>
               <DotChartOutlined />
             </template>
             Feature collection
           </a-menu-item>
 
-          <a-menu-item
-            key="more_top_design"
-            @click="$router.push('/admin/more_top_design')"
-          >
+          <a-menu-item key="more_top_design" @click="$router.push('/admin/more_top_design')">
             <template #icon>
               <ClearOutlined />
             </template>
             More top design
           </a-menu-item>
 
-          <a-menu-item
-            key="editor_pick"
-            @click="$router.push('/admin/editor_pick')"
-          >
+          <a-menu-item key="editor_pick" @click="$router.push('/admin/editor_pick')">
             <template #icon>
               <FireOutlined />
             </template>
             Editor pick
           </a-menu-item>
 
-          <a-menu-item
-            key="live_announce"
-            @click="$router.push('/admin/live_announce')"
-          >
+          <a-menu-item key="live_announce" @click="$router.push('/admin/live_announce')">
             <template #icon>
               <FundOutlined />
             </template>
             Live announce
           </a-menu-item>
 
-          <a-menu-item
-            key="shop_in_person"
-            @click="$router.push('/admin/shop_in_person')"
-          >
+          <a-menu-item key="shop_in_person" @click="$router.push('/admin/shop_in_person')">
             <template #icon>
               <ShopOutlined />
             </template>
@@ -139,20 +103,17 @@
         <a-layout-header :style="headerStyle">
           <a-breadcrumb style="margin: 12px 0px">
             <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
-              <router-link v-if="item.path" :to="item.path"
-                >{{ item.name }}
+              <router-link v-if="item.path" :to="item.path">{{ item.name }}
               </router-link>
               <span v-else>{{ item.name }}</span>
             </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
-        <a-layout-content
-          style="
+        <a-layout-content style="
             overflow-y: hidden;
             overflow: auto;
             max-height: calc(100vh - 120px);
-          "
-        >
+          ">
           <router-view />
         </a-layout-content>
       </a-layout>
@@ -176,6 +137,7 @@ import {
 } from "@ant-design/icons-vue";
 import { computed, type CSSProperties, ref } from "vue";
 import { useRoute } from "vue-router";
+import { getLastNumber } from "../util/util";
 
 const route = useRoute();
 const collapsed = ref(false);
@@ -200,7 +162,7 @@ const activeMenu = computed(() => {
   if (path === "/admin/reports") return "reports";
   if (path === "/admin/settings") return "settings";
   if (path === "/admin/category") return "category";
-  if (path === "/admin/items") return "items";
+  if (path.includes("/admin/items")) return "items";
   if (path === "/admin/banner") return "banner";
   if (path === "/admin/top_design") return "top_design";
   if (path === "/admin/feature_collection") return "feature_collection";
@@ -237,8 +199,12 @@ const breadcrumbs = computed(() => {
     crumbs.push({ name: "Settings" });
   } else if (path === "/admin/category") {
     crumbs.push({ name: "Category" });
-  } else if (path === "/admin/items") {
-    crumbs.push({ name: "Items" });
+  } else if (path.includes("/admin/items")) {
+    const id = getLastNumber(path);
+    crumbs.push({ name: `Items` });
+    if (id) {
+      crumbs.push({ name: `${id}` });
+    }
   } else if (path === "/admin/banner") {
     crumbs.push({ name: "Banner" });
   } else if (path === "/admin/top_design") {
@@ -267,7 +233,7 @@ const headerStyle: CSSProperties = {
   color: "#fff",
   height: "90px",
   backgroundColor: "#fff",
-  justifyContent:"center",
+  justifyContent: "center",
   display: "flex",
   flexDirection: 'column'
 };

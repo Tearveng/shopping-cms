@@ -9,10 +9,22 @@
       @click="handleAdd"
       >Add</a-button
     >
-    <a-table :columns="columns" :data-source="dataSource" size="small" bordered>
+    <!-- :modules="modules" -->
+
+    <a-table
+      :columns="columns"
+      :data-source="dataSource"
+      size="small"
+      bordered
+      style="min-width: 1600px"
+    >
       <template #bodyCell="{ column, text, record }">
         <template
-          v-if="['title', 'subtitle', 'condition'].includes(column.dataIndex)"
+          v-if="
+            ['title', 'subtitle', 'condition'].includes(
+              column.dataIndex
+            )
+          "
         >
           <div>
             <a-input
@@ -25,14 +37,40 @@
             </template>
           </div>
         </template>
-        <template v-else-if="column.dataIndex === 'price'">
+        <template v-if="['size'].includes(column.dataIndex)">
           <div>
-            <a-input
+            <a-button
+              type="link"
               v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-            />
-            <template v-else> $ {{ text }} </template>
+              @click="
+                $router.push({
+                  path: `/admin/items/${record.key}`,
+                  query: { type: 'Size' },
+                })
+              "
+              >Edit size</a-button
+            >
+            <template v-else>
+              {{ text }}
+            </template>
+          </div>
+        </template>
+        <template v-if="['details'].includes(column.dataIndex)">
+          <div>
+            <a-button
+              type="link"
+              v-if="editableData[record.key]"
+              @click="
+                $router.push({
+                  path: `/admin/items/${record.key}`,
+                  query: { type: 'Details' },
+                })
+              "
+              >Edit details</a-button
+            >
+            <template v-else>
+              {{ text }}
+            </template>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_id'">
@@ -155,23 +193,34 @@ import { message, Modal } from "ant-design-vue";
 import { supabase } from "../lib/supabase";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 
 const columns = [
   {
     title: "Title",
     dataIndex: "title",
     // sorter: (a: DataItem, b: DataItem) => a.title.length - b.title.length,
-    width: "15%",
+    width: "10%",
   },
   {
     title: "Subtitle",
     dataIndex: "subtitle",
-    width: "20%",
+    width: "15%",
+  },
+  {
+    title: "Size",
+    dataIndex: "size",
+    width: "8%",
+  },
+  {
+    title: "Details",
+    dataIndex: "details",
+    width: "12%",
   },
   {
     title: "Images",
     dataIndex: "fileList",
-    width: "18%",
+    width: "13%",
   },
   {
     title: "Category",
@@ -186,17 +235,17 @@ const columns = [
   {
     title: "Condition",
     dataIndex: "condition",
-    width: "10%",
+    width: "8%",
   },
   {
     title: "Price",
     dataIndex: "price",
-    width: "8%",
+    width: "5%",
   },
   {
     title: "Operation",
     dataIndex: "operation",
-    width: "15%",
+    width: "20%",
   },
 ];
 
@@ -205,6 +254,8 @@ interface DataItem {
   key: string;
   title: string;
   subtitle: string;
+  size: string;
+  details: string;
   fileList: any[];
   condition: string;
   category_id: string;
@@ -443,6 +494,8 @@ const save = (key: string) => {
       id: plainData.id,
       title: plainData.title,
       subtitle: plainData.subtitle,
+      size: plainData.size,
+      details: plainData.details,
       condition: plainData.condition,
       price: plainData.price,
       user_id: auth.user.id,
@@ -525,6 +578,8 @@ const handleAdd = () => {
       title: "",
       subtitle: "",
       condition: "",
+      size: "",
+      details: "",
       price: 0,
       images: [],
       user_id: auth.user.id,
@@ -540,6 +595,8 @@ const handleAdd = () => {
             key: `${e.id}`,
             title: e.title,
             subtitle: e.subtitle,
+            size: e.size,
+            details: e.details,
             condition: e.condition,
             category_id: null as any,
             parent_key: null as any,
@@ -584,6 +641,8 @@ const fetchAllData = async () => {
         title: i.title,
         subtitle: i.subtitle,
         condition: i.condition,
+        size: i.size,
+        details: i.details,
         category_id: `${i.category_id ?? ""}`,
         parent_key: `${i.parent_key ?? ""}`,
         price: i.price,

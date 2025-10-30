@@ -21,6 +21,7 @@ import ShoppingItems from "../pages/ShoppingItems.vue";
 import ShoppingNewArrivals from "../pages/publish/new-arrivals/ShoppingNewArrivals.vue";
 import HomePageContent from "../pages/publish/HomePageContent.vue";
 import ShoppingItemDetail from "../pages/publish/new-arrivals/detail/ShoppingItemDetail.vue";
+import ShoppingItemEdit from "../pages/shopping-item/ShoppingItemEdit.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -128,6 +129,17 @@ const routes: RouteRecordRaw[] = [
           title: "Item",
           icon: "item",
           breadcrumb: ["Item"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "items/:id",
+        name: "Item by id",
+        component: ShoppingItemEdit,
+        meta: {
+          title: "Item by id",
+          icon: "itemId",
+          breadcrumb: ["ItemId"],
           requiresAuth: true,
         },
       },

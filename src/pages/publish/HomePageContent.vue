@@ -77,7 +77,7 @@
     </a-flex>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ShoppingBanner from './ShoppingBanner.vue';
 import ShoppingEditorPicks from './ShoppingEditorPicks.vue';
 import ShoppingFeatureCollections from './ShoppingFeatureCollections.vue';
