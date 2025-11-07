@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 450px; padding: 20px">
+  <div style="max-width: 550px; padding: 20px">
     <a-typography class="detail-title">{{ route.query.type }}:</a-typography>
 
     <br />

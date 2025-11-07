@@ -51,7 +51,8 @@
               >Edit size</a-button
             >
             <template v-else>
-              {{ text }}
+              <a-typography-text style="font-weight: 600;">>Size</a-typography-text>
+              <!-- <div v-html="text"></div> -->
             </template>
           </div>
         </template>
@@ -69,7 +70,8 @@
               >Edit details</a-button
             >
             <template v-else>
-              {{ text }}
+              <a-typography-text style="font-weight: 600;">>Details</a-typography-text>
+              <!-- <div v-html="text"></div> -->
             </template>
           </div>
         </template>
