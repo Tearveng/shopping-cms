@@ -75,7 +75,7 @@
         <div>
           <a-collapse v-model:activeKey="activeKey" ghost style="margin: 0">
             <a-collapse-panel key="1" header="Details">
-              <div v-html="itemDetail.details" style="line-height: 1"></div>
+              <div v-html="itemDetail.details" style="margin: 0; line-height: inherit; vertical-align: baseline;"></div>
             </a-collapse-panel>
             <a-collapse-panel key="2" header="Size">
               <div style="font-size: 0.9rem; line-height: 1;" v-html="itemDetail.size"></div>

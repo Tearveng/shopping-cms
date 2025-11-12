@@ -14,7 +14,7 @@
 
     <br />
 
-    <a-button> Cancel </a-button>
+    <a-button @click="router.go(-1)"> < Back </a-button>
     <a-button
       type="primary"
       style="margin-left: 10px"
@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   getShoppingAllItemsById,
   storageAllItems,
@@ -42,6 +42,7 @@ import { message } from "ant-design-vue";
 import { useAuthStore } from "../../stores/auth";
 
 const route = useRoute();
+const router = useRouter();
 const auth = useAuthStore();
 
 const itemDetail = ref<ShoppingItemDetail>();

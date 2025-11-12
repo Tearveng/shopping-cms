@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "/:parent_key",
+        path: "collections/:parent_key",
         name: "New Arrivals",
         component: ShoppingNewArrivals,
         meta: {
