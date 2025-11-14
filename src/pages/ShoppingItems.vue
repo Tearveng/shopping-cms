@@ -9,7 +9,6 @@
       @click="handleAdd"
       >Add</a-button
     >
-    <!-- :modules="modules" -->
 
     <a-table
       :columns="columns"
@@ -52,7 +51,6 @@
             >
             <template v-else>
               <a-typography-text style="font-weight: 600;">>Size</a-typography-text>
-              <!-- <div v-html="text"></div> -->
             </template>
           </div>
         </template>
@@ -71,7 +69,6 @@
             >
             <template v-else>
               <a-typography-text style="font-weight: 600;">>Details</a-typography-text>
-              <!-- <div v-html="text"></div> -->
             </template>
           </div>
         </template>
