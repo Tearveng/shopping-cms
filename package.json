@@ -29,6 +29,7 @@
     "@motionone/vue": "^10.16.4",
     "@supabase/supabase-js": "^2.50.0",
     "@vorms/core": "^1.1.0",
+    "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^13.5.0",
     "@vueuse/head": "^2.0.0",
     "ant-design-vue": "^4.2.6",

@@ -28,12 +28,29 @@
             class="dynamic-delete-button"
             @click="removeBanner(designer)"
           />
-          <a-input
-            name="designer.alias"
-            v-model:value="designer.title"
-            placeholder="Title"
-            style="width: 100%; margin-right: 8px"
-          />
+          <a-select
+            :ref="select"
+            :value="designer.title"
+            style="width: 120px"
+            @change="
+              handleChangeSelect({
+                key: designer.key,
+                value: $event,
+                extra: { id: designer.id },
+              })
+            "
+          >
+            <a-select-option
+              v-for="category in [
+                ...new Map(
+                  options?.map((option) => [option.title, option])
+                ).values(),
+              ]"
+              :key="category.key"
+              :value="category.title"
+              >{{ category.title }}</a-select-option
+            >
+          </a-select>
         </a-flex>
       </a-form-item>
       <a-form-item :name="['designers', index, 'fileList']">
@@ -101,6 +118,8 @@ import {
 } from "../services/TopDesignersService";
 import { getImageUrl } from "../services/BannerService";
 import { useAuthStore } from "../stores/auth";
+import type { SelectProps } from "ant-design-vue/es/vc-select";
+import { getShoppingCategoryPublic } from "../services/CategoryService";
 
 export interface ShoppingTopDesigners {
   id: number | null;
@@ -113,10 +132,12 @@ const auth = useAuthStore();
 const refreshKey = ref(0);
 const formRef = ref<FormInstance>();
 // const fileList = ref<UploadProps['fileList']>([])
+const select = ref();
 const isLoading = ref(false);
 const previewVisible = ref(false);
 const previewImage = ref("");
 const previewTitle = ref("");
+const options = ref<SelectProps["options"]>([]);
 const [modal, contextHolder] = Modal.useModal();
 const formItemLayout = {
   labelCol: {
@@ -148,6 +169,15 @@ function getBase64(file: File) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+// Category select change
+const handleChangeSelect = (param: any) => {
+  const temp = [...dynamicValidateForm.designers];
+  console.log("param.extra.id",temp)
+  const findById = temp.findIndex(s => Number(s.id) === Number(param.extra.id));
+  temp[findById].title = param.value
+  dynamicValidateForm.designers = temp
+};
 
 // Validate file before upload
 const beforeUpload = (file: any) => {
@@ -454,6 +484,23 @@ const fetchAllData = async () => {
   }
 };
 
+const fetchAllCategories = async () => {
+  if (auth.user) {
+    const categories = await getShoppingCategoryPublic();
+    for (const i of categories) {
+      const pre = {
+        id: `${i.id}`,
+        key: `${i.id}`,
+        title: i.title,
+        parent_category: i.parent_category,
+      };
+      options.value?.push(pre);
+
+      // dynamicValidateForm.editors.push(pre);
+    }
+  }
+};
+
 watch(refreshKey, () => {
   dynamicValidateForm.designers = [];
   fetchAllData();
@@ -461,6 +508,7 @@ watch(refreshKey, () => {
 
 onMounted(async () => {
   await fetchAllData();
+  await fetchAllCategories();
 });
 </script>
 <style scoped>

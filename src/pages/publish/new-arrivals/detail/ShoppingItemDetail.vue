@@ -75,10 +75,10 @@
         <div>
           <a-collapse v-model:activeKey="activeKey" ghost style="margin: 0">
             <a-collapse-panel key="1" header="Details">
-              <p>{{ text }}</p>
+              <div v-html="itemDetail.details" style="margin: 0; line-height: inherit; vertical-align: baseline;"></div>
             </a-collapse-panel>
             <a-collapse-panel key="2" header="Size">
-              <p style="font-size: 0.9rem">{{ text }}</p>
+              <div style="font-size: 0.9rem; line-height: 1;" v-html="itemDetail.size"></div>
             </a-collapse-panel>
             <a-collapse-panel key="3" header="Description">
               <p style="font-size: 0.9rem">{{ text }}</p>
@@ -135,6 +135,8 @@ onMounted(async () => {
         key: new Date(`${item.created_at}`).getTime(),
         title: item.title,
         subtitle: item.subtitle,
+        size: item.size,
+        details: item.details,
         condition: item.condition,
         price: item.price,
         fileList: imagesList,

@@ -21,6 +21,7 @@ import ShoppingProfile from "../pages/ShoppingProfile.vue";
 import ShoppingShopInPerson from "../pages/ShoppingShopInPerson.vue";
 import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
 import { useAuthStore } from "../stores/auth";
+import ShoppingItemEdit from "../pages/shopping-item/ShoppingItemEdit.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -52,7 +53,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "/:parent_key",
+        path: "collections/:parent_key",
         name: "New Arrivals",
         component: ShoppingNewArrivals,
         meta: {
@@ -128,6 +129,17 @@ const routes: RouteRecordRaw[] = [
           title: "Item",
           icon: "item",
           breadcrumb: ["Item"],
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "items/:id",
+        name: "Item by id",
+        component: ShoppingItemEdit,
+        meta: {
+          title: "Item by id",
+          icon: "itemId",
+          breadcrumb: ["ItemId"],
           requiresAuth: true,
         },
       },

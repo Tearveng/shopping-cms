@@ -4,11 +4,13 @@
 
     <a-row :gutter="[24, 24]">
       <a-col
+        style="cursor: pointer;"
         :span="6"
         :xs="12"
         :sm="6"
         v-for="topDesign in dynamicValidateForm.topDesign"
         :key="topDesign.key"
+        @click="console.log('asdasd')"
       >
         <a-image
           :src="topDesign.fileList[0].thumbUrl"

@@ -4,6 +4,8 @@ export interface ShoppingAllItems {
   title: string;
   parent_key: string;
   subtitle: string;
+  size: string;
+  details: string;
   condition: string;
   price: number;
   fileList: any[];

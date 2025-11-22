@@ -3,109 +3,92 @@
     <a-typography-text>Shopping categories - 350 x 350 px</a-typography-text>
     <br />
     <br />
-    <a-button
-      class="editable-add-btn"
-      style="margin-bottom: 8px"
-      @click="handleAdd"
-      >Add</a-button
-    >
-    <a-table :columns="columns" :data-source="dataSource" size="small" bordered>
+    <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
+    <!-- :modules="modules" -->
+
+    <a-table :columns="columns" :data-source="dataSource" size="small" bordered style="min-width: 1600px">
       <template #bodyCell="{ column, text, record }">
-        <template
-          v-if="['title', 'subtitle', 'condition'].includes(column.dataIndex)"
-        >
+        <template v-if="
+          ['title', 'subtitle', 'condition', 'price'].includes(
+            column.dataIndex
+          )
+        ">
           <div>
-            <a-input
-              v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-            />
+            <a-input v-if="editableData[record.key]" v-model:value="editableData[record.key][column.dataIndex]"
+              style="margin: -5px 0" />
             <template v-else>
               {{ text }}
             </template>
           </div>
         </template>
-        <template v-else-if="column.dataIndex === 'price'">
+        <template v-if="['size'].includes(column.dataIndex)">
           <div>
-            <a-input
-              v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-            />
-            <template v-else> $ {{ text }} </template>
+            <a-button type="link" v-if="editableData[record.key]" @click="
+              $router.push({
+                path: `/admin/items/${record.key}`,
+                query: { type: 'Size' },
+              })
+              ">Edit size</a-button>
+            <template v-else>
+              <a-typography-text style="font-weight: 600">>Size</a-typography-text>
+              <!-- <div v-html="text"></div> -->
+            </template>
+          </div>
+        </template>
+        <template v-if="['details'].includes(column.dataIndex)">
+          <div>
+            <a-button type="link" v-if="editableData[record.key]" @click="
+              $router.push({
+                path: `/admin/items/${record.key}`,
+                query: { type: 'Details' },
+              })
+              ">Edit details</a-button>
+            <template v-else>
+              <a-typography-text style="font-weight: 600">>Details</a-typography-text>
+              <!-- <div v-html="text"></div> -->
+            </template>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_id'">
           <div>
-            <a-select
-              :disabled="!record.parent_key"
-              :ref="select"
-              :value="text"
-              style="width: 120px"
-              @change="
-                handleChangeSelect({
-                  key: record.key,
-                  value: $event,
-                  extra: { id: record.key },
-                })
-              "
-            >
-              <a-select-option
-                v-for="category in options?.filter(
-                  (o) => o.parent_category === record.parent_key
-                )"
-                :key="category.key"
-                :value="category.id.toString()"
-                >{{ category.title }}</a-select-option
-              >
+            <a-select :disabled="!record.parent_key" :ref="select" :value="text" style="width: 120px" @change="
+              handleChangeSelect({
+                key: record.key,
+                value: $event,
+                extra: { id: record.key },
+              })
+              ">
+              <a-select-option v-for="category in options?.filter(
+                (o) => o.parent_category === record.parent_key
+              )" :key="category.key" :value="category.id.toString()">{{ category.title }}</a-select-option>
             </a-select>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_group'">
           <div>
-            <a-select
-              :ref="select"
-              :value="record.parent_key"
-              style="width: 120px"
-              @change="
-                handleChangeSelectGroup({
-                  key: record.key,
-                  value: $event,
-                  extra: { id: record.key },
-                })
-              "
-            >
-              <a-select-option
-                v-for="group in optionsGroup"
-                :key="group.key"
-                :value="group.parent_category"
-                >{{ group.parent_category }}</a-select-option
-              >
+            <a-select :ref="select" :value="record.parent_key" style="width: 120px" @change="
+              handleChangeSelectGroup({
+                key: record.key,
+                value: $event,
+                extra: { id: record.key },
+              })
+              ">
+              <a-select-option v-for="group in optionsGroup" :key="group.key" :value="group.parent_category">{{
+                group.parent_category }}</a-select-option>
             </a-select>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'fileList'">
           <div>
-            <a-upload
-              ref="uploadRef"
-              v-model:file-list="record.fileList"
-              :before-upload="beforeUpload"
-              :remove="handleRemove(record.id)"
-              :custom-request="customUpload({ row: record })"
-              list-type="picture-card"
-              @preview="handlePreview"
-            >
+            <a-upload ref="uploadRef" v-model:file-list="record.fileList" :before-upload="beforeUpload"
+              :remove="handleRemove(record.id)" :custom-request="customUpload({ row: record })" list-type="picture-card"
+              @preview="handlePreview">
               <div>
                 <PlusOutlined />
                 <div style="margin-top: 2px">Upload</div>
               </div>
             </a-upload>
-            <a-modal
-              :open="previewVisible"
-              :title="previewTitle"
-              :footer="null"
-              @cancel="handleCancel"
-            >
+            <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -113,19 +96,22 @@
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="editable-row-operations">
             <span v-if="editableData[record.key]">
-              <a-typography-link @click="save(record.key)"
-                >Save</a-typography-link
-              >
-              <a-popconfirm
-                title="Sure to cancel?"
-                @confirm="cancel(record.key)"
-              >
+              <a-typography-link @click="save(record.key)">Save</a-typography-link>
+              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
                 <a>Cancel</a>
               </a-popconfirm>
             </span>
             <span v-else>
               <a-flex>
-                <a @click="edit(record.key)">Edit</a>
+                <a :style="{ color: handleBlockEditButton(record) ? 'grey' : '', cursor: handleBlockEditButton(record) ? 'not-allowed' : 'pointer' }"
+                  @click="
+                    () => {
+                      if (handleBlockEditButton(record)) {
+                        return;
+                      }
+                      edit(record.key);
+                    }
+                  ">Edit</a>
                 <a @click="deleteRecord(record.id, record.key)">Delete</a>
               </a-flex>
             </span>
@@ -138,6 +124,7 @@
 </template>
 <script lang="ts" setup>
 import { PlusOutlined } from "@ant-design/icons-vue";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 import { message, Modal } from "ant-design-vue";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
 import { cloneDeep } from "lodash-es";
@@ -161,17 +148,27 @@ const columns = [
     title: "Title",
     dataIndex: "title",
     // sorter: (a: DataItem, b: DataItem) => a.title.length - b.title.length,
-    width: "15%",
+    width: "10%",
   },
   {
     title: "Subtitle",
     dataIndex: "subtitle",
-    width: "20%",
+    width: "10%",
+  },
+  {
+    title: "Size",
+    dataIndex: "size",
+    width: "8%",
+  },
+  {
+    title: "Details",
+    dataIndex: "details",
+    width: "12%",
   },
   {
     title: "Images",
     dataIndex: "fileList",
-    width: "18%",
+    width: "20%",
   },
   {
     title: "Category",
@@ -186,17 +183,17 @@ const columns = [
   {
     title: "Condition",
     dataIndex: "condition",
-    width: "10%",
+    width: "8%",
   },
   {
     title: "Price",
     dataIndex: "price",
-    width: "8%",
+    width: "5%",
   },
   {
     title: "Operation",
     dataIndex: "operation",
-    width: "15%",
+    width: "20%",
   },
 ];
 
@@ -205,6 +202,8 @@ interface DataItem {
   key: string;
   title: string;
   subtitle: string;
+  size: string;
+  details: string;
   fileList: any[];
   condition: string;
   category_id: string;
@@ -236,12 +235,16 @@ function getBase64(file: File) {
   });
 }
 
+const handleBlockEditButton = (record: any) => {
+  return !record.parent_key || !record.category_id
+}
+
 // Category select change
 const handleChangeSelect = (param: any) => {
   saveCategory(param.value, param.extra.id);
 };
 
-// 
+//
 const handleChangeSelectGroup = (param: any) => {
   saveCategoryGroup(param.value, param.extra.id);
 };
@@ -443,6 +446,8 @@ const save = (key: string) => {
       id: plainData.id,
       title: plainData.title,
       subtitle: plainData.subtitle,
+      size: plainData.size,
+      details: plainData.details,
       condition: plainData.condition,
       price: plainData.price,
       user_id: auth.user.id,
@@ -494,10 +499,12 @@ const saveCategoryGroup = (k: string, keyId: string) => {
   const { fileList, key, ...rest } = dataSource.value.filter(
     (item) => keyId === item.key
   )[0];
+  console.log("k", k);
   if (auth.user) {
     const newData = {
       ...rest,
       user_id: auth.user.id,
+      category_id: null as any,
       parent_key: k,
     } as IShoppingAllItems;
     try {
@@ -525,6 +532,8 @@ const handleAdd = () => {
       title: "",
       subtitle: "",
       condition: "",
+      size: "",
+      details: "",
       price: 0,
       images: [],
       user_id: auth.user.id,
@@ -540,6 +549,8 @@ const handleAdd = () => {
             key: `${e.id}`,
             title: e.title,
             subtitle: e.subtitle,
+            size: e.size,
+            details: e.details,
             condition: e.condition,
             category_id: null as any,
             parent_key: null as any,
@@ -584,6 +595,8 @@ const fetchAllData = async () => {
         title: i.title,
         subtitle: i.subtitle,
         condition: i.condition,
+        size: i.size,
+        details: i.details,
         category_id: `${i.category_id ?? ""}`,
         parent_key: `${i.parent_key ?? ""}`,
         price: i.price,
@@ -641,14 +654,18 @@ watch(uploadedFiles, (newVal) => {
 .editable-row-operations a {
   margin-right: 8px;
 }
+
 :deep(.ant-upload-list-item-container) {
   max-width: 50px;
 }
+
 /* Override Ant Design's default picture card size */
 :deep(.ant-upload.ant-upload-select-picture-card),
 :deep(.ant-upload-list-picture-card .ant-upload-list-item) {
-  width: 50px !important; /* Your custom width */
-  height: 50px !important; /* Your custom height */
+  width: 50px !important;
+  /* Your custom width */
+  height: 50px !important;
+  /* Your custom height */
   font-size: 10px;
 }
 

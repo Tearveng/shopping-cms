@@ -16,25 +16,25 @@
         :selectedKeys="[current]"
         @click="handleMenuClick"
       >
-        <a-menu-item key="home" @click="$router.push('/new-arrivals')">
+        <a-menu-item key="home" @click="$router.push('/collections/new-arrivals')">
           New arrivals
         </a-menu-item>
-        <a-menu-item key="products" @click="$router.push('/designers')">
+        <a-menu-item key="products" @click="$router.push('/collections/designers')">
           Designers
         </a-menu-item>
-        <a-menu-item key="bags" @click="$router.push('/bags')">
+        <a-menu-item key="bags" @click="$router.push('/collections/bags')">
           Bags
         </a-menu-item>
-        <a-menu-item key="accessories" @click="$router.push('/accessories')">
+        <a-menu-item key="accessories" @click="$router.push('/collections/accessories')">
           Accessories
         </a-menu-item>
-        <a-menu-item key="shoes" @click="$router.push('/shoes')">
+        <a-menu-item key="shoes" @click="$router.push('/collections/shoes')">
           Shoes
         </a-menu-item>
-        <a-menu-item key="jewelry" @click="$router.push('/jewelry')">
+        <a-menu-item key="jewelry" @click="$router.push('/collections/jewelry')">
           Jewelry
         </a-menu-item>
-        <a-menu-item key="watches" @click="$router.push('/watches')">
+        <a-menu-item key="watches" @click="$router.push('/collections/watches')">
           Watches
         </a-menu-item>
       </a-menu>
@@ -64,7 +64,7 @@
           :selectedKeys="[current]"
           @click="handleMenuClick"
         >
-          <a-menu-item key="home" @click="$router.push('/new-arrivals')">
+          <a-menu-item key="home" @click="$router.push('/collections/new-arrivals')">
              <template #icon>
               <img
                 src="/shopping-arrival.svg"
@@ -75,7 +75,7 @@
             </template>
             New arrivals
           </a-menu-item>
-          <a-menu-item key="products" @click="$router.push('/designers')">
+          <a-menu-item key="products" @click="$router.push('/collections/designers')">
             <template #icon>
               <img
                 src="/shopping-design.svg"
@@ -86,7 +86,7 @@
             </template>
             Designers
           </a-menu-item>
-          <a-menu-item key="bags" @click="$router.push('/bags')">
+          <a-menu-item key="bags" @click="$router.push('/collections/bags')">
             <template #icon>
               <img
                 src="/shopping-bag.svg"
@@ -97,7 +97,7 @@
             </template>
             Bags
           </a-menu-item>
-          <a-menu-item key="accessories" @click="$router.push('/accessories')">
+          <a-menu-item key="accessories" @click="$router.push('/collections/accessories')">
              <template #icon>
               <img
                 src="/shopping-accessories.svg"
@@ -108,7 +108,7 @@
             </template>
             Accessories
           </a-menu-item>
-          <a-menu-item key="shoes" @click="$router.push('/shoes')">
+          <a-menu-item key="shoes" @click="$router.push('/collections/shoes')">
              <template #icon>
               <img
                 src="/shopping-shoes.svg"
@@ -119,7 +119,7 @@
             </template>
             Shoes
           </a-menu-item>
-          <a-menu-item key="jewelry" @click="$router.push('/jewelry')">
+          <a-menu-item key="jewelry" @click="$router.push('/collections/jewelry')">
              <template #icon>
               <img
                 src="/shopping-jewelry.svg"
@@ -130,7 +130,7 @@
             </template>
             Jewelry
           </a-menu-item>
-          <a-menu-item key="watches" @click="$router.push('/watches')">
+          <a-menu-item key="watches" @click="$router.push('/collections/watches')">
              <template #icon>
               <img
                 src="/shopping-watches.svg"
