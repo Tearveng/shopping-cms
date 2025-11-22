@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 20px">
-    <a-typography-text>Shopping categories</a-typography-text>
+    <a-typography-text>Shopping categories - 350 x 350 px</a-typography-text>
     <br />
     <br />
     <a-button
@@ -137,9 +137,12 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { PlusOutlined } from "@ant-design/icons-vue";
+import { message, Modal } from "ant-design-vue";
+import type { SelectProps } from "ant-design-vue/es/vc-select";
 import { cloneDeep } from "lodash-es";
 import { onMounted, reactive, ref, watch } from "vue";
-import { PlusOutlined } from "@ant-design/icons-vue";
+import { supabase } from "../lib/supabase";
 import {
   deleteShoppingAllItems,
   getShoppingAllItems,
@@ -149,12 +152,9 @@ import {
   updateShoppingAllItems,
   type IShoppingAllItems,
 } from "../services/AllItemsService";
-import { useAuthStore } from "../stores/auth";
 import { getImageUrl } from "../services/BannerService";
-import { message, Modal } from "ant-design-vue";
-import { supabase } from "../lib/supabase";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
-import type { SelectProps } from "ant-design-vue/es/vc-select";
+import { useAuthStore } from "../stores/auth";
 
 const columns = [
   {
@@ -241,7 +241,7 @@ const handleChangeSelect = (param: any) => {
   saveCategory(param.value, param.extra.id);
 };
 
-//
+// 
 const handleChangeSelectGroup = (param: any) => {
   saveCategoryGroup(param.value, param.extra.id);
 };

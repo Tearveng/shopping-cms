@@ -3,52 +3,33 @@
     <a-flex class="title-category">
       <a-typography-text class="title-text">{{
         parent_key.toString().toUpperCase().replace("-", " ")
-      }}</a-typography-text>
+        }}</a-typography-text>
     </a-flex>
 
-    <a-flex style="width: 100%">
+    <a-flex style="width: 100%" :vertical="isMobile">
       <a-flex class="filter-category" vertical>
         <!-- filter header -->
-        <a-flex
-          style="
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-          "
-        >
-          <a-typography-text
-            style="font-size: 1.1rem; line-height: 1.7em; font-weight: 500"
-            >Filter</a-typography-text
-          >
-          <a-typography-text
-            style="font-size: 0.9rem; line-height: 1.7em; font-weight: 200"
-            >{{
-              filterCount > 0 ? filterCount : totalItem
-            }}
-            items</a-typography-text
-          >
+        <a-flex style="justify-content: space-between; align-items: center; width: 100%" v-if="!isMobile">
+          <a-typography-text style="font-size: 1.1rem; line-height: 1.7em; font-weight: 500">Filter</a-typography-text>
+          <a-typography-text style="font-size: 0.9rem; line-height: 1.7em; font-weight: 200">{{ filterCount > 0 ?
+            filterCount : totalItem }} items</a-typography-text>
         </a-flex>
-        <ShoppingFilterDesigners
-          @option-change="handleOptionChange"
-          :parent_key="parent_key"
-          :isMobile="isMobile"
-        />
+        <a-flex v-else style="align-items: center; cursor: pointer; justify-content: flex-end">
+          <a-button @click="showFilter" type="ghost"
+            :icon="h(visible ? FilterFilled : FilterOutlined)">Filter</a-button>
+        </a-flex>
+        <div :style="{
+          visibility: visible || !isMobile ? 'visible' : 'hidden',
+          height: visible ? 'auto' : 0
+        }">
+          <ShoppingFilterDesigners @option-change="handleOptionChange" :parent_key="parent_key" />
+        </div>
       </a-flex>
 
       <!-- sort by header -->
       <a-flex class="items-category" vertical>
-        <a-flex
-          v-if="!isMobile"
-          style="
-            align-items: center;
-            justify-content: flex-end;
-            cursor: pointer;
-          "
-        >
-          <a-typography-text
-            style="font-size: 15px; font-weight: 200; padding-right: 8px"
-            >Sort by</a-typography-text
-          >
+        <a-flex v-if="!isMobile" style="align-items: center; justify-content: flex-end; cursor: pointer">
+          <a-typography-text style="font-size: 15px; font-weight: 200; padding-right: 8px">Sort by</a-typography-text>
           <a-select ref="select" value="jack" style="width: 200px">
             <a-select-option value="jack">Newest</a-select-option>
             <a-select-option value="lucy">Oldest</a-select-option>
@@ -57,51 +38,19 @@
             <a-select-option value="a">Recently Marked Down</a-select-option>
           </a-select>
         </a-flex>
-        <a-flex
-          v-else
-          style="
-            align-items: center;
-            cursor: pointer;
-            justify-content: flex-end;
-          "
-        >
-          <a-button
-            @click="showFilter"
-            type="ghost"
-            :icon="h(visible ? FilterFilled : FilterOutlined)"
-            >Filter</a-button
-          >
-        </a-flex>
-        <div
-          :style="{
-            visibility: visible && isMobile ? 'visible' : 'hidden',
-            height: visible && isMobile ? 'auto' : 0,
-          }"
-        >
-          <ShoppingFilterDesigners
-            @option-change="handleOptionChange"
-            :parent_key="parent_key"
-            :isMobile="isMobile"
-          />
-        </div>
         <br />
-        <ShoppingAllItems
-          :filter="currentFilter"
-          :parent_key="parent_key"
-          @filter-count="handleFilterCount"
-        />
+        <ShoppingAllItems :filter="currentFilter" :parent_key="parent_key" @filter-count="handleFilterCount" />
       </a-flex>
     </a-flex>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { FilterFilled, FilterOutlined } from "@ant-design/icons-vue";
 import { h, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { FilterOutlined, FilterFilled } from "@ant-design/icons-vue";
+import { useRoute } from "vue-router";
 import ShoppingFilterDesigners from "./filters/ShoppingFilterDesigners.vue";
 import ShoppingAllItems from "./items/ShoppingAllItems.vue";
-import { useRoute } from "vue-router";
-// import { resetAllChecks } from "../../../util/util";
 
 const route = useRoute();
 
@@ -159,6 +108,7 @@ onBeforeUnmount(() => {
 
 .items-category {
   flex-grow: 1;
+  min-height: 800px;
   justify-content: flex-start;
 }
 
@@ -179,17 +129,12 @@ onBeforeUnmount(() => {
   padding: 32px 24px;
 }
 
-@media (max-width: 768px) {
-  .filter-category {
-    display: none;
-  }
-}
-
 @media (max-width: 575px) {
   .title-category {
     justify-content: start;
     padding: 16px 0px 32px 0px;
   }
+
   .title-text {
     font-size: 1.5rem;
     font-weight: 600;

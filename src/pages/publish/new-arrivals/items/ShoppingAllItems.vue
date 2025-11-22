@@ -112,12 +112,12 @@ const error = ref<string | null>(null);
 const props = defineProps({
   filter: {
     type: Object as PropType<{ [k: string]: string }>,
-    require: true,
+    required: true,
     default: () => ({}),
   },
   parent_key: {
     type: String,
-    require: true,
+    required: true,
     default: [],
   },
 });
@@ -139,15 +139,16 @@ watch(
   () => props.parent_key,
   () => {
     parent_key_ref.value = [props.parent_key];
+    category_ids_ref.value = [];
   }
 );
 
 watch(
   [category_ids_ref, parent_key_ref],
   async () => {
-    return await fetchData();
+    await fetchData();
   },
-  { deep: true }
+  // { immediate: true }
 );
 
 function processNestedArray(array: any[]): void {

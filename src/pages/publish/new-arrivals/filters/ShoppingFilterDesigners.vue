@@ -81,8 +81,8 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from "vue";
-import { getCountsCategory } from "../../../../services/CategoryService";
 import { useRoute } from "vue-router";
+import { getCountsCategory } from "../../../../services/CategoryService";
 import type {
   ShoppingCategory,
   ShoppingParentKey,
@@ -117,11 +117,8 @@ const props = defineProps({
     type: String,
     require: true,
     default: [],
-  },
-  isMobile: {
-    type: Boolean,
-    required: true,
-  },
+  }
+ 
 });
 
 const headerLabel = (key: any) => {
@@ -196,14 +193,6 @@ watch(
   () => props.parent_key,
   () => {
     resetAllChecks(parentCategories)
-  }
-);
-
-watch(
-  () => props.isMobile,
-  () => {
-    resetAllChecks(parentCategories);
-    omitFilterData()
   }
 );
 
