@@ -4,7 +4,6 @@
     <br />
     <br />
     <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
-    <!-- :modules="modules" -->
 
     <a-table :columns="columns" :data-source="dataSource" size="small" bordered style="min-width: 1600px">
       <template #bodyCell="{ column, text, record }">
@@ -31,7 +30,6 @@
               ">Edit size</a-button>
             <template v-else>
               <a-typography-text style="font-weight: 600">>Size</a-typography-text>
-              <!-- <div v-html="text"></div> -->
             </template>
           </div>
         </template>
@@ -45,7 +43,6 @@
               ">Edit details</a-button>
             <template v-else>
               <a-typography-text style="font-weight: 600">>Details</a-typography-text>
-              <!-- <div v-html="text"></div> -->
             </template>
           </div>
         </template>
@@ -93,6 +90,7 @@
             </a-modal>
           </div>
         </template>
+
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="editable-row-operations">
             <span v-if="editableData[record.key]">
@@ -103,8 +101,12 @@
             </span>
             <span v-else>
               <a-flex>
-                <a :style="{ color: handleBlockEditButton(record) ? 'grey' : '', cursor: handleBlockEditButton(record) ? 'not-allowed' : 'pointer' }"
-                  @click="
+                <a :style="{
+                  color: handleBlockEditButton(record) ? 'grey' : '',
+                  cursor: handleBlockEditButton(record)
+                    ? 'not-allowed'
+                    : 'pointer',
+                }" @click="
                     () => {
                       if (handleBlockEditButton(record)) {
                         return;
@@ -112,7 +114,18 @@
                       edit(record.key);
                     }
                   ">Edit</a>
-                <a @click="deleteRecord(record.id, record.key)">Delete</a>
+                <a :style="{
+                  color: record.fileList.length > 0 ? 'grey' : '',
+                  cursor:
+                    record.fileList.length > 0 ? 'not-allowed' : 'pointer',
+                }" @click="
+                    () => {
+                      if (record.fileList.length > 0) {
+                        return;
+                      }
+                      deleteRecord(record.id, record.key);
+                    }
+                  ">Delete</a>
               </a-flex>
             </span>
           </div>
@@ -236,8 +249,8 @@ function getBase64(file: File) {
 }
 
 const handleBlockEditButton = (record: any) => {
-  return !record.parent_key || !record.category_id
-}
+  return !record.parent_key || !record.category_id;
+};
 
 // Category select change
 const handleChangeSelect = (param: any) => {
