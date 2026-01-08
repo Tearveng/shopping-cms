@@ -141,19 +141,6 @@
             </template>
             Watches
           </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
-            Shoes
-          </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
-            Jewelry
-          </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
-            Watches
-          </a-menu-item>
-
         </a-menu>
       </a-drawer>
     </div>
