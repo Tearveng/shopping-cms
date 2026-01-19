@@ -1,6 +1,6 @@
 <template>
   <a-flex class="container" vertical>
-    <a-typography class="responsive-text">Editor's picks</a-typography>
+    <a-typography class="responsive-text">Premium picks</a-typography>
     <div class="carousel__wrapper">
       <Carousel v-bind="config" ref="carouselRef">
         <Slide v-for="product in productCategories" :key="product.key">
@@ -19,6 +19,7 @@
               :height="'auto'"
               :preview="false"
             />
+            <br />
             <a-typography
               style="
                 text-align: center;
