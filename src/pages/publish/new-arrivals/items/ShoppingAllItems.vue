@@ -33,7 +33,7 @@
         @click="$router.push(`/p/${item.title.replace(' ', '-')}-${item.id}`)"
       >
         <a-image
-          style="max-width: 271px"
+          style="max-width: 271px; padding: 12px 0"
           :src="item.fileList[0]?.thumbUrl"
           :height="'auto'"
           :preview="false"

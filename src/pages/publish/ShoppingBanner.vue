@@ -9,6 +9,7 @@
       class="banner-image"
       :src="banner.fileList[0].thumbUrl"
       alt="banner-image"
+      loading="lazy"
     />
 
     <a-flex class="content-banner" vertical>
@@ -37,12 +38,14 @@
       </a-flex>
       <a-flex style="padding: 24px 0" gap="20" class="group-button">
         <a-button
+          @click="$router.push('/collections/new-arrivals')"
           type="primary"
           style="
+            background: linear-gradient(90deg, #674d20 0%, #c5a362 100%);
             min-width: 13.4rem;
             min-height: 3.3rem;
             border-radius: 0;
-            background-color: #000;
+            /* background-color: #000; */
             color: #fff;
             font-weight: 400;
             font-size: 1rem;
@@ -51,12 +54,14 @@
           >Shop Trending's collection</a-button
         >
         <a-button
+          @click="$router.push('/collections/new-arrivals')"
           type="primary"
           style="
+            background: linear-gradient(90deg, #674d20 0%, #c5a362 100%);
             min-width: 13.4rem;
             min-height: 3.3rem;
             border-radius: 0;
-            background-color: #000;
+            /* background-color: #000; */
             color: #fff;
             font-weight: 400;
             font-size: 1rem;
@@ -98,6 +103,10 @@
 }
 
 @media (max-width: 575px) {
+  .banner-image {
+    filter: blur(5px);
+    opacity: 0.5;
+  }
   .content-banner {
     padding: 0 1rem;
   }

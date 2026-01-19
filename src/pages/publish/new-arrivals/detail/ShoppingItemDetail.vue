@@ -4,7 +4,7 @@
       width: 100%;
       max-width: 1280px;
       padding: 0 2rem;
-      background-color: #fff;
+      background-color: inherit;
     "
   >
     <a-breadcrumb style="justify-content: flex-start; font-size: smaller">
@@ -48,7 +48,7 @@
               min-height: 2.8rem;
               border-radius: 0;
               border: 1px solid #000;
-              background-color: #fff;
+              background-color: inherit;
               color: #000;
               font-weight: 400;
               font-size: 0.9rem;
@@ -62,7 +62,7 @@
               min-width: 13.4rem;
               min-height: 2.8rem;
               border-radius: 0;
-              background-color: #000;
+              background: linear-gradient(90deg, #674d20 0%, #c5a362 100%);
               color: #fff;
               font-weight: 400;
               font-size: 0.9rem;
@@ -95,14 +95,14 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import ShoppingCarousel from "./ShoppingCarousel.vue";
 import {
   getShoppingAllItemsById,
   storageAllItems,
 } from "../../../../services/AllItemsService";
-import { getLastNumber } from "../../../../util/util";
 import { getImageUrl } from "../../../../services/BannerService";
 import type { ShoppingItemDetail } from "../../../../types/ShoppingItemDetail";
+import { getLastNumber } from "../../../../util/util";
+import ShoppingCarousel from "./ShoppingCarousel.vue";
 
 const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
 const route = useRoute();

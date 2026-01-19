@@ -53,6 +53,7 @@
         </a>
       </a-flex>
       <a-drawer
+        style="background-color: #f3efeb;"
         title="Menu"
         placement="left"
         :closable="true"
@@ -60,6 +61,7 @@
         @close="onClose"
       >
         <a-menu
+          style="background-color: #f3efeb;"
           mode="vertical"
           :selectedKeys="[current]"
           @click="handleMenuClick"
@@ -141,19 +143,6 @@
             </template>
             Watches
           </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
-            Shoes
-          </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
-            Jewelry
-          </a-menu-item>
-          <a-menu-item key="contact">
-            <template #icon>-</template>
-            Watches
-          </a-menu-item>
-
         </a-menu>
       </a-drawer>
     </div>
@@ -161,10 +150,10 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
 import {
   MenuOutlined,
 } from "@ant-design/icons-vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -228,6 +217,7 @@ onBeforeUnmount(() => {
   overflow-x: auto;
   overflow-y: hidden;
   flex-wrap: nowrap;
+  background-color: #f3efeb;
 }
 
 .mobile-menu {
@@ -239,6 +229,12 @@ onBeforeUnmount(() => {
 :deep(.desktop-menu .ant-menu-item-selected) {
   color: #000 !important;
   font-weight: 400 !important;
+  background-color: inherit !important;
+}
+
+:deep(.ant-menu-item-selected) {
+  color: #000 !important;
+  background-color: #e8dcd2 !important;
 }
 
 /* Custom styles for menu items */

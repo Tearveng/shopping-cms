@@ -7,6 +7,7 @@
       v-bind="galleryConfig"
       v-model="currentSlide"
       slideEffect="fade"
+      style="background: #f3efeb;"
     >
       <Slide v-for="image in props.itemDetail.fileList" :key="image.id">
         <img :src="image.url" :alt="image.name" class="gallery-image" />
@@ -39,9 +40,9 @@
 </template>
 
 <script lang="ts" setup>
-import "vue3-carousel/carousel.css";
-import { Carousel, Slide, Navigation } from "vue3-carousel";
 import { ref, type PropType } from "vue";
+import { Carousel, Navigation, Slide } from "vue3-carousel";
+import "vue3-carousel/carousel.css";
 import type { ShoppingItemDetail } from "../../../../types/ShoppingItemDetail";
 
 const currentSlide = ref(0);
