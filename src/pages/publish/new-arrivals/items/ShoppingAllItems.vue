@@ -101,6 +101,7 @@ import {
 } from "../../../../services/AllItemsService";
 import { getImageUrl } from "../../../../services/BannerService";
 import type { ShoppingAllItems } from "../../../../types/ShoppingAllItems";
+import { useQuery } from "@tanstack/vue-query";
 
 const emit = defineEmits(["filter-count"]);
 const category_ids_ref = ref<any[]>([]);
@@ -120,6 +121,12 @@ const props = defineProps({
     required: true,
     default: [],
   },
+});
+
+const { data: items, refetch } = useQuery<ShoppingAllItems[], Error>({
+  queryKey: ["shopping-items", categoryIds(), checkParentKey()], // key depends on parameters
+  queryFn: () => fetchData(),
+  staleTime: 1000 * 60 * 5, // 5 minutes
 });
 
 // Watch for filter changes to trigger re-render
@@ -145,10 +152,10 @@ watch(
 
 watch(
   [category_ids_ref, parent_key_ref],
-  async () => {
-    await fetchData();
+  () => {
+    refetch()
   },
-  // { immediate: true }
+  { immediate: true }
 );
 
 function processNestedArray(array: any[]): void {
@@ -186,8 +193,8 @@ const allItems = reactive<{ items: ShoppingAllItems[] }>({ items: [] });
 const fetchData = async () => {
   loading.value = true;
   error.value = null;
-  allItems.items = [];
-  await getShoppingAllItemsPublic({
+  const items: ShoppingAllItems[] = [];
+  getShoppingAllItemsPublic({
     category_ids: categoryIds(),
     parent_key: checkParentKey(),
     limit: 50,
@@ -219,7 +226,7 @@ const fetchData = async () => {
           price: i.price,
           fileList: imagesList,
         } as ShoppingAllItems;
-        allItems.items.push(pre);
+        items.push(pre);
       }
       emit("filter-count", editorPicks.length);
     })
@@ -228,9 +235,10 @@ const fetchData = async () => {
         (error.value = err instanceof Error ? err.message : "An error occurred")
     )
     .finally(() => (loading.value = false));
+  return items
 };
 
 onMounted(async () => {
-  await fetchData();
+  allItems.items = items as any;
 });
 </script>

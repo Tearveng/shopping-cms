@@ -12,11 +12,14 @@ import { useAuthStore } from "./stores/auth";
 import "vue3-carousel/carousel.css";
 import "./style.css";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 
 const app = createApp(App);
 const pinia = createPinia();
 const head = createHead();
+const queryClient = new QueryClient();
 
+app.use(VueQueryPlugin, { queryClient });
 app.use(Antd);
 app.use(head);
 app.use(pinia);

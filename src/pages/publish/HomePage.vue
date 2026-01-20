@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #f3efeb">
     <a-flex style="justify-content: center" class="responsive-padding">
       <a-layout
         style="width: 100%; background-color: inherit; align-items: center"

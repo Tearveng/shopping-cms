@@ -9,7 +9,8 @@
         <h3>{{ title }}</h3>
         <a-flex vertical align="flex-start">
           <div v-for="contact in group" :key="contact.id">
-            <a-button :href="`https://${contact.link}`" type="link">{{ contact.subtitle }}</a-button>
+            <a-button v-if="contact.link !== '#'" :href="`https://${contact.link}`" type="link">{{ contact.subtitle }}</a-button>
+            <a-button v-else type="link">{{ contact.subtitle }}</a-button>
           </div>
         </a-flex>
       </div>

@@ -16,10 +16,10 @@
         :selectedKeys="[current]"
         @click="handleMenuClick"
       >
-        <a-menu-item key="home" @click="$router.push('/collections/new-arrivals')">
+        <a-menu-item key="new-arrivals" @click="$router.push('/collections/new-arrivals')">
           New arrivals
         </a-menu-item>
-        <a-menu-item key="products" @click="$router.push('/collections/designers')">
+        <a-menu-item key="designers" @click="$router.push('/collections/designers')">
           Designers
         </a-menu-item>
         <a-menu-item key="bags" @click="$router.push('/collections/bags')">
@@ -227,8 +227,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.desktop-menu .ant-menu-item-selected) {
-  color: #000 !important;
-  font-weight: 400 !important;
+  font-weight: 600 !important;
   background-color: inherit !important;
 }
 
