@@ -4,9 +4,7 @@
     <a-flex v-if="!isMobile" vertical>
       <a-flex align="center" gap="10" style="padding-top: 1rem">
         <a class="logo-link">
-          <a-typography class="logo-image" @click="$router.push('/')"
-            >Everything L11</a-typography
-          >
+          <img src="/app-logo.png" alt="Logo" class="logo" @click="$router.push('/')" />
         </a>
       </a-flex>
       <a-menu
@@ -47,9 +45,7 @@
           <MenuOutlined style="margin-bottom: 7px;" />
         </a-button>
         <a class="logo-link">
-          <a-typography class="logo-image" @click="$router.push('/')"
-            >Everything L11</a-typography
-          >
+          <img src="/app-logo.png" alt="Logo" class="logo" @click="$router.push('/')" />
         </a>
       </a-flex>
       <a-drawer
@@ -193,6 +189,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.logo {
+  width: 400px;
+  margin-left: -6rem;   
+  height: auto;         /* maintain aspect ratio */
+  display: block;
+}
 .responsive-menu-container {
   width: 100%;
 }
@@ -299,6 +301,14 @@ onBeforeUnmount(() => {
 @media (max-width: 768px) {
   .logo-link {
     width: 11.7rem;
+  }
+
+  .logo {
+    width: 200px;
+    margin-top: -0.8rem;
+    margin-left: -3rem;
+    height: auto;         /* maintain aspect ratio */
+    display: block;
   }
 
   .logo-image {
