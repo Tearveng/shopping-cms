@@ -3,7 +3,7 @@ import type { Session } from "@supabase/supabase-js";
 import { defineStore } from "pinia";
 import { supabase } from "../lib/supabase";
 
-interface IState {
+export interface IState {
   user: Session["user"] | null;
   session: Session | null;
   loading: boolean;

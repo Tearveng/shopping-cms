@@ -1,14 +1,14 @@
 <template>
   <a-flex
-    v-if="loading"
+    v-if="isLoading"
     class="loading"
     style="justify-content: center; align-items: center"
     ><a-spin
   /></a-flex>
 
-  <div v-else-if="error" class="error">{{ error }}</div>
+  <div v-if="error" class="error">{{ error.message }}</div>
 
-  <div v-else-if="allItems.items.length < 1" class="empty-data">No data</div>
+  <div v-else-if="items.length < 1" class="empty-data">No data</div>
 
   <a-row v-else :gutter="[24, 24]">
     <a-col
@@ -18,7 +18,7 @@
       :md="12"
       :lg="8"
       :xl="6"
-      v-for="item in allItems.items"
+      v-for="item in items"
       :key="item.key"
     >
       <div
@@ -75,8 +75,22 @@
     </a-col>
   </a-row>
   <br />
+  <a-flex justify="center">
+    <a-button
+    type="text"
+    style="max-width: 10rem"
+    @click="fetchNextPage"
+    :disabled="!hasNextPage || isFetchingNextPage"
+  >
+    <span v-if="isFetchingNextPage">Loading...</span>
+    <span v-else-if="hasNextPage">Load more</span>
+    <span v-else>No more items</span>
+  </a-button>
+  </a-flex>
   <br />
   <br />
+  <br />
+
 </template>
 
 <style scoped>
@@ -86,6 +100,7 @@
   height: 100%;
   object-fit: cover;
 }
+
 .empty-data {
   display: flex;
   justify-content: center;
@@ -94,21 +109,15 @@
 </style>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch, type PropType } from "vue";
-import {
-  getShoppingAllItemsPublic,
-  storageAllItems,
-} from "../../../../services/AllItemsService";
-import { getImageUrl } from "../../../../services/BannerService";
-import type { ShoppingAllItems } from "../../../../types/ShoppingAllItems";
-import { useQuery } from "@tanstack/vue-query";
+import { useInfiniteQuery } from "@tanstack/vue-query";
+import { computed, ref, watch, type PropType } from "vue";
+import { userfetchData } from "../../../hook/shopping-allitems-api";
 
 const emit = defineEmits(["filter-count"]);
 const category_ids_ref = ref<any[]>([]);
 const parent_key_ref = ref<any[]>([]);
-
-const loading = ref(false);
-const error = ref<string | null>(null);
+const categoryIdsValue = computed(() => categoryIds());
+const parentKeyValue = computed(() => checkParentKey());
 
 const props = defineProps({
   filter: {
@@ -123,12 +132,6 @@ const props = defineProps({
   },
 });
 
-const { data: items, refetch } = useQuery<ShoppingAllItems[], Error>({
-  queryKey: ["shopping-items", categoryIds(), checkParentKey()], // key depends on parameters
-  queryFn: () => fetchData(),
-  staleTime: 1000 * 60 * 5, // 5 minutes
-});
-
 // Watch for filter changes to trigger re-render
 watch(
   () => props.filter,
@@ -136,10 +139,10 @@ watch(
     category_ids_ref.value = [];
     processNestedArray(Object.values(props.filter).filter((i) => i.length > 0));
     parent_key_ref.value = Object.keys(props.filter).filter(
-      (i) => props.filter[i].length > 0
+      (i) => props.filter[i].length > 0,
     );
     // The computed property will automatically update
-  }
+  },
 );
 
 watch(
@@ -147,15 +150,7 @@ watch(
   () => {
     parent_key_ref.value = [props.parent_key];
     category_ids_ref.value = [];
-  }
-);
-
-watch(
-  [category_ids_ref, parent_key_ref],
-  () => {
-    refetch()
   },
-  { immediate: true }
 );
 
 function processNestedArray(array: any[]): void {
@@ -170,8 +165,8 @@ function processNestedArray(array: any[]): void {
 }
 
 function categoryIds() {
-  if(parent_key_ref.value.includes("new-arrivals")) {
-    return []
+  if (parent_key_ref.value.includes("new-arrivals")) {
+    return [];
   }
   return [...new Set(category_ids_ref.value)];
 }
@@ -188,57 +183,31 @@ function checkParentKey() {
   return parent_key_ref.value;
 }
 
-const allItems = reactive<{ items: ShoppingAllItems[] }>({ items: [] });
-
-const fetchData = async () => {
-  loading.value = true;
-  error.value = null;
-  const items: ShoppingAllItems[] = [];
-  getShoppingAllItemsPublic({
-    category_ids: categoryIds(),
-    parent_key: checkParentKey(),
-    limit: 50,
-  })
-    .then(async (editorPicks) => {
-      for (const i of editorPicks) {
-        const imagesList = [];
-        if (i.images && i.images.length > 0) {
-          for (const img of i.images) {
-            const tempImg = await getImageUrl(
-              img.fileName,
-              `${storageAllItems}`
-            );
-            imagesList.push({
-              uid: img.id,
-              name: img.fileName,
-              status: "done",
-              url: tempImg,
-              thumbUrl: tempImg,
-            });
-          }
-        }
-        const pre = {
-          id: i.id,
-          key: new Date(`${i.created_at}`).getTime(),
-          title: i.title,
-          subtitle: i.subtitle,
-          condition: i.condition,
-          price: i.price,
-          fileList: imagesList,
-        } as ShoppingAllItems;
-        items.push(pre);
-      }
-      emit("filter-count", editorPicks.length);
-    })
-    .catch(
-      (err) =>
-        (error.value = err instanceof Error ? err.message : "An error occurred")
-    )
-    .finally(() => (loading.value = false));
-  return items
-};
-
-onMounted(async () => {
-  allItems.items = items as any;
+// const allItems = reactive<{ items: ShoppingAllItems[] }>({ items: [] });
+const {
+  data: allItems,
+  isLoading,
+  error,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+} = useInfiniteQuery({
+  queryKey: ["user-shopping-items", categoryIdsValue, parentKeyValue],
+  queryFn: ({ pageParam = 1 }) =>
+    userfetchData(
+      categoryIdsValue.value,
+      parentKeyValue.value,
+      pageParam,
+      10,
+    ).then((res) => {
+      emit("filter-count", res.data.length);
+      return res;
+    }),
+  initialPageParam: 1,
+  getNextPageParam: (lastPage) => lastPage.nextPage,
 });
+
+const items = computed(
+  () => allItems.value?.pages.flatMap((page) => page.data) ?? [],
+);
 </script>

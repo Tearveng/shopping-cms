@@ -49,7 +49,7 @@
         </a>
       </a-flex>
       <a-drawer
-        style="background-color: #f3efeb;"
+        style="background: transparent;"
         title="Menu"
         placement="left"
         :closable="true"
@@ -57,7 +57,7 @@
         @close="onClose"
       >
         <a-menu
-          style="background-color: #f3efeb;"
+          style="background: transparent !important;"
           mode="vertical"
           :selectedKeys="[current]"
           @click="handleMenuClick"
@@ -226,6 +226,16 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: flex-end;
   padding: 1rem 0;
+}
+
+:deep(.ant-drawer-content),
+:deep(.ant-drawer-body) {
+  background: transparent !important;
+}
+
+:deep(.ant-menu),
+:deep(.ant-menu-vertical) {
+  background: transparent !important;
 }
 
 :deep(.desktop-menu .ant-menu-item-selected) {

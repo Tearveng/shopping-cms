@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #f3efeb">
+  <div class="home-page">
     <a-flex style="justify-content: center" class="responsive-padding">
       <a-layout
         style="width: 100%; background-color: inherit; align-items: center"
@@ -44,6 +44,14 @@
   padding: 0 2rem;
   justify-content: flex-start;
 }
+.home-page {
+  background-image: url('/app-background.jpg');
+  background-size: cover;        /* 🔥 key */
+  background-position: center;   /* keep centered */
+  background-repeat: no-repeat;  /* no tiling */
+  background-attachment: fixed;  /* optional parallax */
+}
+
 @media (max-width: 575px) {
   .sh-navigation {
     padding: 0 1rem;
@@ -54,8 +62,8 @@
 <script setup lang="ts">
 import { Motion } from "@motionone/vue";
 import { ref } from "vue";
-import ShoppingHead from "./ShoppingHead.vue";
 import ShoppingFooter from "./ShoppingFooter.vue";
+import ShoppingHead from "./ShoppingHead.vue";
 
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);

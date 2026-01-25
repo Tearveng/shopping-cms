@@ -1,11 +1,13 @@
 <template>
   <div style="padding: 20px">
+    <a-typography-text v-if="isLoading">Loading...</a-typography-text>
+    <a-typography-text v-if="error">{{ error.message }}</a-typography-text>
     <a-typography-text>Shopping categories - 350 x 350 px</a-typography-text>
     <br />
     <br />
     <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
 
-    <a-table :columns="columns" :data-source="dataSource" size="small" bordered style="min-width: 1600px">
+    <a-table :columns="columns" :data-source="allItems" size="small" bordered style="min-width: 1600px">
       <template #bodyCell="{ column, text, record }">
         <template v-if="
           ['title', 'subtitle', 'condition', 'price'].includes(
@@ -137,24 +139,25 @@
 </template>
 <script lang="ts" setup>
 import { PlusOutlined } from "@ant-design/icons-vue";
+import { useQuery } from "@tanstack/vue-query";
 import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 import { message, Modal } from "ant-design-vue";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
 import { cloneDeep } from "lodash-es";
 import { onMounted, reactive, ref, watch } from "vue";
 import { supabase } from "../lib/supabase";
+import { queryClient } from "../main";
 import {
   deleteShoppingAllItems,
-  getShoppingAllItems,
   getShoppingAllItemsById,
   insertShoppingAllItems,
   storageAllItems,
   updateShoppingAllItems,
-  type IShoppingAllItems,
+  type IShoppingAllItems
 } from "../services/AllItemsService";
-import { getImageUrl } from "../services/BannerService";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
 import { useAuthStore } from "../stores/auth";
+import { adminfetchData } from "./hook/shopping-allitems-api";
 
 const columns = [
   {
@@ -210,7 +213,7 @@ const columns = [
   },
 ];
 
-interface DataItem {
+export interface DataItem {
   id: number | null;
   key: string;
   title: string;
@@ -223,10 +226,7 @@ interface DataItem {
   price: number;
 }
 
-const data: DataItem[] = reactive([]);
-const refreshKey = ref(0);
 const auth = useAuthStore();
-const dataSource = ref(data);
 const previewVisible = ref(false);
 const previewImage = ref("");
 const previewTitle = ref("");
@@ -235,9 +235,14 @@ const select = ref();
 const options = ref<SelectProps["options"]>([]);
 const optionsGroup = ref<SelectProps["options"]>([]);
 const uploadRef = ref(null);
-// const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 const editableData: any = reactive({});
 const [modal, contextHolder] = Modal.useModal();
+
+const { data: allItems, isLoading, error } = useQuery({
+  queryKey: ['admin-shopping-items'],
+  queryFn: () => adminfetchData(auth),
+  initialData: [] as DataItem[],
+})
 
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
@@ -434,14 +439,19 @@ const deleted = () => {
 
 const edit = (key: string) => {
   editableData[key] = cloneDeep(
-    dataSource.value.filter((item) => key === item.key)[0]
+    allItems.value?.filter((item) => key === item.key)[0]
   );
 };
 
-const deleteRecord = (id: number, key: string) => {
+const deleteRecord = (id: number, _: string) => {
   deleteShoppingAllItems(id)
     .then(() => {
-      dataSource.value = dataSource.value.filter((item) => item.key !== key);
+      queryClient.setQueryData(['admin-shopping-items'], (oldData: any) => {
+        if (oldData) {
+          return oldData.filter((item: any) => item.id !== id);
+        }
+        return [];
+      });
       deleted();
     })
     .catch()
@@ -450,7 +460,7 @@ const deleteRecord = (id: number, key: string) => {
 
 const save = (key: string) => {
   Object.assign(
-    dataSource.value.filter((item) => key === item.key)[0],
+    allItems.value?.filter((item) => key === item.key)[0] as DataItem,
     editableData[key]
   );
   const plainData = editableData[key];
@@ -480,7 +490,7 @@ const save = (key: string) => {
 };
 
 const saveCategory = (k: string, keyId: string) => {
-  const { fileList, key, ...rest } = dataSource.value.filter(
+  const { fileList, key, ...rest } = allItems.value?.filter(
     (item) => keyId === item.key
   )[0];
   if (auth.user) {
@@ -494,7 +504,7 @@ const saveCategory = (k: string, keyId: string) => {
         .then(() => {
           update();
           Object.assign(
-            dataSource.value.filter((item) => keyId === item.key)[0],
+            allItems.value.filter((item) => keyId === item.key)[0],
             {
               category_id: k,
             }
@@ -509,7 +519,7 @@ const saveCategory = (k: string, keyId: string) => {
 };
 
 const saveCategoryGroup = (k: string, keyId: string) => {
-  const { fileList, key, ...rest } = dataSource.value.filter(
+  const { fileList, key, ...rest } = allItems.value.filter(
     (item) => keyId === item.key
   )[0];
   console.log("k", k);
@@ -525,7 +535,7 @@ const saveCategoryGroup = (k: string, keyId: string) => {
         .then(() => {
           update();
           Object.assign(
-            dataSource.value.filter((item) => keyId === item.key)[0],
+            allItems.value.filter((item) => keyId === item.key)[0],
             {
               parent_key: k,
             }
@@ -570,7 +580,12 @@ const handleAdd = () => {
             price: e.price,
             fileList: [],
           } as DataItem;
-          dataSource.value.unshift(pre);
+          queryClient.setQueryData(['admin-shopping-items'], (oldData: any) => {
+            if (oldData) {
+              return [pre, ...oldData];
+            }
+            return [pre];
+          });
           success();
         })
         .catch((e) => errors(e))
@@ -585,41 +600,41 @@ const cancel = (key: string) => {
   delete editableData[key];
 };
 
-const fetchAllData = async () => {
-  if (auth.user) {
-    const shoppingBanners = await getShoppingAllItems(auth.user.id);
-    for (const i of shoppingBanners) {
-      const imagesList = [];
-      if (i.images && i.images.length > 0) {
-        for (const img of i.images) {
-          const tempImg = await getImageUrl(img.fileName, storageAllItems);
-          imagesList.push({
-            uid: img.id,
-            name: img.fileName,
-            status: "done",
-            url: tempImg,
-            thumbUrl: tempImg,
-          });
-        }
-      }
-      const pre = {
-        id: i.id,
-        key: `${i.id}`,
-        title: i.title,
-        subtitle: i.subtitle,
-        condition: i.condition,
-        size: i.size,
-        details: i.details,
-        category_id: `${i.category_id ?? ""}`,
-        parent_key: `${i.parent_key ?? ""}`,
-        price: i.price,
-        fileList: imagesList,
-      } as DataItem;
-      data.push(pre);
-      // dynamicValidateForm.editors.push(pre);
-    }
-  }
-};
+// const fetchAllData = async () => {
+//   if (auth.user) {
+//     const shoppingBanners = await getShoppingAllItems(auth.user.id);
+//     for (const i of shoppingBanners) {
+//       const imagesList = [];
+//       if (i.images && i.images.length > 0) {
+//         for (const img of i.images) {
+//           const tempImg = await getImageUrl(img.fileName, storageAllItems);
+//           imagesList.push({
+//             uid: img.id,
+//             name: img.fileName,
+//             status: "done",
+//             url: tempImg,
+//             thumbUrl: tempImg,
+//           });
+//         }
+//       }
+//       const pre = {
+//         id: i.id,
+//         key: `${i.id}`,
+//         title: i.title,
+//         subtitle: i.subtitle,
+//         condition: i.condition,
+//         size: i.size,
+//         details: i.details,
+//         category_id: `${i.category_id ?? ""}`,
+//         parent_key: `${i.parent_key ?? ""}`,
+//         price: i.price,
+//         fileList: imagesList,
+//       } as DataItem;
+//       data.push(pre);
+//       // dynamicValidateForm.editors.push(pre);
+//     }
+//   }
+// };
 
 const fetchAllCategories = async () => {
   if (auth.user) {
@@ -644,12 +659,7 @@ const fetchAllCategories = async () => {
   }
 };
 
-watch(refreshKey, () => {
-  fetchAllData();
-});
-
 onMounted(async () => {
-  await fetchAllData();
   await fetchAllCategories();
 });
 

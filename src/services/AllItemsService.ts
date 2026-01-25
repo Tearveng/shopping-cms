@@ -28,6 +28,7 @@ export interface IShoppingAllItemsPayload {
   parent_key: string[];
   category_ids: number[];
   limit: number;
+  page: number;
 }
 
 const tableName = "shopping_all_items";
@@ -68,21 +69,30 @@ export const getShoppingAllItems = async (
 
 export const getShoppingAllItemsPublic = async (
   props?: IShoppingAllItemsPayload
-): Promise<IShoppingAllItems[]> => {
+): Promise<{ data: IShoppingAllItems[], nextPage: number | undefined }> => {
+  const { page = 1, limit = 20 } = props ?? {}
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+
   let query = supabase
     .from(tableName)
-    .select("*")
-    .order("created_at", { ascending: false });
+    .select("*", { count: 'exact' })
+    .order("created_at", { ascending: false })
+    .range(from, to);
   if (props?.parent_key && props?.parent_key.length > 0) {
     query = query.in("parent_key", [props.parent_key[0]]);
   }
   if (props?.category_ids && props?.category_ids.length > 0) {
     query = query.in("category_id", props.category_ids);
   }
-  query = query.limit(props?.limit ?? 20);
-  const { data, error } = await query;
+  // query = query.limit(props?.limit ?? 20);
+  const { data, count, error } = await query;
   if (error) throw error.message;
-  return data;
+  return {
+    data,
+    nextPage:
+      to + 1 < (count ?? 0) ? page + 1 : undefined,
+  };
 };
 
 export const getShoppingAllItemsById = async (
