@@ -4,11 +4,13 @@ import MainLayout from "../layouts/MainLayout.vue";
 import Login from "../pages/auth/Login.vue";
 import Home from "../pages/Home.vue";
 import NotFound from "../pages/NotFound.vue";
+import ShoppingAllItemsDesigners from "../pages/publish/designers/items/ShoppingAllItems.vue";
 import HomePageVue from "../pages/publish/HomePage.vue";
 import HomePageContent from "../pages/publish/HomePageContent.vue";
 import ShoppingItemDetail from "../pages/publish/new-arrivals/detail/ShoppingItemDetail.vue";
 import ShoppingNewArrivals from "../pages/publish/new-arrivals/ShoppingNewArrivals.vue";
 import Setting from "../pages/Setting.vue";
+import ShoppingItemEdit from "../pages/shopping-item/ShoppingItemEdit.vue";
 import ShoppingBanner from "../pages/ShoppingBanner.vue";
 import ShoppingCategory from "../pages/ShoppingCategory.vue";
 import ShoppingContact from "../pages/ShoppingContact.vue";
@@ -21,7 +23,6 @@ import ShoppingProfile from "../pages/ShoppingProfile.vue";
 import ShoppingShopInPerson from "../pages/ShoppingShopInPerson.vue";
 import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
 import { useAuthStore } from "../stores/auth";
-import ShoppingItemEdit from "../pages/shopping-item/ShoppingItemEdit.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -50,6 +51,16 @@ const routes: RouteRecordRaw[] = [
           title: "HomeContent",
           icon: "homeContent",
           breadcrumb: ["HomeContent"],
+        },
+      },
+      {
+        path: "designers/:slug",
+        name: "Shop designers",
+        component: ShoppingAllItemsDesigners,
+        meta: {
+          title: "New Arrivals",
+          icon: "new arrivals",
+          breadcrumb: ["New Arrivals"],
         },
       },
       {

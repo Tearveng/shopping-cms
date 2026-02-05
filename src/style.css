@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:Regular:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Khmer:Regular:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* Apply Inter font globally */
 :root,
@@ -25,5 +26,6 @@ body,
 .ant-col,
 .ant-row {
   /* font-family: inherit !important; */
-  font-family: "Averia Gruesa Libre", system-ui;
+  font-family: "Noto Serif Display", serif;
+  letter-spacing: 0.1em;
 }

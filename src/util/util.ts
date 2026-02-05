@@ -22,3 +22,10 @@ export function resetAllChecks(obj: ShoppingParentKey) {
     }
   });
 };
+
+// replace space character by any characters
+export function replaceSpace(str: string, replaceBy: string) {
+  if(!str.includes(" ")) return str;
+
+  return str.replace(/\s+/g, replaceBy);
+}

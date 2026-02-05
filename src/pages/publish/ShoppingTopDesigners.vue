@@ -4,13 +4,13 @@
 
     <a-row :gutter="[24, 24]">
       <a-col
-        style="cursor: pointer;"
+        style="cursor: pointer"
         :span="6"
         :xs="12"
         :sm="6"
         v-for="topDesign in dynamicValidateForm.topDesign"
         :key="topDesign.key"
-        @click="console.log('asdasd')"
+        @click="$router.push(`/designers/${replaceSpace(topDesign.title.toLowerCase(), '-')}`)"
       >
         <a-image
           :src="topDesign.fileList[0].thumbUrl"
@@ -58,6 +58,7 @@ import {
   getShoppingTopDesignersPublic,
   storageTopDesign,
 } from "../../services/TopDesignersService";
+import { replaceSpace } from "../../util/util";
 import type { ShoppingTopDesigners } from "../ShoppingTopDesigners.vue";
 
 const dynamicValidateForm = reactive<{ topDesign: ShoppingTopDesigners[] }>({

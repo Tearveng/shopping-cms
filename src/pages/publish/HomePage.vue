@@ -1,9 +1,16 @@
 <template>
+  <a-float-button :href="adminTelegram" target="_blank">
+    <template #icon>
+      <img
+        src="/shopping-telegram-logo.svg"
+        class="float-img"
+        alt="icon"
+      />
+    </template>
+  </a-float-button>
   <div class="home-page">
     <a-flex style="justify-content: center" class="responsive-padding">
-      <a-layout
-        style="width: 100%; background-color: inherit; align-items: center"
-      >
+      <a-layout style="width: 100%; background-color: inherit; align-items: center">
         <!-- headers  -->
         <a-flex class="sh-navigation">
           <Motion
@@ -37,6 +44,23 @@
 </template>
 
 <style>
+.float-img {
+  width: 70px;
+  height: 70px;
+  margin-left: -25.5px;
+  object-fit: cover; /* cover | contain depending on your need */
+  border-radius: 50%;
+}
+
+.ant-float-btn {
+  width: 64px;
+  height: 64px
+}
+
+.ant-float-btn .ant-float-btn-body .ant-float-btn-content {
+  overflow: visible;
+}
+
 .sh-navigation {
   width: 100%;
   height: auto;
@@ -45,11 +69,11 @@
   justify-content: flex-start;
 }
 .home-page {
-  background-image: url('/app-background.jpg');
-  background-size: cover;        /* 🔥 key */
-  background-position: center;   /* keep centered */
-  background-repeat: no-repeat;  /* no tiling */
-  background-attachment: fixed;  /* optional parallax */
+  background-image: url("/app-background.jpg");
+  background-size: cover; /* 🔥 key */
+  background-position: center; /* keep centered */
+  background-repeat: no-repeat; /* no tiling */
+  background-attachment: fixed; /* optional parallax */
 }
 
 @media (max-width: 575px) {
@@ -65,6 +89,7 @@ import { ref } from "vue";
 import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingHead from "./ShoppingHead.vue";
 
+const adminTelegram = import.meta.env.VITE_ADMIN_TELEGRAM
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
 </script>
