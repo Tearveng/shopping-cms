@@ -1,15 +1,16 @@
 <template>
-    <!-- shopping banner -->
-    <a-flex vertical gap="55" style="width: 100%">
-      <Motion
-        :initial="{ opacity: 0, x: -100 }"
-        :animate="{ opacity: 1, x: 0 }"
-        :transition="{ duration: 0.8, delay: 0.4 }"
-      >
-        <ShoppingBanner />
-      </Motion>
-    </a-flex>
+  <!-- shopping banner -->
+  <a-flex vertical gap="55" style="width: 100%">
+    <Motion
+      :initial="{ opacity: 0, x: -100 }"
+      :animate="{ opacity: 1, x: 0 }"
+      :transition="{ duration: 0.8, delay: 0.4 }"
+    >
+      <ShoppingBanner />
+    </Motion>
+  </a-flex>
 
+  <div class="main-section">
     <!-- shopping top designers -->
     <a-flex vertical gap="55" style="width: 100%; align-items: center">
       <Motion
@@ -75,14 +76,23 @@
         <ShoppingInPerson />
       </Motion>
     </a-flex>
+  </div>
 </template>
 
+<style>
+@media (max-width: 575px) {
+  .main-section {
+    margin-top: 20rem;
+  }
+}
+</style>
+
 <script setup lang="ts">
-import ShoppingBanner from './ShoppingBanner.vue';
-import ShoppingEditorPicks from './ShoppingEditorPicks.vue';
-import ShoppingFeatureCollections from './ShoppingFeatureCollections.vue';
-import ShoppingInPerson from './ShoppingInPerson.vue';
-import ShoppingLiveAnnounce from './ShoppingLiveAnnounce.vue';
-import ShoppingMoreTopDesigners from './ShoppingMoreTopDesigners.vue';
-import ShoppingTopDesigners from './ShoppingTopDesigners.vue';
+import ShoppingBanner from "./ShoppingBanner.vue";
+import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
+import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";
+import ShoppingInPerson from "./ShoppingInPerson.vue";
+import ShoppingLiveAnnounce from "./ShoppingLiveAnnounce.vue";
+import ShoppingMoreTopDesigners from "./ShoppingMoreTopDesigners.vue";
+import ShoppingTopDesigners from "./ShoppingTopDesigners.vue";
 </script>

@@ -104,10 +104,10 @@
 
 @media (max-width: 575px) {
   .banner-image {
-    filter: blur(5px);
-    opacity: 0.5;
+   margin-top: -5rem;
   }
   .content-banner {
+    margin-top: 45rem;
     padding: 0 1rem;
   }
   .container {
