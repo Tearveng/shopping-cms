@@ -66,22 +66,20 @@
     <!-- Mobile Hamburger Menu (shown on smaller screens) -->
     <div v-else class="mobile-menu">
       <a-flex align="center" gap="10">
-        <a-flex gap="20">
-          <a-button type="text" @click="showDrawer" style="padding: 0px">
-            <MenuOutlined />
-          </a-button>
-          <a class="logo-link">
-            <img
-              src="/app-logo.png"
-              alt="Logo"
-              class="logo"
-              @click="$router.push('/')"
-            /> </a
-        ></a-flex>
+        <a-button type="text" @click="showDrawer" style="padding: 0 20px">
+          <MenuOutlined />
+        </a-button>
+        <a class="logo-link">
+          <img
+            src="/app-logo.png"
+            alt="Logo"
+            class="logo"
+            @click="$router.push('/')"
+          />
+        </a>
         <LanguageSwitching />
       </a-flex>
       <a-drawer
-        style="background: transparent"
         title="Menu"
         placement="left"
         :closable="true"
@@ -248,9 +246,11 @@ onBeforeUnmount(() => {
 .logo {
   width: 400px;
   margin-left: -6rem;
-  height: auto; /* maintain aspect ratio */
+  height: auto;
+  /* maintain aspect ratio */
   display: block;
 }
+
 .responsive-menu-container {
   width: 100%;
 }
@@ -366,14 +366,15 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .logo-link {
-    width: 11rem;
+    width: 10rem;
   }
 
   .logo {
     width: 200px;
     margin-top: -0.8rem;
     margin-left: -3rem;
-    height: auto; /* maintain aspect ratio */
+    height: auto;
+    /* maintain aspect ratio */
     display: block;
   }
 
