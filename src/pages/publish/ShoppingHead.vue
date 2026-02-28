@@ -63,21 +63,21 @@
       </a-menu>
     </a-flex>
 
-
     <!-- Mobile Hamburger Menu (shown on smaller screens) -->
     <div v-else class="mobile-menu">
       <a-flex align="center" gap="10">
-        <a-button type="text" @click="showDrawer" style="padding: 0">
-          <MenuOutlined style="margin-bottom: 7px" />
-        </a-button>
-        <a class="logo-link">
-          <img
-            src="/app-logo.png"
-            alt="Logo"
-            class="logo"
-            @click="$router.push('/')"
-          />
-        </a>
+        <a-flex gap="20">
+          <a-button type="text" @click="showDrawer" style="padding: 0px">
+            <MenuOutlined />
+          </a-button>
+          <a class="logo-link">
+            <img
+              src="/app-logo.png"
+              alt="Logo"
+              class="logo"
+              @click="$router.push('/')"
+            /> </a
+        ></a-flex>
         <LanguageSwitching />
       </a-flex>
       <a-drawer
@@ -286,12 +286,12 @@ onBeforeUnmount(() => {
 
 :deep(.ant-drawer-content),
 :deep(.ant-drawer-body) {
-  background: transparent !important;
+  background: "#fff" !important;
 }
 
 :deep(.ant-menu),
 :deep(.ant-menu-vertical) {
-  background: transparent !important;
+  background: "#fff" !important;
 }
 
 :deep(.desktop-menu .ant-menu-item-selected) {
@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .logo-link {
-    width: 11.7rem;
+    width: 11rem;
   }
 
   .logo {
