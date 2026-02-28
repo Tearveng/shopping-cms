@@ -14,6 +14,8 @@
             <ShoppingHead />
           </Motion>
         </a-flex>
+        <br />
+        <br />
         <router-view />
         <a-flex vertical gap="55" style="width: 100%; align-items: center; background-color: #000">
           <Motion :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }"

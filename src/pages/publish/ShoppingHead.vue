@@ -66,7 +66,7 @@
     <!-- Mobile Hamburger Menu (shown on smaller screens) -->
     <div v-else class="mobile-menu">
       <a-flex align="center" gap="10">
-        <a-button type="text" @click="showDrawer" style="padding: 0 20px">
+        <a-button type="text" @click="showDrawer" style="padding: 0 10px">
           <MenuOutlined />
         </a-button>
         <a class="logo-link">
@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .logo-link {
-    width: 10rem;
+    width: 10.5rem;
   }
 
   .logo {
