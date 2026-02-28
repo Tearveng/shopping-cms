@@ -17,7 +17,7 @@
 
   <div v-else-if="items.length < 1" class="empty-data">No data</div>
 
-  <a-row v-else :gutter="[24, 24]" type="flex" style="max-width: 1220px">
+  <a-row v-else :gutter="[24, 24]" type="flex" style="max-width: 1280px; padding: 0px 15px;">
     <a-col
       :span="6"
       :xs="12"
