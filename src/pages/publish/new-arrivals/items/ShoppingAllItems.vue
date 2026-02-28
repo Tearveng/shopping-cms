@@ -39,14 +39,8 @@
           :preview="false"
         />
         <a-typography
-          style="
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.25em;
-            line-height: 1.4em;
-            text-transform: uppercase;
-            text-align: center;
-          "
+          class="item-title"
+          :lang="detectLang(item.title)"
           >{{ item.title }}</a-typography
         >
         <a-typography
@@ -77,20 +71,19 @@
   <br />
   <a-flex justify="center">
     <a-button
-    type="text"
-    style="max-width: 10rem"
-    @click="fetchNextPage"
-    :disabled="!hasNextPage || isFetchingNextPage"
-  >
-    <span v-if="isFetchingNextPage">Loading...</span>
-    <span v-else-if="hasNextPage">Load more</span>
-    <span v-else>No more items</span>
-  </a-button>
+      type="text"
+      style="max-width: 10rem"
+      @click="fetchNextPage"
+      :disabled="!hasNextPage || isFetchingNextPage"
+    >
+      <span v-if="isFetchingNextPage">Loading...</span>
+      <span v-else-if="hasNextPage">Load more</span>
+      <span v-else>No more items</span>
+    </a-button>
   </a-flex>
   <br />
   <br />
   <br />
-
 </template>
 
 <style scoped>
@@ -106,11 +99,33 @@
   justify-content: center;
   min-height: 750px;
 }
+
+
+/* English */
+.item-title:lang(en) {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  line-height: 1.4em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Khmer */
+.item-title:lang(kh) {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  line-height: 1.4em;
+  text-transform: uppercase;
+  text-align: center;
+}
 </style>
 
 <script setup lang="ts">
 import { useInfiniteQuery } from "@tanstack/vue-query";
 import { computed, ref, watch, type PropType } from "vue";
+import { detectLang } from "../../../helpers/detect-lang";
 import { userfetchData } from "../../../hook/shopping-allitems-api";
 
 const emit = defineEmits(["filter-count"]);

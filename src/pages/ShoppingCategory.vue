@@ -265,8 +265,8 @@ const errors = (msg: string) => {
 
 const fetchAllData = async () => {
   if (auth.user) {
-    const shoppingBanners = await getShoppingCategory(auth.user.id);
-    for (const i of shoppingBanners) {
+    const shoppingCategories = await getShoppingCategory(auth.user.id);
+    for (const i of shoppingCategories) {
       const imagesList = [];
       if (i.images && i.images.length > 0) {
         for (const img of i.images) {

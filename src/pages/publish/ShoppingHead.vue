@@ -2,10 +2,20 @@
   <div class="responsive-menu-container">
     <!-- Desktop Horizontal Menu (shown on larger screens) -->
     <a-flex v-if="!isMobile" vertical>
-      <a-flex align="center" gap="10" style="padding-top: 1rem">
+      <a-flex
+        align="center"
+        gap="10"
+        style="padding-top: 1rem; justify-content: space-between"
+      >
         <a class="logo-link">
-          <img src="/app-logo.png" alt="Logo" class="logo" @click="$router.push('/')" />
+          <img
+            src="/app-logo.png"
+            alt="Logo"
+            class="logo"
+            @click="$router.push(`/${route.params.locale}`)"
+          />
         </a>
+        <LanguageSwitching />
       </a-flex>
       <a-menu
         mode="horizontal"
@@ -14,42 +24,64 @@
         :selectedKeys="[current]"
         @click="handleMenuClick"
       >
-        <a-menu-item key="new-arrivals" @click="$router.push('/collections/new-arrivals')">
-          New arrivals
+        <a-menu-item
+          key="new-arrivals"
+          @click="$router.push('/collections/new-arrivals')"
+        >
+          {{ $t("app-menu-navigation.new-arrivals") }}
         </a-menu-item>
-        <a-menu-item key="designers" @click="$router.push('/collections/designers')">
-          Designers
+        <a-menu-item
+          key="designers"
+          @click="$router.push('/collections/designers')"
+        >
+          {{ $t("app-menu-navigation.designers") }}
         </a-menu-item>
         <a-menu-item key="bags" @click="$router.push('/collections/bags')">
-          Bags
+          {{ $t("app-menu-navigation.bags") }}
         </a-menu-item>
-        <a-menu-item key="accessories" @click="$router.push('/collections/accessories')">
-          Accessories
+        <a-menu-item
+          key="accessories"
+          @click="$router.push('/collections/accessories')"
+        >
+          {{ $t("app-menu-navigation.accessories") }}
         </a-menu-item>
         <a-menu-item key="shoes" @click="$router.push('/collections/shoes')">
-          Shoes
+          {{ $t("app-menu-navigation.shoes") }}
         </a-menu-item>
-        <a-menu-item key="jewelry" @click="$router.push('/collections/jewelry')">
-          Jewelry
+        <a-menu-item
+          key="jewelry"
+          @click="$router.push('/collections/jewelry')"
+        >
+          {{ $t("app-menu-navigation.jewelry") }}
         </a-menu-item>
-        <a-menu-item key="watches" @click="$router.push('/collections/watches')">
-          Watches
+        <a-menu-item
+          key="watches"
+          @click="$router.push('/collections/watches')"
+        >
+          {{ $t("app-menu-navigation.watches") }}
         </a-menu-item>
       </a-menu>
     </a-flex>
+
 
     <!-- Mobile Hamburger Menu (shown on smaller screens) -->
     <div v-else class="mobile-menu">
       <a-flex align="center" gap="10">
         <a-button type="text" @click="showDrawer" style="padding: 0">
-          <MenuOutlined style="margin-bottom: 7px;" />
+          <MenuOutlined style="margin-bottom: 7px" />
         </a-button>
         <a class="logo-link">
-          <img src="/app-logo.png" alt="Logo" class="logo" @click="$router.push('/')" />
+          <img
+            src="/app-logo.png"
+            alt="Logo"
+            class="logo"
+            @click="$router.push('/')"
+          />
         </a>
+        <LanguageSwitching />
       </a-flex>
       <a-drawer
-        style="background: transparent;"
+        style="background: transparent"
         title="Menu"
         placement="left"
         :closable="true"
@@ -57,13 +89,16 @@
         @close="onClose"
       >
         <a-menu
-          style="background: transparent !important;"
+          style="background: transparent !important"
           mode="vertical"
           :selectedKeys="[current]"
           @click="handleMenuClick"
         >
-          <a-menu-item key="home" @click="$router.push('/collections/new-arrivals')">
-             <template #icon>
+          <a-menu-item
+            key="home"
+            @click="$router.push('/collections/new-arrivals')"
+          >
+            <template #icon>
               <img
                 src="/shopping-arrival.svg"
                 alt="shopping-icon"
@@ -73,7 +108,10 @@
             </template>
             New arrivals
           </a-menu-item>
-          <a-menu-item key="products" @click="$router.push('/collections/designers')">
+          <a-menu-item
+            key="products"
+            @click="$router.push('/collections/designers')"
+          >
             <template #icon>
               <img
                 src="/shopping-design.svg"
@@ -95,8 +133,11 @@
             </template>
             Bags
           </a-menu-item>
-          <a-menu-item key="accessories" @click="$router.push('/collections/accessories')">
-             <template #icon>
+          <a-menu-item
+            key="accessories"
+            @click="$router.push('/collections/accessories')"
+          >
+            <template #icon>
               <img
                 src="/shopping-accessories.svg"
                 alt="shopping-icon"
@@ -107,7 +148,7 @@
             Accessories
           </a-menu-item>
           <a-menu-item key="shoes" @click="$router.push('/collections/shoes')">
-             <template #icon>
+            <template #icon>
               <img
                 src="/shopping-shoes.svg"
                 alt="shopping-icon"
@@ -117,8 +158,11 @@
             </template>
             Shoes
           </a-menu-item>
-          <a-menu-item key="jewelry" @click="$router.push('/collections/jewelry')">
-             <template #icon>
+          <a-menu-item
+            key="jewelry"
+            @click="$router.push('/collections/jewelry')"
+          >
+            <template #icon>
               <img
                 src="/shopping-jewelry.svg"
                 alt="shopping-icon"
@@ -128,8 +172,11 @@
             </template>
             Jewelry
           </a-menu-item>
-          <a-menu-item key="watches" @click="$router.push('/collections/watches')">
-             <template #icon>
+          <a-menu-item
+            key="watches"
+            @click="$router.push('/collections/watches')"
+          >
+            <template #icon>
               <img
                 src="/shopping-watches.svg"
                 alt="shopping-icon"
@@ -146,11 +193,10 @@
 </template>
 
 <script setup lang="ts">
-import {
-  MenuOutlined,
-} from "@ant-design/icons-vue";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { MenuOutlined } from "@ant-design/icons-vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import LanguageSwitching from "../../lib/components/language-switching.vue";
 
 const route = useRoute();
 const current = ref("home");
@@ -176,6 +222,16 @@ const onClose = () => {
   visible.value = false;
 };
 
+watch(
+  () => route.params.parent_key,
+  (newVal) => {
+    if (!newVal) {
+      current.value = "";
+    }
+  },
+  { immediate: true },
+);
+
 // Set up event listeners for window resize
 onMounted(() => {
   current.value = route.params.parent_key as string;
@@ -191,8 +247,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .logo {
   width: 400px;
-  margin-left: -6rem;   
-  height: auto;         /* maintain aspect ratio */
+  margin-left: -6rem;
+  height: auto; /* maintain aspect ratio */
   display: block;
 }
 .responsive-menu-container {
@@ -200,7 +256,7 @@ onBeforeUnmount(() => {
 }
 
 .logo-link {
-  width: calc(100% - 3rem);
+  width: 250px;
 }
 
 .logo-image {
@@ -239,7 +295,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.desktop-menu .ant-menu-item-selected) {
-  font-weight: 600 !important;
+  font-weight: 400 !important;
   background-color: inherit !important;
 }
 
@@ -317,7 +373,7 @@ onBeforeUnmount(() => {
     width: 200px;
     margin-top: -0.8rem;
     margin-left: -3rem;
-    height: auto;         /* maintain aspect ratio */
+    height: auto; /* maintain aspect ratio */
     display: block;
   }
 

@@ -1,6 +1,7 @@
 import type { RouteRecordRaw, Router } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
 import MainLayout from "../layouts/MainLayout.vue";
+import { i18n } from "../main";
 import Login from "../pages/auth/Login.vue";
 import Home from "../pages/Home.vue";
 import NotFound from "../pages/NotFound.vue";
@@ -35,14 +36,194 @@ declare module "vue-router" {
   }
 }
 
+export const LOCALES: any = {
+  "en-US": "en",
+  "km-KH": "kh",
+};
+
+export const LOCALES_REVERSE: any = {
+  en: "en-US",
+  kh: "km-KH",
+};
+
 // Vue 3 Router Configuration
 const routes: RouteRecordRaw[] = [
-  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
   {
-    path: "/",
-    name: "HomePage",
+    path: "/:locale(en|kh)?",
     component: HomePageVue,
     children: [
+      {
+        path: "admin",
+        component: MainLayout,
+        children: [
+          {
+            path: "",
+            name: "Home",
+            component: Home,
+            meta: {
+              title: "Home",
+              icon: "home",
+              breadcrumb: ["Home"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "profile",
+            name: "Profile",
+            component: ShoppingProfile,
+            meta: {
+              title: "Profile",
+              icon: "profile",
+              breadcrumb: ["Profile"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "category",
+            name: "Category",
+            component: ShoppingCategory,
+            meta: {
+              title: "Category",
+              icon: "category",
+              breadcrumb: ["Category"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "items",
+            name: "Item",
+            component: ShoppingItems,
+            meta: {
+              title: "Item",
+              icon: "item",
+              breadcrumb: ["Item"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "items/:id",
+            name: "Item by id",
+            component: ShoppingItemEdit,
+            meta: {
+              title: "Item by id",
+              icon: "itemId",
+              breadcrumb: ["ItemId"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "banner",
+            name: "Banner",
+            component: ShoppingBanner,
+            meta: {
+              title: "Banner",
+              icon: "banner",
+              breadcrumb: ["Banner"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "top_design",
+            name: "Top design",
+            component: ShoppingTopDesigners,
+            meta: {
+              title: "Top design",
+              icon: "top_design",
+              breadcrumb: ["Top design"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "feature_collection",
+            name: "Feature collection",
+            component: ShoppingFeatureCollections,
+            meta: {
+              title: "Feature collection",
+              icon: "feature_collection",
+              breadcrumb: ["Feature collection"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "more_top_design",
+            name: "More top design",
+            component: ShoppingMoreTopDesigners,
+            meta: {
+              title: "More top design",
+              icon: "more_top_design",
+              breadcrumb: ["More top design"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "editor_pick",
+            name: "Editor pick",
+            component: ShoppingEditorPicks,
+            meta: {
+              title: "Editor pick",
+              icon: "editor_pick",
+              breadcrumb: ["Editor pick"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "live_announce",
+            name: "Live announce",
+            component: ShoppingLiveAnnounce,
+            meta: {
+              title: "Live announce",
+              icon: "live_announce",
+              breadcrumb: ["Live announce"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "shop_in_person",
+            name: "Shop in person",
+            component: ShoppingShopInPerson,
+            meta: {
+              title: "Shop in person",
+              icon: "shop_in_person",
+              breadcrumb: ["Shop in person"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "contact",
+            name: "Contact",
+            component: ShoppingContact,
+            meta: {
+              title: "Contact",
+              icon: "About",
+              breadcrumb: ["Contact"],
+              requiresAuth: true,
+            },
+          },
+          {
+            path: "settings",
+            name: "Setting",
+            component: Setting,
+            meta: {
+              title: "Setting",
+              icon: "Setting",
+              breadcrumb: ["Setting"],
+              requiresAuth: true,
+            },
+          },
+        ],
+      },
+
+      {
+        path: "login",
+        name: "Login",
+        component: Login,
+        meta: {
+          title: "Login",
+          icon: "login",
+          breadcrumb: ["Login"],
+        },
+      },
+
       {
         path: "",
         name: "HomeContent",
@@ -85,175 +266,24 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
+  // ✅ 404 for routes WITH locale (must come last)
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
-    meta: {
-      title: "Login",
-      icon: "login",
-      breadcrumb: ["Login"],
-    },
+    path: "/:locale/:pathMatch(.*)*",
+    name: "LocaleNotFound",
+    component: NotFound,
+    props: (route) => ({
+      requestedPath: route.fullPath,
+      locale: route.params.locale,
+    }),
   },
+
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
+
   {
-    path: "/admin",
-    component: MainLayout,
-    children: [
-      {
-        path: "",
-        name: "Home",
-        component: Home,
-        meta: {
-          title: "Home",
-          icon: "home",
-          breadcrumb: ["Home"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "profile",
-        name: "Profile",
-        component: ShoppingProfile,
-        meta: {
-          title: "Profile",
-          icon: "profile",
-          breadcrumb: ["Profile"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "category",
-        name: "Category",
-        component: ShoppingCategory,
-        meta: {
-          title: "Category",
-          icon: "category",
-          breadcrumb: ["Category"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "items",
-        name: "Item",
-        component: ShoppingItems,
-        meta: {
-          title: "Item",
-          icon: "item",
-          breadcrumb: ["Item"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "items/:id",
-        name: "Item by id",
-        component: ShoppingItemEdit,
-        meta: {
-          title: "Item by id",
-          icon: "itemId",
-          breadcrumb: ["ItemId"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "banner",
-        name: "Banner",
-        component: ShoppingBanner,
-        meta: {
-          title: "Banner",
-          icon: "banner",
-          breadcrumb: ["Banner"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "top_design",
-        name: "Top design",
-        component: ShoppingTopDesigners,
-        meta: {
-          title: "Top design",
-          icon: "top_design",
-          breadcrumb: ["Top design"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "feature_collection",
-        name: "Feature collection",
-        component: ShoppingFeatureCollections,
-        meta: {
-          title: "Feature collection",
-          icon: "feature_collection",
-          breadcrumb: ["Feature collection"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "more_top_design",
-        name: "More top design",
-        component: ShoppingMoreTopDesigners,
-        meta: {
-          title: "More top design",
-          icon: "more_top_design",
-          breadcrumb: ["More top design"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "editor_pick",
-        name: "Editor pick",
-        component: ShoppingEditorPicks,
-        meta: {
-          title: "Editor pick",
-          icon: "editor_pick",
-          breadcrumb: ["Editor pick"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "live_announce",
-        name: "Live announce",
-        component: ShoppingLiveAnnounce,
-        meta: {
-          title: "Live announce",
-          icon: "live_announce",
-          breadcrumb: ["Live announce"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "shop_in_person",
-        name: "Shop in person",
-        component: ShoppingShopInPerson,
-        meta: {
-          title: "Shop in person",
-          icon: "shop_in_person",
-          breadcrumb: ["Shop in person"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "contact",
-        name: "Contact",
-        component: ShoppingContact,
-        meta: {
-          title: "Contact",
-          icon: "About",
-          breadcrumb: ["Contact"],
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "settings",
-        name: "Setting",
-        component: Setting,
-        meta: {
-          title: "Setting",
-          icon: "Setting",
-          breadcrumb: ["Setting"],
-          requiresAuth: true,
-        },
-      },
-    ],
+    path: "/",
+    name: "HomePage",
+    component: HomePageVue,
   },
 ];
 
@@ -284,7 +314,20 @@ const router: Router = createRouter({
 });
 
 router.beforeEach(async (to, _, next) => {
+  const locale = to.params.locale as string;
+  const localeValue = i18n.global.locale as any;
+  const savedLang = localStorage.getItem("i18next-lang") || "en-us";
+  const defaultLocale = LOCALES[savedLang] || "en";
   const authStore = useAuthStore();
+
+  // If no locale in URL, redirect
+  if (!locale) {
+    return next(`/${defaultLocale}${to.fullPath}`);
+  }
+
+  if (localeValue.value !== locale) {
+    localeValue.value = locale;
+  }
 
   if (authStore.loading) {
     await authStore.fetchUser();

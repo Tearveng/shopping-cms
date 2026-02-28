@@ -1,6 +1,6 @@
 <template>
   <a-flex class="container" vertical>
-    <a-typography class="responsive-text">Shop in person</a-typography>
+    <a-typography class="responsive-text">{{ $t("dashboard.shop-in-person") }}</a-typography>
 
     <a-row :gutter="[24, 24]">
       <a-col
@@ -56,11 +56,11 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 import { getImageUrl } from "../../services/BannerService";
-import type { ShoppingShopInPerson } from "../ShoppingShopInPerson.vue";
 import {
   getShoppingShopInPersonPublic,
   storageShopInPerson,
 } from "../../services/ShopInPerson";
+import type { ShoppingShopInPerson } from "../ShoppingShopInPerson.vue";
 
 const dynamicValidateForm = reactive<{ shops: ShoppingShopInPerson[] }>({
   shops: [],

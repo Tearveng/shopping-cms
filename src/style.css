@@ -3,6 +3,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Khmer:Regular:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Averia+Gruesa+Libre&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Suwannaphum:wght@100;300;400;700;900&display=swap');
 
 /* Apply Inter font globally */
 :root,
@@ -18,6 +20,13 @@ body,
   font-style: normal;
 }
 
+.kantumruy-pro {
+  font-family: "Kantumruy Pro", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
 /* Ensure AntD components inherit the font */
 .ant-layout,
 .ant-menu,
@@ -26,6 +35,6 @@ body,
 .ant-col,
 .ant-row {
   /* font-family: inherit !important; */
-  font-family: "Noto Serif Display", serif;
-  letter-spacing: 0.1em;
+  font-family: "Suwannaphum", "Kantumruy Pro", "Noto Serif Display", serif;
+  letter-spacing: 0.1em÷;
 }

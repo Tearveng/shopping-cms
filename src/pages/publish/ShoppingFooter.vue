@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div class="footer-bottom">©2025 Everything L11. All rights reserved.</div>
+    <div class="footer-bottom">©2025 Everything L11. {{ $t("footer.all-right-reserved") }}</div>
   </a-layout-footer>
 </template>
 

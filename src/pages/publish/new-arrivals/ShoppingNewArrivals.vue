@@ -1,45 +1,96 @@
 <template>
   <div class="arrivals-container">
     <a-flex class="title-category">
-      <a-typography-text class="title-text">{{
-        parent_key.toString().toUpperCase().replace("-", " ")
-        }}</a-typography-text>
+      <a-typography-text class="title-text">
+        {{
+          $t(
+            `collections-title.${parent_key
+              .toString()
+              .toUpperCase()
+              .replace("-", " ")}`,
+          )
+        }}</a-typography-text
+      >
     </a-flex>
 
     <a-flex style="width: 100%" :vertical="isMobile">
       <a-flex class="filter-category" vertical>
         <!-- filter header -->
-        <a-flex style="justify-content: space-between; align-items: center; width: 100%" v-if="!isMobile">
-          <a-typography-text style="font-size: 1.1rem; line-height: 1.7em; font-weight: 500">Filter</a-typography-text>
-          <a-typography-text style="font-size: 0.9rem; line-height: 1.7em; font-weight: 200">{{ filterCount > 0 ?
-            filterCount : totalItem }} items</a-typography-text>
+        <a-flex
+          style="
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+          "
+          v-if="!isMobile"
+        >
+          <a-typography-text
+            style="font-size: 1.1rem; line-height: 1.7em; font-weight: 500"
+            >{{ $t('sidebar-filter.filter')  }}</a-typography-text
+          >
+          <a-typography-text
+            style="font-size: 0.9rem; line-height: 1.7em; font-weight: 200"
+            >{{
+              filterCount > 0 ? filterCount : totalItem
+            }}
+            {{ $t('sidebar-filter.items')  }}</a-typography-text
+          >
         </a-flex>
-        <a-flex v-else style="align-items: center; cursor: pointer; justify-content: flex-end">
-          <a-button @click="showFilter" type="ghost"
-            :icon="h(visible ? FilterFilled : FilterOutlined)">Filter</a-button>
+        <a-flex
+          v-else
+          style="
+            align-items: center;
+            cursor: pointer;
+            justify-content: flex-end;
+          "
+        >
+          <a-button
+            @click="showFilter"
+            type="ghost"
+            :icon="h(visible ? FilterFilled : FilterOutlined)"
+            >{{ $t('sidebar-filter.filter') }}</a-button
+          >
         </a-flex>
-        <div :style="{
-          visibility: visible || !isMobile ? 'visible' : 'hidden',
-          height: visible ? 'auto' : 0
-        }">
-          <ShoppingFilterDesigners @option-change="handleOptionChange" :parent_key="parent_key" />
+        <div
+          :style="{
+            visibility: visible || !isMobile ? 'visible' : 'hidden',
+            height: visible ? 'auto' : 0,
+          }"
+        >
+          <ShoppingFilterDesigners
+            @option-change="handleOptionChange"
+            :parent_key="parent_key"
+          />
         </div>
       </a-flex>
 
       <!-- sort by header -->
       <a-flex class="items-category" vertical>
-        <a-flex v-if="!isMobile" style="align-items: center; justify-content: flex-end; cursor: pointer">
-          <a-typography-text style="font-size: 15px; font-weight: 200; padding-right: 8px">Sort by</a-typography-text>
+        <a-flex
+          v-if="!isMobile"
+          style="
+            align-items: center;
+            justify-content: flex-end;
+            cursor: pointer;
+          "
+        >
+          <a-typography-text
+            style="font-size: 15px; font-weight: 200; padding-right: 8px"
+            >{{ $t("sidebar-filter.sort-by") }}</a-typography-text
+          >
           <a-select ref="select" value="jack" style="width: 200px">
-            <a-select-option value="jack">Newest</a-select-option>
-            <a-select-option value="lucy">Oldest</a-select-option>
-            <a-select-option value="lucy">Best Value</a-select-option>
-            <a-select-option value="lucy">Most Popular</a-select-option>
-            <a-select-option value="a">Recently Marked Down</a-select-option>
+            <a-select-option value="jack">{{ $t("sidebar-filter.newest") }}</a-select-option>
+            <a-select-option value="lucy">{{ $t("sidebar-filter.oldest") }}</a-select-option>
+            <a-select-option value="lucy">{{ $t("sidebar-filter.best-value") }}</a-select-option>
+            <a-select-option value="lucy">{{ $t("sidebar-filter.most-popular") }}</a-select-option>
           </a-select>
         </a-flex>
         <br />
-        <ShoppingAllItems :filter="currentFilter" :parent_key="parent_key" @filter-count="handleFilterCount" />
+        <ShoppingAllItems
+          :filter="currentFilter"
+          :parent_key="parent_key"
+          @filter-count="handleFilterCount"
+        />
       </a-flex>
     </a-flex>
   </div>
@@ -87,7 +138,7 @@ watch(
     parent_key.value = newParams.parent_key as string;
     filterCount.value = undefined;
   },
-  { immediate: true }
+  { immediate: true },
 ); // Run immediately on component mount);
 onMounted(() => {
   checkScreenSize();
@@ -120,7 +171,7 @@ onBeforeUnmount(() => {
 
 .title-text {
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.4em;
 }
 

@@ -1,6 +1,6 @@
 <template>
   <a-flex class="container" vertical>
-    <a-typography class="responsive-text">Premium picks</a-typography>
+    <a-typography class="responsive-text">{{ $t("dashboard.premium-picks") }}</a-typography>
     <div class="carousel__wrapper">
       <Carousel v-bind="config" ref="carouselRef">
         <Slide v-for="product in productCategories" :key="product.key">
@@ -80,10 +80,10 @@
               </a-button>
               <a-typography
                 style="font-size: 0.8rem; font-weight: 500; line-height: 1.7em"
-                >Showing {{ carouselRef.visibleRange.min + 1 }}-{{
+                >{{ $t("premium-pick.showing") }} {{ carouselRef.visibleRange.min + 1 }}-{{
                   carouselRef.visibleRange.max + 1
                 }}
-                of {{ productCategories.length }} items</a-typography
+                {{ $t("premium-pick.of") }} {{ productCategories.length }} {{ $t("sidebar-filter.items") }}</a-typography
               >
               <a-button
                 @click="

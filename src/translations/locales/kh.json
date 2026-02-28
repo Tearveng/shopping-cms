@@ -1,0 +1,52 @@
+{
+  "shopping-banner": {
+    "shopping-trending": "ទំនិញដែលកំពុងពេញនិយម",
+    "shopping-all": "ទំនិញទាំងអស់"
+  },
+  "app-menu-navigation": {
+    "hello": "សួរស្ដី",
+    "new-arrivals": "ទំនិញទើបមកដល់",
+    "designers": "ម៉ូតច្នៃ",
+    "bags": "កាបូប",
+    "accessories": "គ្រឿងតុបតែង",
+    "shoes": "ស្បែកជើង",
+    "jewelry": "គ្រឿងអង្គាលការ",
+    "watches": "នាឡិការ"
+  },
+  "collections-title": {
+    "NEW ARRIVALS": "ទំនិញទើបមកដល់",
+    "DESIGNERS": "អ្នកច្នៃម៉ូត",
+    "BAGS": "កាបូប",
+    "ACCESSORIES": "គ្រឿងតុបតែង",
+    "SHOES": "ស្បែកជើង",
+    "JEWELRY": "គ្រឿងអង្គាលការ",
+    "WATCHES": "នាឡិការ"
+  },
+  "locale-language": {
+    "khmer": "ខ្មែរ",
+    "english": "អង់គ្លេស"
+  },
+  "sidebar-filter": {
+    "filter": "តម្រង",
+    "items": "ទំនិញ",
+    "sort-by": "តម្រងតាម",
+    "newest": "ទំនិញថ្មីៗ",
+    "oldest": "ទំនិញចាស់ៗ",
+    "best-value": "ទំនិញគុណភាព",
+    "most-popular": "ទំនិញពេញនិយម"
+  },
+  "dashboard": {
+    "shopping-top-designers": "បញ្ជាទិញម៉ូតច្នៃពេញនិយម",
+    "feature-collections": "ទំនិញប្រម៉ូសិន",
+    "shopping-more-top-designers": "បញ្ជាទិញម៉ូតច្នៃពេញនិយមផ្សេងៗទៀត",
+    "premium-picks": "ម៉ូតពេញនិយមប្រណិត",
+    "shop-in-person": "បញ្ជាទិញផ្ទាល់ដល់ហាង"
+  },
+  "premium-pick": {
+    "showing": "បង្ហាញ",
+    "of": "នៃ"
+  },
+  "footer": {
+    "all-right-reserved": "រក្សាសិទ្ធដោយ"
+  }
+}

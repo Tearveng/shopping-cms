@@ -51,7 +51,7 @@
             font-size: 1rem;
             letter-spacing: 0.1rem;
           "
-          >Shop Trending's collection</a-button
+          >{{ $t('shopping-banner.shopping-trending') }}</a-button
         >
         <a-button
           @click="$router.push('/collections/new-arrivals')"
@@ -67,7 +67,7 @@
             font-size: 1rem;
             letter-spacing: 0.1rem;
           "
-          >Shop All</a-button
+          >{{ $t('shopping-banner.shopping-all') }}</a-button
         >
       </a-flex>
     </a-flex>

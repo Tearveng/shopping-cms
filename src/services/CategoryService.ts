@@ -20,7 +20,7 @@ const table = "shopping_category";
 export const storageCategory = "storage-category";
 
 export const insertShoppingCategory = async (
-  props: IShoppingCategory[]
+  props: IShoppingCategory[],
 ): Promise<IShoppingCategory[]> => {
   const { data, error } = await supabase.from(table).insert(props).select();
 
@@ -40,7 +40,7 @@ export const updateShoppingCategory = async (prop: IShoppingCategory) => {
 };
 
 export const getShoppingCategory = async (
-  user_id: string
+  user_id: string,
 ): Promise<IShoppingCategory[]> => {
   const { data, error } = await supabase
     .from(table)
@@ -52,14 +52,30 @@ export const getShoppingCategory = async (
   return data;
 };
 
-export const getShoppingCategoryPublic = async (): Promise<
-  IShoppingCategory[]
-> => {
-  const { data, error } = await supabase
+export const getShoppingCategoryPublic = async (
+  title?: string,
+): Promise<IShoppingCategory[]> => {
+  let query = supabase
     .from(table)
     .select("*")
-    .order("created_at", { ascending: true })
-    .select();
+    .order("created_at", { ascending: true });
+
+  if (title) {
+    // Search for specific title
+    query = query.eq("title", title);
+  } else {
+    // When title is undefined, get categories that either:
+    // - Have a title (not null)
+    // - Or have no title (null) - depending on your business logic
+
+    // Example: Get categories with title OR null title
+    // query = query.or(`title.eq.${title},title.is.null`);
+
+    // Example: Get all categories except those with null title
+    query = query.not("title", "is", null);
+  }
+
+  const { data, error } = await query;
   if (error) throw error.message;
   return data;
 };
@@ -78,7 +94,7 @@ export const getCountsCategory = async (): Promise<
 };
 
 export const getShoppingCategoryById = async (
-  id: number
+  id: number,
 ): Promise<IShoppingCategory> => {
   const { data, error } = await supabase
     .from(table)

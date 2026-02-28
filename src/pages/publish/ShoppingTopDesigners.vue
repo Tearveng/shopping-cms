@@ -1,6 +1,8 @@
 <template>
   <a-flex class="container" vertical>
-    <a-typography class="responsive-text">Shop Top Designers</a-typography>
+    <a-typography class="responsive-text">{{
+      $t("dashboard.shopping-top-designers")
+    }}</a-typography>
 
     <a-row :gutter="[24, 24]">
       <a-col
@@ -10,7 +12,9 @@
         :sm="6"
         v-for="topDesign in dynamicValidateForm.topDesign"
         :key="topDesign.key"
-        @click="$router.push(`/designers/${replaceSpace(topDesign.title.toLowerCase(), '-')}`)"
+        @click="
+          $router.push(`/designers/${replaceSpace(topDesign.title.toLowerCase(), '-')}`)
+        "
       >
         <a-image
           :src="topDesign.fileList[0].thumbUrl"

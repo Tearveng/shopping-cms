@@ -6,16 +6,18 @@
     ><a-spin
   /></a-flex>
 
-  <a-typography-text
-    style="font-size: 3rem; line-height: 1.4em"
-    >Chanel</a-typography-text
+  <br /><br />
+
+  <a-typography-text style="font-size: 3rem; line-height: 1.4em"
+    >{{ firstCharUpperCase(slug) }}</a-typography-text
   >
+  <br /><br />
 
   <div v-if="error" class="error">{{ error.message }}</div>
 
   <div v-else-if="items.length < 1" class="empty-data">No data</div>
 
-  <a-row v-else :gutter="[24, 24]">
+  <a-row v-else :gutter="[24, 24]" type="flex" style="max-width: 1220px">
     <a-col
       :span="6"
       :xs="12"
@@ -113,15 +115,21 @@
 </style>
 
 <script setup lang="ts">
-import { useInfiniteQuery } from "@tanstack/vue-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/vue-query";
 import { computed, ref, watch, type PropType } from "vue";
+import { useRoute } from "vue-router";
+import { getShoppingCategoryPublic } from "../../../../services/CategoryService";
+import { firstCharUpperCase } from "../../../../util/util";
 import { userfetchData } from "../../../hook/shopping-allitems-api";
 
 const emit = defineEmits(["filter-count"]);
 const category_ids_ref = ref<any[]>([]);
 const parent_key_ref = ref<any[]>([]);
-const categoryIdsValue = computed(() => categoryIds());
 const parentKeyValue = computed(() => checkParentKey());
+const route = useRoute();
+
+// Access route parameters
+const slug = ref(route.params.slug as string);
 
 const props = defineProps({
   filter: {
@@ -168,13 +176,6 @@ function processNestedArray(array: any[]): void {
   }
 }
 
-function categoryIds() {
-  if (parent_key_ref.value.includes("new-arrivals")) {
-    return [];
-  }
-  return [...new Set(category_ids_ref.value)];
-}
-
 function checkParentKey() {
   if (
     parent_key_ref.value.includes("new-arrivals") ||
@@ -187,6 +188,15 @@ function checkParentKey() {
   return parent_key_ref.value;
 }
 
+const categoriesQuery = useQuery({
+  queryKey: ["categories"],
+  queryFn: () => getShoppingCategoryPublic(firstCharUpperCase(slug.value)),
+});
+
+const categoryIds = computed(
+  () => categoriesQuery.data.value?.map((c) => c.id) || [],
+);
+
 // const allItems = reactive<{ items: ShoppingAllItems[] }>({ items: [] });
 const {
   data: allItems,
@@ -196,19 +206,19 @@ const {
   hasNextPage,
   isFetchingNextPage,
 } = useInfiniteQuery({
-  queryKey: ["user-shopping-items", categoryIdsValue, parentKeyValue],
-  queryFn: ({ pageParam = 1 }) =>
-    userfetchData(
-      categoryIdsValue.value,
-      parentKeyValue.value,
-      pageParam,
-      10,
-    ).then((res) => {
-      emit("filter-count", res.data.length);
-      return res;
-    }),
+  queryKey: ["user-shopping-items", categoryIds, parentKeyValue],
+  queryFn: async ({ pageParam = 1 }) => {
+    console.log("categoryIds.value.length", categoryIds.value.length)
+    const validCategoryIds = categoryIds.value.filter(
+      (id): id is number => id !== undefined,
+    );
+    const res = await userfetchData(validCategoryIds, [], pageParam, 10);
+    emit("filter-count", res.data.length);
+    return res;
+  },
   initialPageParam: 1,
   getNextPageParam: (lastPage) => lastPage.nextPage,
+  enabled:computed(() => categoryIds.value.some(id => id !== undefined)),
 });
 
 const items = computed(

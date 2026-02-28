@@ -1,0 +1,52 @@
+{
+  "shopping-banner": {
+    "shopping-trending": "Shopping Trending's Collection",
+    "shopping-all": "Shop All"
+  },
+  "app-menu-navigation": {
+    "hello": "Hello",
+    "new-arrivals": "New arrivals",
+    "designers": "Designers",
+    "bags": "Bags",
+    "accessories": "Accessories",
+    "shoes": "Shoes",
+    "jewelry": "Jewelry",
+    "watches": "Watches"
+  },
+  "collections-title": {
+    "NEW ARRIVALS": "NEW ARRIVALS",
+    "DESIGNERS": "DESIGNERS",
+    "BAGS": "BAGS",
+    "ACCESSORIES": "ACCESSORIES",
+    "SHOES": "SHOES",
+    "JEWELRY": "JEWELRY",
+    "WATCHES": "WATCHES"
+  },
+  "locale-language": {
+    "khmer": "Khmer",
+    "english": "English"
+  },
+  "sidebar-filter": {
+    "filter": "Filter",
+    "items": "Items",
+    "sort-by": "Sort by",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "best-value": "Best Value",
+    "most-popular": "Most Popular"
+  },
+  "dashboard": {
+    "shopping-top-designers": "Shop Top Designers",
+    "feature-collections": "Feature Collects",
+    "shopping-more-top-designers": "Shop More Top Designers",
+    "premium-picks": "Premium Picks",
+    "shop-in-person": "Shop In Person"
+  },
+  "premium-pick": {
+    "showing": "Showing",
+    "of": "of"
+  },
+  "footer": {
+    "all-right-reserved": "All rights reserved."
+  }
+}

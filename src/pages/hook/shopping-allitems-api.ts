@@ -5,6 +5,7 @@ import type { ShoppingAllItems } from "../../types/ShoppingAllItems";
 import type { DataItem } from "../ShoppingItems.vue";
 
 export const adminfetchData = async (auth: IState) => {
+    console.log("auth", auth)
     const data = []
     const shoppingBanners = await getShoppingAllItems(`${auth.user?.id}`);
     for (const i of shoppingBanners) {

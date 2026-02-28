@@ -8,7 +8,7 @@
     >
       <a-collapse-panel
         key="1"
-        :header="headerLabel(key)"
+        :header="$t(`app-menu-navigation.${key}`)"
         style="padding: 0; margin: 0"
       >
         <a-flex
@@ -120,10 +120,6 @@ const props = defineProps({
   }
  
 });
-
-const headerLabel = (key: any) => {
-  return key[0].toUpperCase() + key.slice(1);
-};
 
 const getCategoriesEntries = () => {
   const key = route.params.parent_key;

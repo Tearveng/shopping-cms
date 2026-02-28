@@ -1,4 +1,4 @@
-<template>
+ <template>
   <a-flex style="justify-content: center">
     <a-layout style="width: 100%; max-width: 1920px">
       <a-layout-sider v-model:collapsed="collapsed" collapsible theme="light" width="250">

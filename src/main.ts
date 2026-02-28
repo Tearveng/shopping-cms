@@ -6,16 +6,24 @@ import Antd from "ant-design-vue";
 import "ant-design-vue/dist/reset.css";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
+import { createI18n } from "vue-i18n";
 import "vue3-carousel/carousel.css";
 import App from "./App.vue";
 import { supabase } from "./lib/supabase";
 import router from "./router";
 import { useAuthStore } from "./stores/auth";
 import "./style.css";
+import { locales } from "./translations/messages";
 
 const app = createApp(App);
 const pinia = createPinia();
 const head = createHead();
+export const i18n = createI18n({
+  legacy: false,
+  locale: "kh",
+  fallbackLocale: "en",
+  messages: locales,
+});
 export const queryClient = new QueryClient();
 
 app.use(VueQueryPlugin, { queryClient });
@@ -23,6 +31,7 @@ app.use(Antd);
 app.use(head);
 app.use(pinia);
 app.use(router);
+app.use(i18n);
 app.component("QuillEditor", QuillEditor);
 
 const authStore = useAuthStore();

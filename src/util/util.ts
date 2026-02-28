@@ -29,3 +29,16 @@ export function replaceSpace(str: string, replaceBy: string) {
 
   return str.replace(/\s+/g, replaceBy);
 }
+
+export function firstCharUpperCase(str: string) {
+  if(str === "") return str;
+
+  // Replace hyphens with spaces
+  const stringWithSpaces = str.replace(/-/g, ' ');
+  
+  // Split into words, capitalize each, then join back
+  return stringWithSpaces
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}

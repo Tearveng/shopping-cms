@@ -17,36 +17,6 @@
         <a-typography-text>Settings</a-typography-text>
         <a-button type="primary" danger ghost @click="logoutUser">Logout</a-button>
       </div>
-      <a-space direction="vertical" style="width: 100%">
-        <a-typography-text>Publish URL:</a-typography-text>
-        <a-form-item
-          name="username"
-          style="margin-bottom: -16px; max-width: 400px"
-        >
-          <a-input
-            v-model:value="formState.subdomain"
-            placeholder="Subdomain"
-            addon-after="byveng.store"
-          />
-        </a-form-item>
-        <div style="display: flex; flex-wrap: wrap;">
-          <a-typography-text style="margin-right: 10px"
-            >Redirect URL:</a-typography-text
-          >
-          <a
-            style="text-decoration: underline;"
-            :href="`https://${formState.subdomain}.byveng.store`"
-            target="_blank"
-            >{{ `https://${formState.subdomain}.byveng.store` }}</a
-          >
-        </div>
-      </a-space>
-      <a-space>
-        <!-- <a-button @click="resetForm">Reset</a-button> -->
-        <a-button type="primary" html-type="submit" :loading="isLoading"
-          >Save</a-button
-        >
-      </a-space>
     </a-space>
   </a-form>
 </template>

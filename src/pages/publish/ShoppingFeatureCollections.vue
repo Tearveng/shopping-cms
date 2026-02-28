@@ -1,6 +1,6 @@
 <template>
   <a-flex class="container" vertical>
-    <a-typography class="responsive-text">Feature Collections</a-typography>
+    <a-typography class="responsive-text">{{ $t("dashboard.feature-collections") }}</a-typography>
 
     <a-row :gutter="[24, 48]">
       <a-col
@@ -75,11 +75,11 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 import { getImageUrl } from "../../services/BannerService";
-import type { ShoppingFeatureCollection } from "../ShoppingFeatureCollections.vue";
 import {
   getShoppingFeatureCollectionsPublic,
   storageFeatureCollection,
 } from "../../services/FeatureCollectionService";
+import type { ShoppingFeatureCollection } from "../ShoppingFeatureCollections.vue";
 
 const dynamicValidateForm = reactive<{
   featureCollection: ShoppingFeatureCollection[];
