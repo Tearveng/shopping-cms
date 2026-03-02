@@ -112,7 +112,7 @@ const route = useRoute();
 const isAdmin = route.path.includes("/admin");
 const isLogin = route.path.includes("/login");
 
-const openTelegram = (event) => {
+const openTelegram = (event: any) => {
   event.preventDefault();
   event.stopPropagation();
   
