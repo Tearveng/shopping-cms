@@ -3,6 +3,7 @@
     target="_blank"
     v-if="!isAdmin && !isLogin"
     @touchstart="handleTouch"
+    @click="console.log('asdasd')"
   >
     <template #icon>
       <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
