@@ -2,8 +2,7 @@
   <a-float-button
     target="_blank"
     v-if="!isAdmin && !isLogin"
-    @touchstart="handleTouch"
-    @click="console.log('asdasd')"
+    @click="openTelegram"
   >
     <template #icon>
       <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
@@ -113,11 +112,24 @@ const route = useRoute();
 const isAdmin = route.path.includes("/admin");
 const isLogin = route.path.includes("/login");
 
-const handleTouch = (event: any) => {
-  // Prevent default touch behavior
+const openTelegram = (event) => {
   event.preventDefault();
-  // Open the link
-  window.open(adminTelegram.value, "_blank");
+  event.stopPropagation();
+  
+  // Try multiple methods to open link
+  try {
+    // Method 1: Direct location change
+    window.location.href = adminTelegram.value;
+    
+    // Method 2: Open in new tab (fallback)
+    setTimeout(() => {
+      window.open(adminTelegram.value, '_blank');
+    }, 100);
+  } catch (error) {
+    console.error('Failed to open link:', error);
+    // Method 3: Last resort
+    window.open(adminTelegram.value, '_blank');
+  }
 };
 
 console.log("route", route.path);
