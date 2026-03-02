@@ -119,16 +119,16 @@ const openTelegram = (event: any) => {
   // Try multiple methods to open link
   try {
     // Method 1: Direct location change
-    window.location.href = adminTelegram.value;
+    window.location.href = adminTelegram;
     
     // Method 2: Open in new tab (fallback)
     setTimeout(() => {
-      window.open(adminTelegram.value, '_blank');
+      window.open(adminTelegram, '_blank');
     }, 100);
   } catch (error) {
     console.error('Failed to open link:', error);
     // Method 3: Last resort
-    window.open(adminTelegram.value, '_blank');
+    window.open(adminTelegram, '_blank');
   }
 };
 
