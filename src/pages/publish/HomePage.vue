@@ -1,5 +1,9 @@
 <template>
-  <a-float-button :href="adminTelegram" target="_blank" v-if="!isAdmin && !isLogin">
+  <a-float-button
+    target="_blank"
+    v-if="!isAdmin && !isLogin"
+    @touchstart="handleTouch"
+  >
     <template #icon>
       <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
     </template>
@@ -107,6 +111,13 @@ const route = useRoute();
 
 const isAdmin = route.path.includes("/admin");
 const isLogin = route.path.includes("/login");
+
+const handleTouch = (event: any) => {
+  // Prevent default touch behavior
+  event.preventDefault();
+  // Open the link
+  window.open(adminTelegram.value, "_blank");
+};
 
 console.log("route", route.path);
 </script>

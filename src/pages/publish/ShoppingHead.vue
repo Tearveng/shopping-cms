@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .logo-link {
-    width: 10.5rem;
+    width: 12rem;
   }
 
   .logo {
