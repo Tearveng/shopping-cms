@@ -1,25 +1,38 @@
 <template>
+  <a-float-button :href="adminTelegram" target="_blank" v-if="!isAdmin && !isLogin">
+    <template #icon>
+      <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
+    </template>
+  </a-float-button>
   <div class="home-page" v-if="!isAdmin && !isLogin">
-    <a-float-button :href="adminTelegram" target="_blank">
-      <template #icon>
-        <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
-      </template>
-    </a-float-button>
     <a-flex style="justify-content: center" class="responsive-padding">
-      <a-layout style="width: 100%; background-color: inherit; align-items: center">
+      <a-layout
+        style="width: 100%; background-color: inherit; align-items: center"
+      >
         <!-- headers  -->
         <a-flex class="sh-navigation">
-          <Motion style="width:100%" :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }"
-            :transition="{ duration: 0.8, delay: 0.2 }">
+          <Motion
+            style="width: 100%"
+            :initial="{ opacity: 0, x: -100 }"
+            :animate="{ opacity: 1, x: 0 }"
+            :transition="{ duration: 0.8, delay: 0.2 }"
+          >
             <ShoppingHead />
           </Motion>
         </a-flex>
         <br />
         <br />
         <router-view />
-        <a-flex vertical gap="55" style="width: 100%; align-items: center; background-color: #000">
-          <Motion :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }"
-            :transition="{ duration: 0.8, delay: 2 }">
+        <a-flex
+          vertical
+          gap="55"
+          style="width: 100%; align-items: center; background-color: #000"
+        >
+          <Motion
+            :initial="{ opacity: 0, x: -100 }"
+            :animate="{ opacity: 1, x: 0 }"
+            :transition="{ duration: 0.8, delay: 2 }"
+          >
             <ShoppingFooter />
           </Motion>
         </a-flex>
@@ -46,7 +59,7 @@
 
 .ant-float-btn {
   width: 64px;
-  height: 64px
+  height: 64px;
 }
 
 .ant-float-btn .ant-float-btn-body .ant-float-btn-content {
@@ -87,13 +100,13 @@ import { useRoute } from "vue-router";
 import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingHead from "./ShoppingHead.vue";
 
-const adminTelegram = import.meta.env.VITE_ADMIN_TELEGRAM
+const adminTelegram = import.meta.env.VITE_ADMIN_TELEGRAM;
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
 const route = useRoute();
 
-const isAdmin = route.path.includes('/admin')
-const isLogin = route.path.includes('/login')
+const isAdmin = route.path.includes("/admin");
+const isLogin = route.path.includes("/login");
 
-console.log("route", route.path)
+console.log("route", route.path);
 </script>

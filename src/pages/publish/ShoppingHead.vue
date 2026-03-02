@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
   overflow-x: auto;
   overflow-y: hidden;
   flex-wrap: nowrap;
-  background-color: #f3efeb;
+  background: transparent;
 }
 
 .mobile-menu {
