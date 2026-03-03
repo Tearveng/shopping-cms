@@ -104,7 +104,7 @@ import { useRoute } from "vue-router";
 import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingHead from "./ShoppingHead.vue";
 
-const adminTelegram = import.meta.env.VITE_ADMIN_TELEGRAM;
+const adminTelegram = "https://t.me/everythingl11";
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
 const route = useRoute();
