@@ -47,6 +47,9 @@
     "showing": "Showing",
     "of": "of"
   },
+  "utils": {
+    "no-data": "No data"
+  },
   "footer": {
     "all-right-reserved": "All rights reserved.",
     "customer-service": "Customer Service",

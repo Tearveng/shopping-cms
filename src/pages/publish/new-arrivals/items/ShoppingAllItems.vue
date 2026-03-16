@@ -8,7 +8,7 @@
 
   <div v-if="error" class="error">{{ error.message }}</div>
 
-  <div v-else-if="items.length < 1" class="empty-data">No data</div>
+  <div v-else-if="items.length < 1" class="empty-data">{{ $t("utils.no-data") }}</div>
 
   <a-row v-else :gutter="[24, 24]">
     <a-col

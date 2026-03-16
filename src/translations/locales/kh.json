@@ -48,6 +48,9 @@
     "showing": "បង្ហាញ",
     "of": "នៃ"
   },
+  "utils": {
+    "no-data": "គ្មានទិន្ន័យ"
+  },
   "footer": {
     "all-right-reserved": "រក្សាសិទ្ធដោយ",
     "customer-service": "សេវាអតិថិជន",
