@@ -4,6 +4,7 @@
     "shopping-all": "Shop All"
   },
   "app-menu-navigation": {
+    "menu": "Menu",
     "hello": "Hello",
     "new-arrivals": "New arrivals",
     "designers": "Designers",
@@ -47,6 +48,11 @@
     "of": "of"
   },
   "footer": {
-    "all-right-reserved": "All rights reserved."
+    "all-right-reserved": "All rights reserved.",
+    "customer-service": "Customer Service",
+    "about-us": "About Us",
+    "shop-with-us": "Shop With Us",
+    "legal": "Legal",
+    "connect-with-us": "Connect With Us"
   }
 }

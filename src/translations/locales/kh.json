@@ -5,6 +5,8 @@
   },
   "app-menu-navigation": {
     "hello": "សួរស្ដី",
+    "menu": "ជ្រើសរើស",
+
     "new-arrivals": "ទំនិញទើបមកដល់",
     "designers": "ម៉ូតច្នៃ",
     "bags": "កាបូប",
@@ -47,6 +49,11 @@
     "of": "នៃ"
   },
   "footer": {
-    "all-right-reserved": "រក្សាសិទ្ធដោយ"
+    "all-right-reserved": "រក្សាសិទ្ធដោយ",
+    "customer-service": "សេវាអតិថិជន",
+    "about-us": "អំពីយើង",
+    "shop-with-us": "ទិញទំនិញជាមួយយើង",
+    "legal": "ច្បាប់",
+    "connect-with-us": "ភ្ជាប់ទៅគេហទំព័រ"
   }
 }

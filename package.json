@@ -25,7 +25,7 @@
     "url": "https://github.com/Tearveng/portfolio-cms-ant/issues"
   },
   "dependencies": {
-    "@ant-design/icons-vue": "^7.0.1",
+    "@ant-design/icons": "^6.1.0",
     "@motionone/vue": "^10.16.4",
     "@supabase/supabase-js": "^2.50.0",
     "@tanstack/vue-query": "^5.92.8",

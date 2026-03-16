@@ -1,11 +1,6 @@
 <template>
   <a-layout
-    style="
-      width: 100%;
-      max-width: 1280px;
-      padding: 0 2rem;
-      background-color: inherit;
-    "
+    class="item-detail-layout"
   >
     <a-breadcrumb style="justify-content: flex-start; font-size: smaller">
       <a-breadcrumb-item
@@ -30,7 +25,7 @@
           itemDetail?.category.title
         }}</a-typography>
         <a-typography
-        class="khmer-text"
+          class="khmer-text"
           style="
             font-size: 1.125rem;
             font-weight: 200;
@@ -75,10 +70,20 @@
         <div>
           <a-collapse v-model:activeKey="activeKey" ghost style="margin: 0">
             <a-collapse-panel key="1" header="Details">
-              <div v-html="itemDetail.details" style="margin: 0; line-height: inherit; vertical-align: baseline;"></div>
+              <div
+                v-html="itemDetail.details"
+                style="
+                  margin: 0;
+                  line-height: inherit;
+                  vertical-align: baseline;
+                "
+              ></div>
             </a-collapse-panel>
             <a-collapse-panel key="2" header="Size">
-              <div style="font-size: 0.9rem; line-height: 1;" v-html="itemDetail.size"></div>
+              <div
+                style="font-size: 0.9rem; line-height: 1"
+                v-html="itemDetail.size"
+              ></div>
             </a-collapse-panel>
             <a-collapse-panel key="3" header="Description">
               <p style="font-size: 0.9rem">{{ text }}</p>
@@ -146,6 +151,13 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+.item-detail-layout {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 2rem;
+  background-color: inherit;
+}
+
 .carousel {
   --vc-pgn-background-color: rgba(255, 255, 255, 0.7);
   --vc-pgn-active-color: rgba(255, 255, 255, 1);
@@ -202,6 +214,12 @@ onMounted(async () => {
   }
   .detail-right {
     padding-left: 0;
+  }
+}
+
+@media (max-width: 575px) {
+ .item-detail-layout {
+    padding: 0 1.5rem;
   }
 }
 </style>

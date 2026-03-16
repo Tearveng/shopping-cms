@@ -2,15 +2,25 @@
   <a-select
     ref="select"
     v-model:value="language"
-    style="width: 120px"
     :options="options"
+    class="transparent-select"
     @focus="focus"
     @change="handleChange"
   >
   </a-select>
 </template>
 
-<style scoped></style>
+<style scoped>
+.transparent-select :deep(.ant-select-selector) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.transparent-select :deep(.ant-select-focused .ant-select-selector) {
+  box-shadow: none;
+}
+</style>
 
 <script lang="ts" setup>
 import type { SelectProps } from "ant-design-vue";
@@ -20,18 +30,18 @@ import { useRoute, useRouter } from "vue-router";
 import { i18n } from "../../main";
 import { LOCALES, LOCALES_REVERSE } from "../../router";
 
-const { locale, t } = useI18n()
+const { locale } = useI18n()
 const router = useRouter();
 const route = useRoute();
 const language = ref(LOCALES[localStorage.getItem("i18next-lang") as string]);
 const options = ref<SelectProps["options"]>([
   {
     value: "en",
-    label: h("span", ["🇬🇧   ",  t(`locale-language.english`) ]),
+    label: h("span", ["🇬🇧   ", "English" ]),
   },
   {
     value: "kh",
-    label: h("span", ["🇰🇭   ", t(`locale-language.khmer`) ]),
+    label: h("span", ["🇰🇭   ", "Khmer" ]),
   },
 ]);
 
@@ -56,6 +66,6 @@ const handleChange = (value: string) => {
 
 onMounted(() => {
   language.value = (locale as any).value
-  localStorage.setItem("i18next-lang", (locale as any).value);
+  localStorage.setItem("i18next-lang", LOCALES_REVERSE[(locale as any).value]);
 })
 </script>

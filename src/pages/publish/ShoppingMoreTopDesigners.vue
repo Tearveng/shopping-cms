@@ -3,11 +3,15 @@
     <a-typography class="responsive-text">{{ $t("dashboard.shopping-more-top-designers") }}</a-typography>
     <a-row :gutter="[24, 24]">
       <a-col
+        style="cursor: pointer"
         :span="6"
         :xs="12"
         :sm="6"
         v-for="moreTopDesign in dynamicValidateForm.moreTopDesigns"
         :key="moreTopDesign.key"
+        @click="
+          $router.push(`/designers/${replaceSpace(moreTopDesign.title.toLowerCase(), '-')}`)
+        "
       >
         <a-image
           :src="moreTopDesign.fileList[0].thumbUrl"
@@ -61,6 +65,7 @@ import {
 } from "../../services/MoreTopDesignersService";
 import type { ShoppingMoreTopDesigners } from "../ShoppingMoreTopDesigners.vue";
 import type { ShoppingTopDesigners } from "../ShoppingTopDesigners.vue";
+import { replaceSpace } from "../../util/util";
 
 const dynamicValidateForm = reactive<{
   moreTopDesigns: ShoppingMoreTopDesigners[];

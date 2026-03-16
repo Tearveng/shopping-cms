@@ -65,8 +65,8 @@
 
     <!-- Mobile Hamburger Menu (shown on smaller screens) -->
     <div v-else class="mobile-menu">
-      <a-flex align="center" gap="10">
-        <a-button type="text" @click="showDrawer" style="padding: 0 10px">
+      <a-flex gap="10">
+        <a-button type="text" @click="showDrawer" justify="flex-end" >
           <MenuOutlined />
         </a-button>
         <a class="logo-link">
@@ -80,7 +80,7 @@
         <LanguageSwitching />
       </a-flex>
       <a-drawer
-        title="Menu"
+        :title="$t('app-menu-navigation.menu')"
         placement="left"
         :closable="true"
         :visible="visible"
@@ -104,7 +104,7 @@
                 height="14"
               />
             </template>
-            New arrivals
+            {{ $t("app-menu-navigation.new-arrivals") }}
           </a-menu-item>
           <a-menu-item
             key="products"
@@ -118,7 +118,7 @@
                 height="14"
               />
             </template>
-            Designers
+            {{ $t("app-menu-navigation.designers") }}
           </a-menu-item>
           <a-menu-item key="bags" @click="$router.push('/collections/bags')">
             <template #icon>
@@ -129,7 +129,7 @@
                 height="14"
               />
             </template>
-            Bags
+            {{ $t("app-menu-navigation.bags") }}
           </a-menu-item>
           <a-menu-item
             key="accessories"
@@ -143,7 +143,7 @@
                 height="14"
               />
             </template>
-            Accessories
+            {{ $t("app-menu-navigation.accessories") }}
           </a-menu-item>
           <a-menu-item key="shoes" @click="$router.push('/collections/shoes')">
             <template #icon>
@@ -154,7 +154,7 @@
                 height="14"
               />
             </template>
-            Shoes
+            {{ $t("app-menu-navigation.shoes") }}
           </a-menu-item>
           <a-menu-item
             key="jewelry"
@@ -168,7 +168,7 @@
                 height="14"
               />
             </template>
-            Jewelry
+            {{ $t("app-menu-navigation.jewelry") }}
           </a-menu-item>
           <a-menu-item
             key="watches"
@@ -182,7 +182,7 @@
                 height="14"
               />
             </template>
-            Watches
+            {{ $t("app-menu-navigation.watches") }}
           </a-menu-item>
         </a-menu>
       </a-drawer>
@@ -279,8 +279,9 @@ onBeforeUnmount(() => {
 }
 
 .mobile-menu {
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   padding: 1rem 0;
 }
 
