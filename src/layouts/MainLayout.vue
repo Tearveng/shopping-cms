@@ -102,11 +102,11 @@
       <a-layout>
         <a-layout-header :style="headerStyle">
           <a-breadcrumb style="margin: 12px 0px">
-            <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
+            <!-- <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
               <router-link v-if="item.path" :to="item.path">{{ item.name }}
               </router-link>
               <span v-else>{{ item.name }}</span>
-            </a-breadcrumb-item>
+            </a-breadcrumb-item> -->
           </a-breadcrumb>
         </a-layout-header>
         <a-layout-content style="

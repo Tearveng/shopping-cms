@@ -1,6 +1,6 @@
 <template>
   <iframe
-    :src="`https://${subdomain}.byveng.store`"
+    :src="pro_link"
     title="official website"
     width="100%"
     height="900"
@@ -10,6 +10,9 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+
+const pro_link = import.meta.env.VITE_PRODUCTION_LINK
+
 const subdomain = computed(() => {
   const hostname = window.location.hostname; // e.g., "sub.example.com"
   const parts = hostname.split(".");
