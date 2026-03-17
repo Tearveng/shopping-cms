@@ -48,7 +48,9 @@
     "of": "of"
   },
   "utils": {
-    "no-data": "No data"
+    "no-data": "No data",
+    "load-more": "Load more",
+    "no-more-items": "No more items"
   },
   "footer": {
     "all-right-reserved": "All rights reserved.",
@@ -57,5 +59,12 @@
     "shop-with-us": "Shop With Us",
     "legal": "Legal",
     "connect-with-us": "Connect With Us"
+  },
+  "item-detail": {
+    "add-to-cart": "Add To Cart",
+    "buy-now": "Buy now",
+    "size": "Size",
+    "description": "Description",
+    "details": "Details"
   }
 }

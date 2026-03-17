@@ -43,7 +43,7 @@ export const insertShoppingAllItems = async (
   return data;
 };
 
-export const updateShoppingAllItems = async (prop: IShoppingAllItems) => {
+export const updateShoppingAllItems = async (prop: IShoppingAllItems): Promise<IShoppingAllItems[]> => {
   const { data, error } = await supabase
     .from(tableName)
     .update(prop)
@@ -61,7 +61,7 @@ export const getShoppingAllItems = async (
     .from(tableName)
     .select("*")
     .order("created_at", { ascending: false })
-    .eq("user_id", user_id) // Replace with the actual user ID
+    // .eq("user_id", user_id) // Replace with the actual user ID
     .select();
   if (error) throw error.message;
   return data;

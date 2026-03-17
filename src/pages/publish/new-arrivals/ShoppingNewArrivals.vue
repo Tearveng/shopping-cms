@@ -66,7 +66,7 @@
 
       <!-- sort by header -->
       <a-flex class="items-category" vertical>
-        <a-flex
+        <!-- <a-flex
           v-if="!isMobile"
           style="
             align-items: center;
@@ -84,8 +84,8 @@
             <a-select-option value="lucy">{{ $t("sidebar-filter.best-value") }}</a-select-option>
             <a-select-option value="lucy">{{ $t("sidebar-filter.most-popular") }}</a-select-option>
           </a-select>
-        </a-flex>
-        <br />
+        </a-flex> -->
+        <!-- <br /> -->
         <ShoppingAllItems
           :filter="currentFilter"
           :parent_key="parent_key"

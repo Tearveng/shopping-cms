@@ -49,7 +49,9 @@
     "of": "នៃ"
   },
   "utils": {
-    "no-data": "គ្មានទិន្ន័យ"
+    "no-data": "គ្មានទិន្ន័យ",
+    "no-more-items": "គ្មានទំនិញបន្ថែម",
+    "load-more": "ទាញបន្ថែម"
   },
   "footer": {
     "all-right-reserved": "រក្សាសិទ្ធដោយ",
@@ -58,5 +60,12 @@
     "shop-with-us": "ទិញទំនិញជាមួយយើង",
     "legal": "ច្បាប់",
     "connect-with-us": "ភ្ជាប់ទៅគេហទំព័រ"
+  },
+  "item-detail": {
+    "add-to-cart": "ដាក់ក្នុងកន្ដ្រក់",
+    "buy-now": "ទិញឥឡូវ",
+    "size": "ទំហំ",
+    "description": "បរិយាយ",
+    "details": "ព័ត៌មានលម្អិត"
   }
 }

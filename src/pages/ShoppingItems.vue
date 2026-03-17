@@ -5,18 +5,34 @@
     <a-typography-text>Shopping categories - 350 x 350 px</a-typography-text>
     <br />
     <br />
-    <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
+    <a-button
+      class="editable-add-btn"
+      style="margin-bottom: 8px"
+      @click="handleAdd"
+      >Add</a-button
+    >
 
-    <a-table :columns="columns" :data-source="allItems" size="small" bordered style="min-width: 1600px">
+    <a-table
+      :columns="columns"
+      :data-source="allItems"
+      size="small"
+      bordered
+      style="min-width: 1600px"
+    >
       <template #bodyCell="{ column, text, record }">
-        <template v-if="
-          ['title', 'subtitle', 'condition', 'price'].includes(
-            column.dataIndex
-          )
-        ">
+        <template
+          v-if="
+            ['title', 'subtitle', 'condition', 'price'].includes(
+              column.dataIndex,
+            )
+          "
+        >
           <div>
-            <a-input v-if="editableData[record.key]" v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0" />
+            <a-input
+              v-if="editableData[record.key]"
+              v-model:value="editableData[record.key][column.dataIndex]"
+              style="margin: -5px 0"
+            />
             <template v-else>
               {{ text }}
             </template>
@@ -24,70 +40,115 @@
         </template>
         <template v-if="['size'].includes(column.dataIndex)">
           <div>
-            <a-button type="link" v-if="editableData[record.key]" @click="
-              $router.push({
-                path: `/admin/items/${record.key}`,
-                query: { type: 'Size' },
-              })
-              ">Edit size</a-button>
+            <a-button
+              type="link"
+              v-if="editableData[record.key]"
+              @click="
+                $router.push({
+                  path: `/admin/items/${record.key}`,
+                  query: { type: 'Size' },
+                })
+              "
+              >Edit size</a-button
+            >
             <template v-else>
-              <a-typography-text style="font-weight: 600">>Size</a-typography-text>
+              <a-typography-text style="font-weight: 600"
+                >>Size</a-typography-text
+              >
             </template>
           </div>
         </template>
         <template v-if="['details'].includes(column.dataIndex)">
           <div>
-            <a-button type="link" v-if="editableData[record.key]" @click="
-              $router.push({
-                path: `/admin/items/${record.key}`,
-                query: { type: 'Details' },
-              })
-              ">Edit details</a-button>
+            <a-button
+              type="link"
+              v-if="editableData[record.key]"
+              @click="
+                $router.push({
+                  path: `/admin/items/${record.key}`,
+                  query: { type: 'Details' },
+                })
+              "
+              >Edit details</a-button
+            >
             <template v-else>
-              <a-typography-text style="font-weight: 600">>Details</a-typography-text>
+              <a-typography-text style="font-weight: 600"
+                >>Details</a-typography-text
+              >
             </template>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_id'">
           <div>
-            <a-select :disabled="!record.parent_key" :ref="select" :value="text" style="width: 120px" @change="
-              handleChangeSelect({
-                key: record.key,
-                value: $event,
-                extra: { id: record.key },
-              })
-              ">
-              <a-select-option v-for="category in options?.filter(
-                (o) => o.parent_category === record.parent_key
-              )" :key="category.key" :value="category.id.toString()">{{ category.title }}</a-select-option>
+            <a-select
+              :disabled="!record.parent_key"
+              :ref="select"
+              :value="text"
+              style="width: 120px"
+              @change="
+                handleChangeSelect({
+                  key: record.key,
+                  value: $event,
+                  extra: { id: record.key },
+                })
+              "
+            >
+              <a-select-option
+                v-for="category in options?.filter(
+                  (o) => o.parent_category === record.parent_key,
+                )"
+                :key="category.key"
+                :value="category.id.toString()"
+                >{{ category.title }}</a-select-option
+              >
             </a-select>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_group'">
           <div>
-            <a-select :ref="select" :value="record.parent_key" style="width: 120px" @change="
-              handleChangeSelectGroup({
-                key: record.key,
-                value: $event,
-                extra: { id: record.key },
-              })
-              ">
-              <a-select-option v-for="group in optionsGroup" :key="group.key" :value="group.parent_category">{{
-                group.parent_category }}</a-select-option>
+            <a-select
+              :ref="select"
+              :value="record.parent_key"
+              style="width: 120px"
+              @change="
+                handleChangeSelectGroup({
+                  key: record.key,
+                  value: $event,
+                  extra: { id: record.key },
+                })
+              "
+            >
+              <a-select-option
+                v-for="group in optionsGroup"
+                :key="group.key"
+                :value="group.parent_category"
+                >{{ group.parent_category }}</a-select-option
+              >
             </a-select>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'fileList'">
           <div>
-            <a-upload ref="uploadRef" v-model:file-list="record.fileList" :before-upload="beforeUpload"
-              :remove="handleRemove(record.id)" :custom-request="customUpload({ row: record })" list-type="picture-card"
-              @preview="handlePreview">
+            <a-upload
+              ref="uploadRef"
+              v-model:file-list="record.fileList"
+              :before-upload="beforeUpload"
+              :remove="handleRemove(record.id)"
+              :custom-request="customUpload({ row: record })"
+              list-type="picture-card"
+              @preview="handlePreview"
+            >
               <div>
                 <PlusOutlined />
                 <div style="margin-top: 2px">Upload</div>
               </div>
             </a-upload>
-            <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+            <a-modal
+              :open="previewVisible"
+              :title="previewTitle"
+              :footer="null"
+              @cancel="handleCancel"
+            >
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -96,38 +157,51 @@
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="editable-row-operations">
             <span v-if="editableData[record.key]">
-              <a-typography-link @click="save(record.key)">Save</a-typography-link>
-              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
+              <a-typography-link @click="save(record.key)"
+                >Save</a-typography-link
+              >
+              <a-popconfirm
+                title="Sure to cancel?"
+                @confirm="cancel(record.key)"
+              >
                 <a>Cancel</a>
               </a-popconfirm>
             </span>
             <span v-else>
               <a-flex>
-                <a :style="{
-                  color: handleBlockEditButton(record) ? 'grey' : '',
-                  cursor: handleBlockEditButton(record)
-                    ? 'not-allowed'
-                    : 'pointer',
-                }" @click="
+                <a
+                  :style="{
+                    color: handleBlockEditButton(record) ? 'grey' : '',
+                    cursor: handleBlockEditButton(record)
+                      ? 'not-allowed'
+                      : 'pointer',
+                  }"
+                  @click="
                     () => {
                       if (handleBlockEditButton(record)) {
                         return;
                       }
                       edit(record.key);
                     }
-                  ">Edit</a>
-                <a :style="{
-                  color: record.fileList.length > 0 ? 'grey' : '',
-                  cursor:
-                    record.fileList.length > 0 ? 'not-allowed' : 'pointer',
-                }" @click="
+                  "
+                  >Edit</a
+                >
+                <a
+                  :style="{
+                    color: record.fileList.length > 0 ? 'grey' : '',
+                    cursor:
+                      record.fileList.length > 0 ? 'not-allowed' : 'pointer',
+                  }"
+                  @click="
                     () => {
                       if (record.fileList.length > 0) {
                         return;
                       }
                       deleteRecord(record.id, record.key);
                     }
-                  ">Delete</a>
+                  "
+                  >Delete</a
+                >
               </a-flex>
             </span>
           </div>
@@ -139,25 +213,28 @@
 </template>
 <script lang="ts" setup>
 import { PlusOutlined } from "@ant-design/icons-vue";
-import { useQuery } from "@tanstack/vue-query";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 import { message, Modal } from "ant-design-vue";
 import type { SelectProps } from "ant-design-vue/es/vc-select";
 import { cloneDeep } from "lodash-es";
 import { onMounted, reactive, ref, watch } from "vue";
 import { supabase } from "../lib/supabase";
-import { queryClient } from "../main";
 import {
   deleteShoppingAllItems,
   getShoppingAllItemsById,
   insertShoppingAllItems,
   storageAllItems,
   updateShoppingAllItems,
-  type IShoppingAllItems
+  type IShoppingAllItems,
 } from "../services/AllItemsService";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
 import { useAuthStore } from "../stores/auth";
-import { adminfetchData } from "./hook/shopping-allitems-api";
+import {
+  adminfetchData,
+  getImageByFileName,
+  getSingleItem,
+} from "./hook/shopping-allitems-api";
 
 const columns = [
   {
@@ -179,7 +256,7 @@ const columns = [
   {
     title: "Details",
     dataIndex: "details",
-    width: "12%",
+    width: "8%",
   },
   {
     title: "Images",
@@ -227,6 +304,7 @@ export interface DataItem {
 }
 
 const auth = useAuthStore();
+const queryClient = useQueryClient();
 const previewVisible = ref(false);
 const previewImage = ref("");
 const previewTitle = ref("");
@@ -238,11 +316,15 @@ const uploadRef = ref(null);
 const editableData: any = reactive({});
 const [modal, contextHolder] = Modal.useModal();
 
-const { data: allItems, isLoading, error } = useQuery({
-  queryKey: ['admin-shopping-items'],
+const {
+  data: allItems,
+  isLoading,
+  error,
+} = useQuery({
+  queryKey: ["admin-shopping-items"],
   queryFn: () => adminfetchData(auth),
   initialData: [] as DataItem[],
-})
+});
 
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
@@ -322,7 +404,7 @@ const customUpload = ({ row }: any) => {
       const shoppingEditorPick = row;
       if (shoppingEditorPick.id) {
         const getByUserId = await getShoppingAllItemsById(
-          shoppingEditorPick.id
+          shoppingEditorPick.id,
         );
         const oldImages =
           getByUserId.images && getByUserId.images.length > 0
@@ -341,12 +423,25 @@ const customUpload = ({ row }: any) => {
         } as IShoppingAllItems;
 
         updateShoppingAllItems(rest)
-          .then()
+          .then(async (res) => {
+            const updatedItem = await getSingleItem(res[0]);
+            queryClient.setQueryData(
+              ["admin-shopping-items"],
+              (oldData: DataItem[] = []) => {
+                return oldData.map((item) => {
+                  if (item.id === res[0].id) {
+                    return updatedItem;
+                  }
+                  return item;
+                });
+              },
+            );
+          })
           .catch((e) => errors(e))
           .finally(() => {
             // isLoading.value = false;
           });
-
+        console.log("here");
         onSuccess();
         return false;
       }
@@ -395,13 +490,30 @@ const handleRemove = (id: number) => {
             await deleteImage("shopping-storage", filePath);
             const { category, ...rest } = await getShoppingAllItemsById(id);
             const oldImages = rest.images?.filter(
-              (i) => i.fileName !== fileName
+              (i) => i.fileName !== fileName,
             );
             updateShoppingAllItems({
               ...rest,
               images: oldImages,
             })
-              .then()
+              .then((res) => {
+                queryClient.setQueryData(
+                  ["admin-shopping-items"],
+                  (oldData: DataItem[] = []) => {
+                    return oldData.map((item) => {
+                      if (item.id === res[0].id) {
+                        return {
+                          ...item,
+                          fileList: item.fileList.filter(
+                            (i: any) => i.name !== fileName,
+                          ),
+                        };
+                      }
+                      return item;
+                    });
+                  },
+                );
+              })
               .catch((e) => errors(e))
               .finally();
             deleted();
@@ -439,14 +551,14 @@ const deleted = () => {
 
 const edit = (key: string) => {
   editableData[key] = cloneDeep(
-    allItems.value?.filter((item) => key === item.key)[0]
+    allItems.value?.filter((item) => key === item.key)[0],
   );
 };
 
 const deleteRecord = (id: number, _: string) => {
   deleteShoppingAllItems(id)
     .then(() => {
-      queryClient.setQueryData(['admin-shopping-items'], (oldData: any) => {
+      queryClient.setQueryData(["admin-shopping-items"], (oldData: any) => {
         if (oldData) {
           return oldData.filter((item: any) => item.id !== id);
         }
@@ -461,7 +573,7 @@ const deleteRecord = (id: number, _: string) => {
 const save = (key: string) => {
   Object.assign(
     allItems.value?.filter((item) => key === item.key)[0] as DataItem,
-    editableData[key]
+    editableData[key],
   );
   const plainData = editableData[key];
   if (auth.user) {
@@ -491,7 +603,7 @@ const save = (key: string) => {
 
 const saveCategory = (k: string, keyId: string) => {
   const { fileList, key, ...rest } = allItems.value?.filter(
-    (item) => keyId === item.key
+    (item) => keyId === item.key,
   )[0];
   if (auth.user) {
     const newData = {
@@ -507,7 +619,7 @@ const saveCategory = (k: string, keyId: string) => {
             allItems.value.filter((item) => keyId === item.key)[0],
             {
               category_id: k,
-            }
+            },
           );
         })
         .catch((e) => errors(e))
@@ -520,7 +632,7 @@ const saveCategory = (k: string, keyId: string) => {
 
 const saveCategoryGroup = (k: string, keyId: string) => {
   const { fileList, key, ...rest } = allItems.value.filter(
-    (item) => keyId === item.key
+    (item) => keyId === item.key,
   )[0];
   console.log("k", k);
   if (auth.user) {
@@ -538,7 +650,7 @@ const saveCategoryGroup = (k: string, keyId: string) => {
             allItems.value.filter((item) => keyId === item.key)[0],
             {
               parent_key: k,
-            }
+            },
           );
         })
         .catch((e) => errors(e))
@@ -580,7 +692,7 @@ const handleAdd = () => {
             price: e.price,
             fileList: [],
           } as DataItem;
-          queryClient.setQueryData(['admin-shopping-items'], (oldData: any) => {
+          queryClient.setQueryData(["admin-shopping-items"], (oldData: any) => {
             if (oldData) {
               return [pre, ...oldData];
             }
@@ -649,7 +761,7 @@ const fetchAllCategories = async () => {
       options.value?.push(pre);
       if (
         !optionsGroup.value?.some(
-          (c) => c.parent_category === i.parent_category
+          (c) => c.parent_category === i.parent_category,
         )
       ) {
         optionsGroup.value?.push(pre);
@@ -664,11 +776,10 @@ onMounted(async () => {
 });
 
 watch(uploadedFiles, (newVal) => {
-  console.log("newVal");
   if (uploadRef.value) {
     (uploadRef.value as any).style.setProperty(
       "--item-margin",
-      newVal.length >= 1 ? "-50px" : "0px"
+      newVal.length >= 1 ? "-50px" : "0px",
     );
   }
 });

@@ -90,8 +90,8 @@
       :disabled="!hasNextPage || isFetchingNextPage"
     >
       <span v-if="isFetchingNextPage">Loading...</span>
-      <span v-else-if="hasNextPage">Load more</span>
-      <span v-else>No more items</span>
+      <span v-else-if="hasNextPage">{{ $t("utils.load-more") }}</span>
+      <span v-else>{{ $t("utils.no-more-items") }}</span>
     </a-button>
   </a-flex>
   <br />

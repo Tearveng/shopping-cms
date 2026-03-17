@@ -40,7 +40,7 @@ export const getShoppingTopDesigners = async (
     .from(table)
     .select("*")
     .order("created_at", { ascending: true })
-    .eq("user_id", user_id) // Replace with the actual user ID
+    // .eq("user_id", user_id) // Replace with the actual user ID
     .select();
   if (error) throw error.message;
   return data;

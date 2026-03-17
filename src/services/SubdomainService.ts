@@ -25,7 +25,7 @@ export const getSubdomainById = async (
   const { data, error } = await supabase
     .from("subdomain_cms")
     .select("*")
-    .eq("user_id", user_id) // Replace with the actual user ID
+    // .eq("user_id", user_id) // Replace with the actual user ID
     .maybeSingle();
   if (error) throw error.message;
   return data;

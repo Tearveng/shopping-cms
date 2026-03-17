@@ -49,7 +49,7 @@
               font-size: 0.9rem;
               letter-spacing: 0.1rem;
             "
-            >Add To Cart</a-button
+            >{{ $t('item-detail.add-to-cart') }}</a-button
           >
           <a-button
             type="primary"
@@ -63,13 +63,13 @@
               font-size: 0.9rem;
               letter-spacing: 0.1rem;
             "
-            >Buy Now</a-button
+            >{{ $t('item-detail.buy-now') }}</a-button
           >
         </a-flex>
 
         <div>
           <a-collapse v-model:activeKey="activeKey" ghost style="margin: 0">
-            <a-collapse-panel key="1" header="Details">
+            <a-collapse-panel key="1" :header="$t('item-detail.details')">
               <div
                 v-html="itemDetail.details"
                 style="
@@ -79,13 +79,13 @@
                 "
               ></div>
             </a-collapse-panel>
-            <a-collapse-panel key="2" header="Size">
+            <a-collapse-panel key="2" :header="$t('item-detail.size')">
               <div
                 style="font-size: 0.9rem; line-height: 1"
                 v-html="itemDetail.size"
               ></div>
             </a-collapse-panel>
-            <a-collapse-panel key="3" header="Description">
+            <a-collapse-panel key="3" :header="$t('item-detail.description')">
               <p style="font-size: 0.9rem">{{ text }}</p>
             </a-collapse-panel>
           </a-collapse>
