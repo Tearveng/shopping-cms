@@ -35,7 +35,7 @@ export const updateShoppingEditorPicks = async (prop: IShoppingEditorPicks) => {
 };
 
 export const getShoppingEditorPicks = async (
-  user_id: string
+  _: string
 ): Promise<IShoppingEditorPicks[]> => {
   const { data, error } = await supabase
     .from(tableName)

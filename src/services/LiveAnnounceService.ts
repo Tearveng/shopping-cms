@@ -36,7 +36,7 @@ export const updateShoppingLiveAnnounce = async (
 };
 
 export const getShoppingLiveAnnounce = async (
-  user_id: string
+  _: string
 ): Promise<IShoppingLiveAnnounce[]> => {
   const { data, error } = await supabase
     .from(table)

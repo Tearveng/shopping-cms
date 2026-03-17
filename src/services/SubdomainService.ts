@@ -20,7 +20,7 @@ export const insertSubdomain = async (
 };
 
 export const getSubdomainById = async (
-  user_id: string
+  _: string
 ): Promise<ISubdomain> => {
   const { data, error } = await supabase
     .from("subdomain_cms")

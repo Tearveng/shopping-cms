@@ -21,7 +21,7 @@ export const insertShoppingContacts = async (
 };
 
 export const getShoppingContacts = async (
-  user_id: string
+  _: string
 ): Promise<IShoppingContact[]> => {
   const { data, error } = await supabase
     .from(table)

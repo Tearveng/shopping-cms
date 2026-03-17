@@ -35,7 +35,7 @@ const tableName = "shopping_all_items";
 export const storageAllItems = "storage-all-items";
 
 export const insertShoppingAllItems = async (
-  props: IShoppingAllItems[]
+  props: IShoppingAllItems[],
 ): Promise<IShoppingAllItems[]> => {
   const { data, error } = await supabase.from(tableName).insert(props).select();
 
@@ -43,7 +43,9 @@ export const insertShoppingAllItems = async (
   return data;
 };
 
-export const updateShoppingAllItems = async (prop: IShoppingAllItems): Promise<IShoppingAllItems[]> => {
+export const updateShoppingAllItems = async (
+  prop: IShoppingAllItems,
+): Promise<IShoppingAllItems[]> => {
   const { data, error } = await supabase
     .from(tableName)
     .update(prop)
@@ -55,7 +57,7 @@ export const updateShoppingAllItems = async (prop: IShoppingAllItems): Promise<I
 };
 
 export const getShoppingAllItems = async (
-  user_id: string
+  _: string,
 ): Promise<IShoppingAllItems[]> => {
   const { data, error } = await supabase
     .from(tableName)
@@ -68,15 +70,15 @@ export const getShoppingAllItems = async (
 };
 
 export const getShoppingAllItemsPublic = async (
-  props?: IShoppingAllItemsPayload
-): Promise<{ data: IShoppingAllItems[], nextPage: number | undefined }> => {
-  const { page = 1, limit = 20 } = props ?? {}
-  const from = (page - 1) * limit
-  const to = from + limit - 1
+  props?: IShoppingAllItemsPayload,
+): Promise<{ data: IShoppingAllItems[]; nextPage: number | undefined }> => {
+  const { page = 1, limit = 20 } = props ?? {};
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
   let query = supabase
     .from(tableName)
-    .select("*", { count: 'exact' })
+    .select("*", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, to);
   if (props?.parent_key && props?.parent_key.length > 0) {
@@ -90,13 +92,12 @@ export const getShoppingAllItemsPublic = async (
   if (error) throw error.message;
   return {
     data,
-    nextPage:
-      to + 1 < (count ?? 0) ? page + 1 : undefined,
+    nextPage: to + 1 < (count ?? 0) ? page + 1 : undefined,
   };
 };
 
 export const getShoppingAllItemsById = async (
-  id: number
+  id: number,
 ): Promise<IShoppingAllItems> => {
   const { data, error } = await supabase
     .from(tableName)
@@ -104,7 +105,7 @@ export const getShoppingAllItemsById = async (
       `
       *,
       category:category_id (*)
-    `
+    `,
     )
     .eq("id", id) // Replace with the actual user ID
     .maybeSingle();

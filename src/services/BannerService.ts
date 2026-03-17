@@ -34,7 +34,7 @@ export const updateShoppingBanner = async (prop: IShoppingBanner) => {
 };
 
 export const getShoppingBanners = async (
-  user_id: string
+  _: string
 ): Promise<IShoppingBanner[]> => {
   const { data, error } = await supabase
     .from(table)

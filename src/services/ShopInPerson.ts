@@ -34,7 +34,7 @@ export const updateShoppingShopInPerson = async (
 };
 
 export const getShoppingShopInPerson = async (
-  user_id: string
+  _: string
 ): Promise<IShoppingShopInPerson[]> => {
   const { data, error } = await supabase
     .from(table)

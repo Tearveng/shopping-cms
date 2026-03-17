@@ -40,7 +40,7 @@ export const updateShoppingCategory = async (prop: IShoppingCategory) => {
 };
 
 export const getShoppingCategory = async (
-  user_id: string,
+  _: string,
 ): Promise<IShoppingCategory[]> => {
   const { data, error } = await supabase
     .from(table)

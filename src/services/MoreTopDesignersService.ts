@@ -34,7 +34,7 @@ export const updateShoppingMoreTopDesigners = async (
 };
 
 export const getShoppingMoreTopDesigners = async (
-  user_id: string
+  _: string
 ): Promise<IShoppingMoreTopDesigners[]> => {
   const { data, error } = await supabase
     .from(tableName)

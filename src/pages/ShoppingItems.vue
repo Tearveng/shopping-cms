@@ -230,11 +230,7 @@ import {
 } from "../services/AllItemsService";
 import { getShoppingCategoryPublic } from "../services/CategoryService";
 import { useAuthStore } from "../stores/auth";
-import {
-  adminfetchData,
-  getImageByFileName,
-  getSingleItem,
-} from "./hook/shopping-allitems-api";
+import { adminfetchData, getSingleItem } from "./hook/shopping-allitems-api";
 
 const columns = [
   {
