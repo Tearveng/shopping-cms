@@ -102,11 +102,11 @@
       <a-layout>
         <a-layout-header :style="headerStyle">
           <a-breadcrumb style="margin: 12px 0px">
-            <!-- <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
+            <a-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
               <router-link v-if="item.path" :to="item.path">{{ item.name }}
               </router-link>
               <span v-else>{{ item.name }}</span>
-            </a-breadcrumb-item> -->
+            </a-breadcrumb-item>
           </a-breadcrumb>
         </a-layout-header>
         <a-layout-content style="
@@ -146,30 +146,30 @@ const openKeys = ref(["users", "products"]);
 // Active menu based on current route
 const activeMenu = computed(() => {
   const path = route.path;
-  if (path === "/admin/dashboard") return "dashboard";
-  if (path === "/admin/profile") return "profile";
-  if (path === "/admin/work") return "work";
-  if (path === "/admin/education") return "education";
-  if (path === "/admin/project") return "project";
-  if (path === "/admin/language") return "language";
-  if (path === "/admin/contact") return "contact";
-  if (path === "/admin/about") return "about";
-  if (path === "/admin/settings") return "settings";
-  if (path === "/admin/users") return "user-list";
-  if (path === "/admin/users/roles") return "user-roles";
-  if (path === "/admin/products") return "product-list";
-  if (path === "/admin/products/categories") return "categories";
-  if (path === "/admin/reports") return "reports";
-  if (path === "/admin/settings") return "settings";
-  if (path === "/admin/category") return "category";
+  if (path.includes("/admin/dashboard")) return "dashboard";
+  if (path.includes("/admin/profile")) return "profile";
+  if (path.includes("/admin/work")) return "work";
+  if (path.includes("/admin/education")) return "education";
+  if (path.includes("/admin/project")) return "project";
+  if (path.includes("/admin/language")) return "language";
+  if (path.includes("/admin/contact")) return "contact";
+  if (path.includes("/admin/about")) return "about";
+  if (path.includes("/admin/settings")) return "settings";
+  if (path.includes("/admin/users")) return "user-list";
+  if (path.includes("/admin/users/roles")) return "user-roles";
+  if (path.includes("/admin/products")) return "product-list";
+  if (path.includes("/admin/products/categories")) return "categories";
+  if (path.includes("/admin/reports")) return "reports";
+  if (path.includes("/admin/settings")) return "settings";
+  if (path.includes("/admin/category")) return "category";
   if (path.includes("/admin/items")) return "items";
-  if (path === "/admin/banner") return "banner";
-  if (path === "/admin/top_design") return "top_design";
-  if (path === "/admin/feature_collection") return "feature_collection";
-  if (path === "/admin/more_top_design") return "more_top_design";
-  if (path === "/admin/editor_pick") return "editor_pick";
-  if (path === "/admin/live_announce") return "live_announce";
-  if (path === "/admin/shop_in_person") return "shop_in_person";
+  if (path.includes("/admin/banner")) return "banner";
+  if (path.includes("/admin/top_design")) return "top_design";
+  if (path.includes("/admin/feature_collection")) return "feature_collection";
+  if (path.includes("/admin/more_top_design")) return "more_top_design";
+  if (path.includes("/admin/editor_pick")) return "editor_pick";
+  if (path.includes("/admin/live_announce")) return "live_announce";
+  if (path.includes("/admin/shop_in_person")) return "shop_in_person";
 
   return "admin/home";
 });
@@ -178,26 +178,32 @@ const activeMenu = computed(() => {
 const breadcrumbs = computed(() => {
   const path = route.path;
   const crumbs: { name: string; path?: string }[] = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/admin" },
   ];
 
-  if (path === "/admin/about") {
-    crumbs.push({ name: "/adminAbout" });
-  } else if (path === "/admin/dashboard") {
+  if (path.includes("/admin/top_design")) {
+    crumbs.push({ name: "Top design" });
+  } else if (path.includes("/admin/dashboard")) {
     crumbs.push({ name: "Dashboard" });
-  } else if (path === "/admin/profile") {
+  } else if (path.includes("/admin/profile")) {
     crumbs.push({ name: "Profile" });
-  } else if (path === "/admin/work") {
-    crumbs.push({ name: "Work" });
-  } else if (path === "/admin/education") {
-    crumbs.push({ name: "Education" });
-  } else if (path === "/admin/project") {
-    crumbs.push({ name: "Project" });
-  } else if (path === "/admin/contact") {
+  } else if (path.includes("/admin/banner")) {
+    crumbs.push({ name: "Banner" });
+  } else if (path.includes("/admin/feature_collection")) {
+    crumbs.push({ name: "Feature collection" });
+  } else if (path.includes("/admin/more_top_design")) {
+    crumbs.push({ name: "More top design" });
+  } else if (path.includes("/admin/editor_pick")) {
+    crumbs.push({ name: "Editor pick" });
+  }  else if (path.includes("/admin/live_announce")) {
+    crumbs.push({ name: "Live announce" });
+  } else if (path.includes("/admin/shop_in_person")) {
+    crumbs.push({ name: "Shop in person" });
+  } else if (path.includes("/admin/contact")) {
     crumbs.push({ name: "Shopping Contact" });
-  } else if (path === "/admin/settings") {
+  } else if (path.includes("/admin/settings")) {
     crumbs.push({ name: "Settings" });
-  } else if (path === "/admin/category") {
+  } else if (path.includes("/admin/category")) {
     crumbs.push({ name: "Category" });
   } else if (path.includes("/admin/items")) {
     const id = getLastNumber(path);

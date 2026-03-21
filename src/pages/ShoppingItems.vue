@@ -787,6 +787,7 @@ watch(uploadedFiles, (newVal) => {
 
 :deep(.ant-upload-list-item-container) {
   max-width: 50px;
+  max-height: 50px;
 }
 
 /* Override Ant Design's default picture card size */
@@ -800,6 +801,6 @@ watch(uploadedFiles, (newVal) => {
 }
 
 :deep(.ant-upload-list) {
-  max-height: 50px;
+  max-height: 110px;
 }
 </style>
