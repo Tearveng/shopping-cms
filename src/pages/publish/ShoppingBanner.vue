@@ -1,47 +1,31 @@
 <template>
-  <a-flex
-    class="container"
-    vertical
-    v-for="banner in dynamicValidateForm.banners"
-    :key="banner.key"
-  >
-    <img
-      class="banner-image"
-      :src="banner.fileList[0].thumbUrl"
-      alt="banner-image"
-      loading="lazy"
-    />
+  <a-flex class="container" vertical v-for="banner in dynamicValidateForm.banners" :key="banner.key">
+    <img class="banner-image" :src="banner.fileList[0].thumbUrl" alt="banner-image" loading="lazy" />
 
     <a-flex class="content-banner" vertical>
       <a-flex class="text-block" vertical>
-        <a-typography-text
-          style="font-size: 1rem; letter-spacing: 0.2em; line-height: 1.4em"
-          >{{ banner.title }}</a-typography-text
-        >
-        <a-typography-text
-          style="
-            font-size: 2.5rem;
+        <a-typography-text style="font-size: 1rem; letter-spacing: 0.2em; line-height: 1.4em">{{ banner.title
+          }}</a-typography-text>
+        <a-typography-text style="
+            font-size: 1.5rem;
             font-weight: 500;
             line-height: 1.2em;
             padding-top: 0.5rem;
             padding-bottom: 1rem;
-          "
-          >{{ banner.subtitle }}</a-typography-text
-        >
-        <a-typography-text
-          style="font-size: 1rem; font-weight: 200; line-height: 1.7em; max-width: 350px"
-          >{{ banner.description }}</a-typography-text
-        >
+          ">{{ banner.subtitle }}</a-typography-text>
+        <a-typography-text style="
+            font-size: 1rem;
+            font-weight: 200;
+            line-height: 1.7em;
+            max-width: 350px;
+          ">{{ banner.description }}</a-typography-text>
         <!-- <a-typography-text style="font-size: 1rem; font-weight: 200; line-height: 1.7em"
           >Nicole Richie exclusively for FASHIONPHILE.</a-typography-text
         > -->
       </a-flex>
       <a-flex style="padding: 24px 0" gap="20" class="group-button">
-        <a-button
-          @click="$router.push('/collections/new-arrivals')"
-          type="primary"
-          style="
-            background: linear-gradient(90deg, #674d20 0%, #c5a362 100%);
+        <!-- <a-button @click="$router.push('/collections/new-arrivals')" type="primary" style="
+            background: linear-gradient(to left, #FFD194, #D1913C); 
             min-width: 13.4rem;
             min-height: 3.3rem;
             border-radius: 0;
@@ -50,14 +34,9 @@
             font-weight: 400;
             font-size: 1rem;
             letter-spacing: 0.1rem;
-          "
-          >{{ $t('shopping-banner.shopping-trending') }}</a-button
-        >
-        <a-button
-          @click="$router.push('/collections/new-arrivals')"
-          type="primary"
-          style="
-            background: linear-gradient(90deg, #674d20 0%, #c5a362 100%);
+          ">{{ $t("shopping-banner.shopping-trending") }}</a-button> -->
+        <a-button @click="$router.push('/collections/new-arrivals')" type="primary" style="
+            background: linear-gradient(to left, #FFD194, #D1913C); 
             min-width: 13.4rem;
             min-height: 3.3rem;
             border-radius: 0;
@@ -66,9 +45,7 @@
             font-weight: 400;
             font-size: 1rem;
             letter-spacing: 0.1rem;
-          "
-          >{{ $t('shopping-banner.shopping-all') }}</a-button
-        >
+          ">{{ $t("shopping-banner.shopping-all") }}</a-button>
       </a-flex>
     </a-flex>
   </a-flex>
@@ -84,11 +61,13 @@
   align-items: center;
   justify-content: center;
 }
+
 .banner-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .content-banner {
   width: 100%;
   max-width: 1280px;
@@ -98,21 +77,25 @@
   position: absolute;
   z-index: 1;
 }
+
 .text-block {
   max-width: 30rem;
 }
 
 @media (max-width: 575px) {
   .banner-image {
-   margin-top: -5rem;
+    margin-top: -5rem;
   }
+
   .content-banner {
     margin-top: 45rem;
     padding: 0 1rem;
   }
+
   .container {
     gap: 20px;
   }
+
   .group-button {
     display: flex;
     flex-direction: column;
@@ -122,7 +105,11 @@
 
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
-import { getImageUrl, getShoppingBannersPublic, storageBanner } from "../../services/BannerService";
+import {
+  getImageUrl,
+  getShoppingBannersPublic,
+  storageBanner,
+} from "../../services/BannerService";
 import type { ShoppingBanner } from "../ShoppingBanner.vue";
 
 const dynamicValidateForm = reactive<{ banners: ShoppingBanner[] }>({

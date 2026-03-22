@@ -12,7 +12,8 @@
     "accessories": "Accessories",
     "shoes": "Shoes",
     "jewelry": "Jewelry",
-    "watches": "Watches"
+    "watches": "Watches",
+    "crystal-designed": "Crystal designed"
   },
   "collections-title": {
     "NEW ARRIVALS": "NEW ARRIVALS",
@@ -21,7 +22,8 @@
     "ACCESSORIES": "ACCESSORIES",
     "SHOES": "SHOES",
     "JEWELRY": "JEWELRY",
-    "WATCHES": "WATCHES"
+    "WATCHES": "WATCHES",
+    "CRYSTAL DESIGNED": "CRYSTAL DESIGNED"
   },
   "locale-language": {
     "khmer": "Khmer",
@@ -37,9 +39,9 @@
     "most-popular": "Most Popular"
   },
   "dashboard": {
-    "shopping-top-designers": "Shop Top Designers",
+    "shopping-top-designers": "Shop Brand Outlet",
     "feature-collections": "Feature Collects",
-    "shopping-more-top-designers": "Shop More Top Designers",
+    "shopping-more-top-designers": "Shop More Brand Outlet",
     "premium-picks": "Premium Picks",
     "shop-in-person": "Shop In Person"
   },

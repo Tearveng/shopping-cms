@@ -60,6 +60,12 @@
         >
           {{ $t("app-menu-navigation.watches") }}
         </a-menu-item>
+        <!-- <a-menu-item
+          key="crystal-designed"
+          @click="$router.push('/collections/crystal-designed')"
+        >
+          {{ $t("app-menu-navigation.crystal-designed") }}
+        </a-menu-item> -->
       </a-menu>
     </a-flex>
 
@@ -184,6 +190,20 @@
             </template>
             {{ $t("app-menu-navigation.watches") }}
           </a-menu-item>
+          <!-- <a-menu-item
+            key="watches"
+            @click="$router.push('/collections/crystal-designed')"
+          >
+            <template #icon>
+              <img
+                src="/shopping-watches.svg"
+                alt="shopping-icon"
+                width="14"
+                height="14"
+              />
+            </template>
+            {{ $t("app-menu-navigation.crystal-designed") }}
+          </a-menu-item> -->
         </a-menu>
       </a-drawer>
     </div>

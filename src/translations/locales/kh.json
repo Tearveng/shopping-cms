@@ -6,14 +6,14 @@
   "app-menu-navigation": {
     "hello": "សួរស្ដី",
     "menu": "ជ្រើសរើស",
-
     "new-arrivals": "ទំនិញទើបមកដល់",
     "designers": "ម៉ូតច្នៃ",
     "bags": "កាបូប",
     "accessories": "គ្រឿងតុបតែង",
     "shoes": "ស្បែកជើង",
-    "jewelry": "គ្រឿងអង្គាលការ",
-    "watches": "នាឡិការ"
+    "jewelry": "គ្រឿងអលង្ការ",
+    "watches": "នាឡិការ",
+    "crystal-designed": "ត្បូងច្នៃ"
   },
   "collections-title": {
     "NEW ARRIVALS": "ទំនិញទើបមកដល់",
@@ -21,8 +21,9 @@
     "BAGS": "កាបូប",
     "ACCESSORIES": "គ្រឿងតុបតែង",
     "SHOES": "ស្បែកជើង",
-    "JEWELRY": "គ្រឿងអង្គាលការ",
-    "WATCHES": "នាឡិការ"
+    "JEWELRY": "គ្រឿងអលង្ការ",
+    "WATCHES": "នាឡិការ",
+    "CRYSTAL DESIGNED": "ត្បូងច្នៃ"
   },
   "locale-language": {
     "khmer": "ខ្មែរ",
@@ -38,9 +39,9 @@
     "most-popular": "ទំនិញពេញនិយម"
   },
   "dashboard": {
-    "shopping-top-designers": "បញ្ជាទិញម៉ូតច្នៃពេញនិយម",
+    "shopping-top-designers": "បញ្ជាទិញម៉ូតពេញនិយម",
     "feature-collections": "ទំនិញប្រម៉ូសិន",
-    "shopping-more-top-designers": "បញ្ជាទិញម៉ូតច្នៃពេញនិយមផ្សេងៗទៀត",
+    "shopping-more-top-designers": "បញ្ជាទិញម៉ូតពេញនិយមផ្សេងៗទៀត",
     "premium-picks": "ម៉ូតពេញនិយមប្រណិត",
     "shop-in-person": "បញ្ជាទិញផ្ទាល់ដល់ហាង"
   },

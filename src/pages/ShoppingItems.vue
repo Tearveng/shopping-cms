@@ -5,34 +5,18 @@
     <a-typography-text>Shopping categories - 350 x 350 px</a-typography-text>
     <br />
     <br />
-    <a-button
-      class="editable-add-btn"
-      style="margin-bottom: 8px"
-      @click="handleAdd"
-      >Add</a-button
-    >
+    <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
 
-    <a-table
-      :columns="columns"
-      :data-source="allItems"
-      size="small"
-      bordered
-      style="min-width: 1600px"
-    >
+    <a-table :columns="columns" :data-source="allItems" size="small" bordered style="min-width: 1600px">
       <template #bodyCell="{ column, text, record }">
-        <template
-          v-if="
-            ['title', 'subtitle', 'condition', 'price'].includes(
-              column.dataIndex,
-            )
-          "
-        >
+        <template v-if="
+          ['title', 'subtitle', 'condition', 'price'].includes(
+            column.dataIndex,
+          )
+        ">
           <div>
-            <a-input
-              v-if="editableData[record.key]"
-              v-model:value="editableData[record.key][column.dataIndex]"
-              style="margin: -5px 0"
-            />
+            <a-input v-if="editableData[record.key]" v-model:value="editableData[record.key][column.dataIndex]"
+              style="margin: -5px 0" />
             <template v-else>
               {{ text }}
             </template>
@@ -40,115 +24,70 @@
         </template>
         <template v-if="['size'].includes(column.dataIndex)">
           <div>
-            <a-button
-              type="link"
-              v-if="editableData[record.key]"
-              @click="
-                $router.push({
-                  path: `/admin/items/${record.key}`,
-                  query: { type: 'Size' },
-                })
-              "
-              >Edit size</a-button
-            >
+            <a-button type="link" v-if="editableData[record.key]" @click="
+              $router.push({
+                path: `/admin/items/${record.key}`,
+                query: { type: 'Size' },
+              })
+              ">Edit size</a-button>
             <template v-else>
-              <a-typography-text style="font-weight: 600"
-                >>Size</a-typography-text
-              >
+              <a-typography-text style="font-weight: 600">>Size</a-typography-text>
             </template>
           </div>
         </template>
         <template v-if="['details'].includes(column.dataIndex)">
           <div>
-            <a-button
-              type="link"
-              v-if="editableData[record.key]"
-              @click="
-                $router.push({
-                  path: `/admin/items/${record.key}`,
-                  query: { type: 'Details' },
-                })
-              "
-              >Edit details</a-button
-            >
+            <a-button type="link" v-if="editableData[record.key]" @click="
+              $router.push({
+                path: `/admin/items/${record.key}`,
+                query: { type: 'Details' },
+              })
+              ">Edit details</a-button>
             <template v-else>
-              <a-typography-text style="font-weight: 600"
-                >>Details</a-typography-text
-              >
+              <a-typography-text style="font-weight: 600">>Details</a-typography-text>
             </template>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_id'">
           <div>
-            <a-select
-              :disabled="!record.parent_key"
-              :ref="select"
-              :value="text"
-              style="width: 120px"
-              @change="
-                handleChangeSelect({
-                  key: record.key,
-                  value: $event,
-                  extra: { id: record.key },
-                })
-              "
-            >
-              <a-select-option
-                v-for="category in options?.filter(
-                  (o) => o.parent_category === record.parent_key,
-                )"
-                :key="category.key"
-                :value="category.id.toString()"
-                >{{ category.title }}</a-select-option
-              >
+            <a-select :disabled="!record.parent_key" :ref="select" :value="text" style="width: 120px" @change="
+              handleChangeSelect({
+                key: record.key,
+                value: $event,
+                extra: { id: record.key },
+              })
+              ">
+              <a-select-option v-for="category in options?.filter(
+                (o) => o.parent_category === record.parent_key,
+              )" :key="category.key" :value="category.id.toString()">{{ category.title }}</a-select-option>
             </a-select>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'category_group'">
           <div>
-            <a-select
-              :ref="select"
-              :value="record.parent_key"
-              style="width: 120px"
-              @change="
-                handleChangeSelectGroup({
-                  key: record.key,
-                  value: $event,
-                  extra: { id: record.key },
-                })
-              "
-            >
-              <a-select-option
-                v-for="group in optionsGroup"
-                :key="group.key"
-                :value="group.parent_category"
-                >{{ group.parent_category }}</a-select-option
-              >
+            <a-select :ref="select" :value="record.parent_key" style="width: 120px" @change="
+              handleChangeSelectGroup({
+                key: record.key,
+                value: $event,
+                extra: { id: record.key },
+              })
+              ">
+              <a-select-option v-for="group in optionsGroup" :key="group.key" :value="group.parent_category">{{
+                group.parent_category }}</a-select-option>
             </a-select>
           </div>
         </template>
         <template v-else-if="column.dataIndex === 'fileList'">
           <div>
-            <a-upload
-              ref="uploadRef"
-              v-model:file-list="record.fileList"
-              :before-upload="beforeUpload"
-              :remove="handleRemove(record.id)"
-              :custom-request="customUpload({ row: record })"
-              list-type="picture-card"
-              @preview="handlePreview"
-            >
+            <a-upload ref="uploadRef" v-model:file-list="record.fileList" :before-upload="beforeUpload"
+              :remove="handleRemove(record.id)" :custom-request="customUpload({ row: record })" list-type="picture-card"
+              @preview="handlePreview">
               <div>
                 <PlusOutlined />
                 <div style="margin-top: 2px">Upload</div>
               </div>
             </a-upload>
-            <a-modal
-              :open="previewVisible"
-              :title="previewTitle"
-              :footer="null"
-              @cancel="handleCancel"
-            >
+            <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -157,51 +96,38 @@
         <template v-else-if="column.dataIndex === 'operation'">
           <div class="editable-row-operations">
             <span v-if="editableData[record.key]">
-              <a-typography-link @click="save(record.key)"
-                >Save</a-typography-link
-              >
-              <a-popconfirm
-                title="Sure to cancel?"
-                @confirm="cancel(record.key)"
-              >
+              <a-typography-link @click="save(record.key)">Save</a-typography-link>
+              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
                 <a>Cancel</a>
               </a-popconfirm>
             </span>
             <span v-else>
               <a-flex>
-                <a
-                  :style="{
-                    color: handleBlockEditButton(record) ? 'grey' : '',
-                    cursor: handleBlockEditButton(record)
-                      ? 'not-allowed'
-                      : 'pointer',
-                  }"
-                  @click="
+                <a :style="{
+                  color: handleBlockEditButton(record) ? 'grey' : '',
+                  cursor: handleBlockEditButton(record)
+                    ? 'not-allowed'
+                    : 'pointer',
+                }" @click="
                     () => {
                       if (handleBlockEditButton(record)) {
                         return;
                       }
                       edit(record.key);
                     }
-                  "
-                  >Edit</a
-                >
-                <a
-                  :style="{
-                    color: record.fileList.length > 0 ? 'grey' : '',
-                    cursor:
-                      record.fileList.length > 0 ? 'not-allowed' : 'pointer',
-                  }"
-                  @click="
+                  ">Edit</a>
+                <a :style="{
+                  color: record.fileList.length > 0 ? 'grey' : '',
+                  cursor:
+                    record.fileList.length > 0 ? 'not-allowed' : 'pointer',
+                }" @click="
                     () => {
                       if (record.fileList.length > 0) {
                         return;
                       }
                       deleteRecord(record.id, record.key);
                     }
-                  "
-                  >Delete</a
-                >
+                  ">Delete</a>
               </a-flex>
             </span>
           </div>

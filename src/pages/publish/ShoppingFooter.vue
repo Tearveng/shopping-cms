@@ -1,20 +1,12 @@
 <template>
   <a-layout-footer class="custom-footer">
     <div class="footer-content">
-      <div
-        class="footer-section"
-        v-for="(group, title) in groupedContacts"
-        :key="title"
-      >
+      <div class="footer-section" v-for="(group, title) in groupedContacts" :key="title">
         <h3>{{ mappingTitle(title.toLowerCase()) }}</h3>
         <a-flex vertical align="flex-start">
           <div v-for="contact in group" :key="contact.id">
-            <a-button
-              v-if="contact.link !== '#'"
-              :href="`https://${contact.link}`"
-              type="link"
-              >{{ contact.subtitle }}</a-button
-            >
+            <a-button v-if="contact.link !== '#'" :href="`https://${contact.link}`" type="link">{{ contact.subtitle
+              }}</a-button>
             <a-button v-else type="link">{{ contact.subtitle }}</a-button>
           </div>
         </a-flex>
@@ -23,31 +15,15 @@
       <div class="footer-section">
         <h3>{{ $t("footer.connect-with-us") }}</h3>
         <div class="social-icons">
-          <a
-            :href="handleSocialClick('facebook')"
-            target="_black"
-            style="color: #fff; text-decoration: none"
-          >
+          <a :href="handleSocialClick('facebook')" target="_black" style="color: #fff; text-decoration: none">
             <FacebookFilled style="cursor: pointer" />
           </a>
-          <a
-            :href="handleSocialClick('instagram')"
-            target="_black"
-            style="color: #fff; text-decoration: none"
-            ><InstagramFilled style="cursor: pointer"
-          /></a>
-          <a
-            :href="handleSocialClick('tiktok')"
-            target="_black"
-            style="color: #fff; text-decoration: none"
-            ><img
-              src="/tiktok-icons.svg"
-              alt="tiktok-icon"
-              width="18"
-              height="20"
-              @click="handleSocialClick('tiktok')"
-              style="cursor: pointer; margin-top: -3px"
-          /></a>
+          <a :href="handleSocialClick('instagram')" target="_black" style="color: #fff; text-decoration: none">
+            <InstagramFilled style="cursor: pointer" />
+          </a>
+          <a :href="handleSocialClick('tiktok')" target="_black" style="color: #fff; text-decoration: none"><img
+              src="/tiktok-icons.svg" alt="tiktok-icon" width="18" height="20" @click="handleSocialClick('tiktok')"
+              style="cursor: pointer; margin-top: -3px" /></a>
         </div>
         <!-- <a-input-search
           placeholder="Subscribe to newsletter"
@@ -71,7 +47,7 @@ import { getShoppingContactsPublic } from "../../services/ContactService";
 import type { ShoppingContact } from "../ShoppingContact.vue";
 import { useI18n } from "vue-i18n";
 
-const {t} = useI18n()
+const { t } = useI18n()
 const dynamicValidateForm = reactive<{ contacts: ShoppingContact[] }>({
   contacts: [],
 });
@@ -124,7 +100,7 @@ onMounted(async () => {
 <style scoped>
 .custom-footer {
   padding: 2rem 2rem;
-  background-color: transparent;
+  background: transparent;
 }
 
 .footer-content {

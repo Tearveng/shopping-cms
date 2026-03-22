@@ -2,7 +2,41 @@
   <a-float-button
     target="_blank"
     v-if="!isAdmin && !isLogin"
-    @click="openTelegram"
+    @click="(event: any) => openTelegram(event, facebookUrl)"
+    class="facebook-float-button"
+  >
+    <template #icon>
+      <img src="/shopping-facebook-logo.svg" class="facebook-img" alt="icon" />
+    </template>
+  </a-float-button>
+  <a-float-button
+    target="_blank"
+    v-if="!isAdmin && !isLogin"
+    @click="(event: any) => openTelegram(event, instagramUrl)"
+    class="instagram-float-button"
+  >
+    <template #icon>
+      <img
+        src="/shopping-instagram-logo.svg"
+        class="instagram-img"
+        alt="icon"
+      />
+    </template>
+  </a-float-button>
+  <a-float-button
+    target="_blank"
+    v-if="!isAdmin && !isLogin"
+    @click="(event: any) => openTelegram(event, tiktokUrl)"
+    class="tiktok-float-button"
+  >
+    <template #icon>
+      <img src="/shopping-tiktok-logo.svg" class="tiktok-img" alt="icon" />
+    </template>
+  </a-float-button>
+  <a-float-button
+    target="_blank"
+    v-if="!isAdmin && !isLogin"
+    @click="(event: any) => openTelegram(event, adminTelegram)"
   >
     <template #icon>
       <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
@@ -30,7 +64,21 @@
         <a-flex
           vertical
           gap="55"
-          style="width: 100%; align-items: center; background-color: #000"
+          style="
+            width: 100%;
+            align-items: center;
+            background: #eacda3; /* fallback for old browsers */
+            background: -webkit-linear-gradient(
+              to right,
+              #d6ae7b,
+              #eacda3
+            ); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(
+              to right,
+              #d6ae7b,
+              #eacda3
+            ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          "
         >
           <Motion
             :initial="{ opacity: 0, x: -100 }"
@@ -53,17 +101,56 @@
 
 <style>
 .float-img {
-  width: 70px;
-  height: 70px;
-  margin-left: -25.5px;
+  width: 56px;
+  height: 56px;
+  margin-left: -19px;
   object-fit: cover;
   /* cover | contain depending on your need */
   border-radius: 50%;
 }
 
+.facebook-img {
+  width: 68px;
+  height: 68px;
+  margin-left: -24.5px;
+  object-fit: cover;
+  /* cover | contain depending on your need */
+  border-radius: 50%;
+}
+
+.instagram-img {
+  width: 56px;
+  height: 56px;
+  margin-left: -19px;
+  object-fit: cover;
+  /* cover | contain depending on your need */
+  border-radius: 50%;
+}
+
+.tiktok-img {
+  width: 40px;
+  height: 40px;
+  margin-left: -11px;
+  object-fit: cover;
+  /* cover | contain depending on your need */
+  border-radius: 50%;
+}
+
+.instagram-float-button {
+  margin-bottom: 110px;
+}
+
+.tiktok-float-button {
+  margin-bottom: 55px;
+}
+
+.facebook-float-button {
+  margin-bottom: 165px;
+}
+
 .ant-float-btn {
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
 }
 
 .ant-float-btn .ant-float-btn-body .ant-float-btn-content {
@@ -105,6 +192,9 @@ import ShoppingFooter from "./ShoppingFooter.vue";
 import ShoppingHead from "./ShoppingHead.vue";
 
 const adminTelegram = "https://t.me/everythingl11";
+const facebookUrl = "https://www.facebook.com/everythingl11bygechlang";
+const instagramUrl = "https://www.instagram.com/everythingl11/";
+const tiktokUrl = "https://www.tiktok.com/@everything_l11";
 const found = ref<boolean>(true);
 const isLoading = ref<boolean>(false);
 const route = useRoute();
@@ -112,23 +202,23 @@ const route = useRoute();
 const isAdmin = route.path.includes("/admin");
 const isLogin = route.path.includes("/login");
 
-const openTelegram = (event: any) => {
+const openTelegram = (event: any, url: string) => {
   event.preventDefault();
   event.stopPropagation();
-  
+
   // Try multiple methods to open link
   try {
     // Method 1: Direct location change
-    window.location.href = adminTelegram;
-    
+    window.location.href = url;
+
     // Method 2: Open in new tab (fallback)
     setTimeout(() => {
-      window.open(adminTelegram, '_blank');
+      window.open(adminTelegram, "_blank");
     }, 100);
   } catch (error) {
-    console.error('Failed to open link:', error);
+    console.error("Failed to open link:", error);
     // Method 3: Last resort
-    window.open(adminTelegram, '_blank');
+    window.open(adminTelegram, "_blank");
   }
 };
 
