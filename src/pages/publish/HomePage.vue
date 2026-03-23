@@ -37,6 +37,7 @@
     target="_blank"
     v-if="!isAdmin && !isLogin"
     @click="(event: any) => openTelegram(event, adminTelegram)"
+    class="telegram-float-button"
   >
     <template #icon>
       <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
@@ -110,9 +111,9 @@
 }
 
 .facebook-img {
-  width: 68px;
-  height: 68px;
-  margin-left: -24.5px;
+  width: 45px;
+  height: 45px;
+  margin-left: -13.5px;
   object-fit: cover;
   /* cover | contain depending on your need */
   border-radius: 50%;
@@ -137,15 +138,19 @@
 }
 
 .instagram-float-button {
-  margin-bottom: 110px;
+  margin-bottom: 75px;
 }
 
 .tiktok-float-button {
-  margin-bottom: 55px;
+  margin-bottom: 20px;
 }
 
 .facebook-float-button {
-  margin-bottom: 165px;
+  margin-bottom: 130px;
+}
+
+.telegram-float-button {
+  margin-bottom: -35px;
 }
 
 .ant-float-btn {
