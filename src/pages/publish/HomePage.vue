@@ -205,7 +205,7 @@ const isLoading = ref<boolean>(false);
 const route = useRoute();
 
 const isAdmin = route.path.includes("/admin");
-const isLogin = route.path.includes("/login");
+const isLogin = route.path.includes("/login") || route.path.includes("/reset-password");
 
 const openTelegram = (event: any, url: string) => {
   event.preventDefault();

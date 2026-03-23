@@ -24,6 +24,7 @@ import ShoppingProfile from "../pages/ShoppingProfile.vue";
 import ShoppingShopInPerson from "../pages/ShoppingShopInPerson.vue";
 import ShoppingTopDesigners from "../pages/ShoppingTopDesigners.vue";
 import { useAuthStore } from "../stores/auth";
+import ResetPassword from "../pages/auth/ResetPassword.vue";
 
 // Define custom meta interface for TypeScript
 declare module "vue-router" {
@@ -221,6 +222,17 @@ const routes: RouteRecordRaw[] = [
           title: "Login",
           icon: "login",
           breadcrumb: ["Login"],
+        },
+      },
+
+      {
+        path: "reset-password",
+        name: "Reset Password",
+        component: ResetPassword,
+        meta: {
+          title: "Reset password",
+          icon: "reset-password",
+          breadcrumb: ["Reset password"],
         },
       },
 
