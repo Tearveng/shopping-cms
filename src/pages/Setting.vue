@@ -10,8 +10,9 @@
       <div
         style="
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: column;
+          align-items: start;
+          gap: 10px;
         "
       >
         <a-typography-text>Settings</a-typography-text>
