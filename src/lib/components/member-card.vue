@@ -24,6 +24,11 @@
       :confirm-loading="confirmLoading"
       @ok="handleOk"
       ok-text="Close"
+      :ok-button-props="{
+        style: {
+          backgroundColor: 'goldenrod',
+        },
+      }"
       :cancel-button-props="{ style: { display: 'none' } }"
     >
       <br />
