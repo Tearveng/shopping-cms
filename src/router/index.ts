@@ -246,6 +246,7 @@ const routes: RouteRecordRaw[] = [
           breadcrumb: ["HomeContent"],
         },
       },
+
       {
         path: "designers/:slug",
         name: "Shop designers",
@@ -256,6 +257,7 @@ const routes: RouteRecordRaw[] = [
           breadcrumb: ["New Arrivals"],
         },
       },
+
       {
         path: "collections/:parent_key",
         name: "New Arrivals",
@@ -266,6 +268,7 @@ const routes: RouteRecordRaw[] = [
           breadcrumb: ["New Arrivals"],
         },
       },
+      
       {
         path: "p/:item_id",
         name: "Item detail",

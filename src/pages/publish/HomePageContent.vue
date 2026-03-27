@@ -1,4 +1,7 @@
 <template>
+  <!-- shopping member-card -->
+  <MemberCard />
+
   <!-- shopping banner -->
   <a-flex vertical gap="55" style="width: 100%">
     <Motion
@@ -88,6 +91,7 @@
 </style>
 
 <script setup lang="ts">
+import MemberCard from "../../lib/components/member-card.vue";
 import ShoppingBanner from "./ShoppingBanner.vue";
 import ShoppingEditorPicks from "./ShoppingEditorPicks.vue";
 import ShoppingFeatureCollections from "./ShoppingFeatureCollections.vue";

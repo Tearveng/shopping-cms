@@ -43,6 +43,7 @@
       <img src="/shopping-telegram-logo.svg" class="float-img" alt="icon" />
     </template>
   </a-float-button>
+
   <div class="home-page" v-if="!isAdmin && !isLogin">
     <a-flex style="justify-content: center" class="responsive-padding">
       <a-layout
@@ -205,7 +206,8 @@ const isLoading = ref<boolean>(false);
 const route = useRoute();
 
 const isAdmin = route.path.includes("/admin");
-const isLogin = route.path.includes("/login") || route.path.includes("/reset-password");
+const isLogin =
+  route.path.includes("/login") || route.path.includes("/reset-password");
 
 const openTelegram = (event: any, url: string) => {
   event.preventDefault();
